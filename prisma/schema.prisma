@@ -1,0 +1,205 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Team {
+  id            Int     @id
+  sourceId      String?
+  school        String
+  mascot        String?
+  abbreviation  String?
+  displayName   String?
+  conference    String?
+  conferenceId  Int?
+  primaryColor  String?
+  secondaryColor String?
+  currentVenue  String?
+  currentCity   String?
+  currentState  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  players          Player[]
+  homeGames        Game[]             @relation("HomeTeam")
+  awayGames        Game[]             @relation("AwayTeam")
+  teamSeasonStats  TeamSeasonStats[]
+  playerSeasonStats PlayerSeasonStats[]
+
+  @@map("teams")
+}
+
+model Player {
+  id        Int     @id
+  sourceId  String?
+  firstName String?
+  lastName  String?
+  name      String?
+  position  String?
+  height    Int?
+  weight    Int?
+  jersey    String?
+  teamId    Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  team        Team?               @relation(fields: [teamId], references: [id])
+  seasonStats PlayerSeasonStats[]
+  plays       Play[]
+
+  @@map("players")
+}
+
+model Game {
+  id           Int      @id
+  sourceId     String?
+  season       Int
+  seasonType   String?
+  startDate    DateTime
+  homeTeamId   Int?
+  awayTeamId   Int?
+  homeScore    Int?
+  awayScore    Int?
+  venue        String?
+  status       String?
+  neutralSite  Boolean? @default(false)
+  conferenceGame Boolean? @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  homeTeam Team?  @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam Team?  @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  plays    Play[]
+
+  @@map("games")
+}
+
+model Play {
+  id             String   @id
+  gameId         Int
+  playerId       Int?
+  teamId         Int?
+  period         Int?
+  clock          String?
+  secondsRemaining Int?
+  homeScore      Int?
+  awayScore      Int?
+  playType       String?
+  playText       String?
+  scoringPlay    Boolean? @default(false)
+  shootingPlay   Boolean? @default(false)
+  scoreValue     Int?
+
+  // Shot information
+  shotMade       Boolean?
+  shotRange      String?
+  shotAssisted   Boolean?
+  shotX          Float?
+  shotY          Float?
+  assisterId     Int?
+  assisterName   String?
+
+  createdAt DateTime @default(now())
+
+  game   Game    @relation(fields: [gameId], references: [id])
+  player Player? @relation(fields: [playerId], references: [id])
+
+  @@index([gameId])
+  @@index([playerId])
+  @@map("plays")
+}
+
+model TeamSeasonStats {
+  id        Int @id @default(autoincrement())
+  teamId    Int
+  season    Int
+
+  games     Int? @default(0)
+  wins      Int? @default(0)
+  losses    Int? @default(0)
+
+  // Points breakdown
+  pointsTotal     Int? @default(0)
+  pointsInPaint   Int? @default(0)
+  pointsFastBreak Int? @default(0)
+  pointsOffTurnovers Int? @default(0)
+
+  fieldGoalsMade        Int? @default(0)
+  fieldGoalsAttempted   Int? @default(0)
+  threePointsMade       Int? @default(0)
+  threePointsAttempted  Int? @default(0)
+  freeThrowsMade        Int? @default(0)
+  freeThrowsAttempted   Int? @default(0)
+
+  // Rebounds breakdown
+  offensiveRebounds Int? @default(0)
+  defensiveRebounds Int? @default(0)
+  totalRebounds     Int? @default(0)
+
+  assists     Int? @default(0)
+  steals      Int? @default(0)
+  blocks      Int? @default(0)
+
+  // Turnovers breakdown
+  turnoversTotal Int? @default(0)
+  turnoversTeam  Int? @default(0)
+
+  // Fouls breakdown
+  foulsTotal     Int? @default(0)
+  foulsTechnical Int? @default(0)
+  foulsFlagrant  Int? @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  team Team @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, season])
+  @@map("team_season_stats")
+}
+
+model PlayerSeasonStats {
+  id        Int @id @default(autoincrement())
+  playerId  Int
+  teamId    Int?
+  season    Int
+
+  games           Int? @default(0)
+  gamesStarted    Int? @default(0)
+  minutes         Int? @default(0)
+  points          Int? @default(0)
+  rebounds        Int? @default(0)
+  offRebounds     Int? @default(0)
+  defRebounds     Int? @default(0)
+  assists         Int? @default(0)
+  steals          Int? @default(0)
+  blocks          Int? @default(0)
+  turnovers       Int? @default(0)
+  fouls           Int? @default(0)
+
+  fieldGoalsMade        Int? @default(0)
+  fieldGoalsAttempted   Int? @default(0)
+  threePointsMade       Int? @default(0)
+  threePointsAttempted  Int? @default(0)
+  freeThrowsMade        Int? @default(0)
+  freeThrowsAttempted   Int? @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  player Player @relation(fields: [playerId], references: [id])
+  team   Team?  @relation(fields: [teamId], references: [id])
+
+  @@unique([playerId, season])
+  @@map("player_season_stats")
+}
