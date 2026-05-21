@@ -4,8 +4,10 @@ import { prisma } from '../../../lib/prisma';
 import { TeamShotHeatmap, type AggregateShot } from '../../../components/TeamShotHeatmap';
 import { UciMatchup } from '../../../components/UciMatchup';
 import { TeamShotQualityPanel } from '../../../components/ShotQualityPanel';
+import { SeasonSelector } from '../../../components/SeasonSelector';
 import { buildTeamHeatmapShots, getTeamXeFGCached } from '../../../lib/xefg';
 import { shotDistanceFt } from '../../../components/Court';
+import { resolveSeason, seasonLabel, withSeason } from '../../../lib/season';
 import {
   buildMatchupData,
   runTacticalEngine,
@@ -13,8 +15,6 @@ import {
 } from '../../../lib/tactical-engine';
 
 export const dynamic = 'force-dynamic';
-
-const SEASON = 2025;
 
 type Zone = 'rim' | 'mid' | 'three';
 
@@ -86,12 +86,16 @@ function StatBlock({
 
 export default async function TeamPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ teamId: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { teamId: teamIdStr } = await params;
   const teamId = parseInt(teamIdStr, 10);
   if (Number.isNaN(teamId)) notFound();
+
+  const SEASON = resolveSeason(await searchParams);
 
   const team = await prisma.team.findUnique({ where: { id: teamId } });
   if (!team) notFound();
@@ -288,21 +292,26 @@ export default async function TeamPage({
 
   return (
     <main className="max-w-[1400px] mx-auto px-6 lg:px-8 py-12 lg:py-16">
-      {/* Breadcrumb + Coach Brief CTA */}
-      <div className="flex items-center justify-between mb-8 gap-4">
+      {/* Breadcrumb + Season selector + Coach Brief CTA */}
+      <div className="flex items-center justify-between mb-8 gap-4 flex-wrap">
         <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim">
-          <Link href="/" className="hover:text-text transition-colors">Conference</Link>
+          <Link href={withSeason('/', SEASON)} className="hover:text-text transition-colors">
+            Conference
+          </Link>
           <span className="mx-2 opacity-40">/</span>
           <span>{team.abbreviation ?? team.school}</span>
         </div>
-        {!isUci && (
-          <Link
-            href={`/teams/${teamId}/brief`}
-            className="mono text-[11px] uppercase tracking-widest px-3 py-1.5 border border-accent text-accent hover:bg-accent hover:text-bg transition-colors"
-          >
-            View Coach Brief →
-          </Link>
-        )}
+        <div className="flex items-center gap-3 flex-wrap">
+          <SeasonSelector season={SEASON} />
+          {!isUci && (
+            <Link
+              href={withSeason(`/teams/${teamId}/brief`, SEASON)}
+              className="mono text-[11px] uppercase tracking-widest px-3 py-1.5 border border-accent text-accent hover:bg-accent hover:text-bg transition-colors"
+            >
+              View Coach Brief →
+            </Link>
+          )}
+        </div>
       </div>
 
       {/* 1. Identity header */}
@@ -313,7 +322,7 @@ export default async function TeamPage({
             style={{ backgroundColor: accentColor }}
           />
           <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim mb-2">
-            {team.conference ?? 'Independent'} · {SEASON - 1}–{String(SEASON).slice(2)}
+            {team.conference ?? 'Independent'} · {seasonLabel(SEASON)}
           </div>
           <h1 className="display text-[56px] sm:text-[72px] leading-[0.95] tracking-tight font-medium">
             {team.school}
@@ -537,7 +546,7 @@ export default async function TeamPage({
                     <tr key={p.id} className="border-b border-border last:border-b-0 hover:bg-surface-2 transition-colors">
                       <td className="py-3 px-4 mono tabular-nums text-text-dim">{i + 1}</td>
                       <td className="py-3 px-4">
-                        <Link href={`/players/${p.id}/report`} className="hover:text-accent transition-colors">
+                        <Link href={withSeason(`/players/${p.id}/report`, SEASON)} className="hover:text-accent transition-colors">
                           <span className="display font-medium">{p.name}</span>
                           {p.jersey && (
                             <span className="ml-2 mono text-xs tabular-nums text-text-dim">#{p.jersey}</span>
@@ -581,7 +590,7 @@ export default async function TeamPage({
             return (
               <Link
                 key={p.id}
-                href={`/players/${p.id}/report`}
+                href={withSeason(`/players/${p.id}/report`, SEASON)}
                 className="block bg-surface hover:bg-surface-2 transition-colors p-5"
               >
                 <div className="flex items-start justify-between gap-3 mb-3">

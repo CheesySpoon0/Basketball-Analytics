@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { prisma } from '../../lib/prisma';
+import { SeasonSelector } from '../../components/SeasonSelector';
+import { resolveSeason, seasonLabel, withSeason } from '../../lib/season';
 
 export const dynamic = 'force-dynamic';
-
-const SEASON = 2025;
 
 const BIG_WEST_SCHOOLS = [
   'UC Irvine',
@@ -19,7 +19,12 @@ const BIG_WEST_SCHOOLS = [
   'UC San Diego',
 ];
 
-export default async function PlayersIndex() {
+export default async function PlayersIndex({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const season = resolveSeason(await searchParams);
   const teams = await prisma.team.findMany({
     where: { school: { in: BIG_WEST_SCHOOLS } },
   });
@@ -27,7 +32,7 @@ export default async function PlayersIndex() {
   const teamById = new Map(teams.map((t) => [t.id, t]));
 
   const top = await prisma.playerSeasonStats.findMany({
-    where: { teamId: { in: teamIds }, season: SEASON },
+    where: { teamId: { in: teamIds }, season },
     orderBy: { points: 'desc' },
     take: 50,
     include: { player: true },
@@ -35,8 +40,11 @@ export default async function PlayersIndex() {
 
   return (
     <main className="max-w-[1400px] mx-auto px-6 lg:px-8 py-12 lg:py-16">
-      <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim mb-6">
-        Big West · {SEASON - 1}–{String(SEASON).slice(2)}
+      <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
+        <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim">
+          Big West · {seasonLabel(season)}
+        </div>
+        <SeasonSelector season={season} />
       </div>
       <h1 className="display text-[56px] sm:text-[72px] leading-[0.95] tracking-tight font-medium mb-12">
         Top Scorers
@@ -66,7 +74,7 @@ export default async function PlayersIndex() {
                 <tr key={s.id} className="border-b border-border last:border-b-0 hover:bg-surface-2 transition-colors">
                   <td className="py-3 px-4 mono tabular-nums text-text-dim">{i + 1}</td>
                   <td className="py-3 px-4">
-                    <Link href={`/players/${s.playerId}`} className="hover:text-accent transition-colors">
+                    <Link href={withSeason(`/players/${s.playerId}`, season)} className="hover:text-accent transition-colors">
                       <span className="display font-medium">{s.player.name}</span>
                       {s.player.jersey && (
                         <span className="ml-2 mono text-xs tabular-nums text-text-dim">#{s.player.jersey}</span>
@@ -75,7 +83,7 @@ export default async function PlayersIndex() {
                   </td>
                   <td className="py-3 px-4 text-text-dim">
                     {team ? (
-                      <Link href={`/teams/${team.id}`} className="hover:text-text transition-colors">
+                      <Link href={withSeason(`/teams/${team.id}`, season)} className="hover:text-text transition-colors">
                         {team.abbreviation ?? team.school}
                       </Link>
                     ) : '—'}

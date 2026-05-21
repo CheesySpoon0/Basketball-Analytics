@@ -5,6 +5,7 @@
 // every player page load.
 // ============================================================================
 import { prisma } from '../prisma';
+import { DEFAULT_SEASON } from '../season';
 import {
   classifyShotType,
   classifyThreeSubzone,
@@ -24,7 +25,8 @@ import type {
   ZoneAgg,
 } from './types';
 
-export const SEASON = 2025;
+/** @deprecated Resolve the season per-request via lib/season; kept for callers without a request context. */
+export const SEASON = DEFAULT_SEASON;
 export const ROTATION_MPG = 5;
 
 const pct = (n: number, d: number): number | null => (d > 0 ? n / d : null);

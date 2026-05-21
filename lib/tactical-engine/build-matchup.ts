@@ -15,10 +15,11 @@
 // ============================================================================
 import { prisma } from '../prisma';
 import { shotDistanceFt } from '../../components/Court';
+import { DEFAULT_SEASON } from '../season';
 import type { MatchupData, TeamProfile, PlayerProfile } from './types';
 
-/** Default season. Pass through if you need a different one. */
-export const DEFAULT_SEASON = 2025;
+/** Re-exported so existing imports from this module keep working. */
+export { DEFAULT_SEASON };
 
 /**
  * Minimum opp FGAs we want before reporting any zone-allowed number.

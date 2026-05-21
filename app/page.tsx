@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { prisma } from '../lib/prisma';
+import { SeasonSelector } from '../components/SeasonSelector';
+import { resolveSeason, seasonLabel, withSeason } from '../lib/season';
 
 export const dynamic = 'force-dynamic';
-
-const SEASON = 2025;
 
 const BIG_WEST_SCHOOLS = [
   'UC Irvine',
@@ -36,14 +36,14 @@ type TeamCard = {
   threePct: number | null;
 };
 
-async function getTeamCards(): Promise<TeamCard[]> {
+async function getTeamCards(season: number): Promise<TeamCard[]> {
   const teams = await prisma.team.findMany({
     where: { school: { in: BIG_WEST_SCHOOLS } },
   });
   const teamIds = teams.map((t) => t.id);
 
   const stats = await prisma.teamSeasonStats.findMany({
-    where: { teamId: { in: teamIds }, season: SEASON },
+    where: { teamId: { in: teamIds }, season },
   });
   const statsByTeam = new Map(stats.map((s) => [s.teamId, s]));
 
@@ -76,14 +76,22 @@ async function getTeamCards(): Promise<TeamCard[]> {
     .sort((a, b) => b.wins - a.wins);
 }
 
-function TeamCard({ team, featured }: { team: TeamCard; featured?: boolean }) {
+function TeamCard({
+  team,
+  season,
+  featured,
+}: {
+  team: TeamCard;
+  season: number;
+  featured?: boolean;
+}) {
   const winPct = team.games > 0 ? team.wins / team.games : 0;
   const ppg = team.games > 0 ? team.pointsTotal / team.games : 0;
   const accentColor = team.primaryColor ? `#${team.primaryColor}` : 'var(--accent)';
 
   return (
     <Link
-      href={`/teams/${team.id}`}
+      href={withSeason(`/teams/${team.id}`, season)}
       className={[
         'group relative block bg-surface hover:bg-surface-2 transition-colors',
         featured ? 'sm:col-span-2 sm:row-span-2 p-8' : 'p-5',
@@ -171,8 +179,13 @@ function TeamCard({ team, featured }: { team: TeamCard; featured?: boolean }) {
   );
 }
 
-export default async function HomePage() {
-  const teams = await getTeamCards();
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const season = resolveSeason(await searchParams);
+  const teams = await getTeamCards(season);
   const home = teams.find((t) => t.school === HOME_TEAM);
   const others = teams.filter((t) => t.school !== HOME_TEAM);
   const totalGames = teams.reduce((acc, t) => acc + t.games, 0);
@@ -180,8 +193,11 @@ export default async function HomePage() {
   return (
     <main className="max-w-[1400px] mx-auto px-6 lg:px-8 py-16 lg:py-24">
       <section className="mb-16 lg:mb-24 max-w-3xl">
-        <div className="mono text-[11px] uppercase tracking-[0.25em] text-text-dim mb-6">
-          Vol. 01 · 2024–25 Conference Report
+        <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
+          <div className="mono text-[11px] uppercase tracking-[0.25em] text-text-dim">
+            {seasonLabel(season)} Conference Report
+          </div>
+          <SeasonSelector season={season} />
         </div>
         <h1 className="display text-[56px] sm:text-[72px] lg:text-[88px] leading-[0.95] tracking-tight font-medium">
           Big West<br />
@@ -190,7 +206,7 @@ export default async function HomePage() {
         <p className="mt-8 text-text-dim text-lg leading-relaxed max-w-2xl">
           Eleven programs. {totalGames} team-seasons of play-by-play tracked.
           Shot locations, possession-level intelligence, and roster intel for
-          the {SEASON - 1}–{String(SEASON).slice(2)} season.
+          the {seasonLabel(season)} season.
         </p>
         <div className="mt-10 flex items-center gap-8 text-sm">
           <div>
@@ -205,7 +221,7 @@ export default async function HomePage() {
           <div className="h-10 w-px bg-border" />
           <div>
             <div className="stat-label">Season</div>
-            <div className="mono text-xl tabular-nums mt-1">{SEASON - 1}–{String(SEASON).slice(2)}</div>
+            <div className="mono text-xl tabular-nums mt-1">{seasonLabel(season)}</div>
           </div>
         </div>
       </section>
@@ -218,9 +234,9 @@ export default async function HomePage() {
       </div>
 
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border">
-        {home && <TeamCard team={home} featured />}
+        {home && <TeamCard team={home} season={season} featured />}
         {others.map((t) => (
-          <TeamCard key={t.id} team={t} />
+          <TeamCard key={t.id} team={t} season={season} />
         ))}
       </section>
 

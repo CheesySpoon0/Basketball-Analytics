@@ -64,21 +64,25 @@ function MonoNumbers({ text }: { text: string }) {
 export function CoachBriefView({
   teamId,
   opponentName,
+  season,
 }: {
   teamId: number;
   opponentName: string;
+  season: number;
 }) {
   const [data, setData] = React.useState<ApiResponse | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [regenerating, setRegenerating] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
+  const briefUrl = `/api/coach-brief/${teamId}?season=${season}`;
+
   /** Read existing cached brief; generates only if no cache yet. */
   const loadBrief = React.useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/coach-brief/${teamId}`, { cache: 'no-store' });
+      const res = await fetch(briefUrl, { cache: 'no-store' });
       const json = (await res.json()) as ApiResponse;
       if (!res.ok || json.error) {
         throw new Error(json.error ?? `Request failed (${res.status})`);
@@ -90,14 +94,14 @@ export function CoachBriefView({
     } finally {
       setLoading(false);
     }
-  }, [teamId]);
+  }, [briefUrl]);
 
   /** Force regenerate. Costs API credits — only fires on button click. */
   const regenerateBrief = React.useCallback(async () => {
     setRegenerating(true);
     setError(null);
     try {
-      const res = await fetch(`/api/coach-brief/${teamId}`, {
+      const res = await fetch(briefUrl, {
         method: 'POST',
         cache: 'no-store',
       });
@@ -112,7 +116,7 @@ export function CoachBriefView({
     } finally {
       setRegenerating(false);
     }
-  }, [teamId]);
+  }, [briefUrl]);
 
   React.useEffect(() => {
     loadBrief();

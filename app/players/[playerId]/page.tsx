@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { prisma } from '../../../lib/prisma';
+import { SeasonSelector } from '../../../components/SeasonSelector';
+import { resolveSeason, seasonLabel, withSeason } from '../../../lib/season';
 import { ShotChartView, type Shot } from './ShotChartView';
 
 export const dynamic = 'force-dynamic';
-
-const SEASON = 2025;
 
 type ZoneStats = { att: number; made: number; pct: number };
 
@@ -28,12 +28,16 @@ function shotDistance(rawX: number, rawY: number): number {
 
 export default async function PlayerPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ playerId: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { playerId: playerIdStr } = await params;
   const playerId = parseInt(playerIdStr, 10);
   if (Number.isNaN(playerId)) notFound();
+
+  const SEASON = resolveSeason(await searchParams);
 
   const player = await prisma.player.findUnique({
     where: { id: playerId },
@@ -114,19 +118,27 @@ export default async function PlayerPage({
 
   return (
     <main className="max-w-[1400px] mx-auto px-6 lg:px-8 py-10 lg:py-14">
-      {/* Breadcrumb */}
-      <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim mb-8">
-        <Link href="/" className="hover:text-text transition-colors">Conference</Link>
-        <span className="mx-2 opacity-40">/</span>
-        {player.team && (
-          <>
-            <Link href={`/teams/${player.team.id}`} className="hover:text-text transition-colors">
-              {player.team.abbreviation ?? player.team.school}
-            </Link>
-            <span className="mx-2 opacity-40">/</span>
-          </>
-        )}
-        <span>{player.name}</span>
+      {/* Breadcrumb + Season selector */}
+      <div className="flex items-center justify-between gap-4 mb-8 flex-wrap">
+        <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim">
+          <Link href={withSeason('/', SEASON)} className="hover:text-text transition-colors">
+            Conference
+          </Link>
+          <span className="mx-2 opacity-40">/</span>
+          {player.team && (
+            <>
+              <Link
+                href={withSeason(`/teams/${player.team.id}`, SEASON)}
+                className="hover:text-text transition-colors"
+              >
+                {player.team.abbreviation ?? player.team.school}
+              </Link>
+              <span className="mx-2 opacity-40">/</span>
+            </>
+          )}
+          <span>{player.name}</span>
+        </div>
+        <SeasonSelector season={SEASON} />
       </div>
 
       {/* Header */}
@@ -141,12 +153,12 @@ export default async function PlayerPage({
             <span>{player.position ?? '—'}</span>
             <span className="opacity-40">·</span>
             {player.team && (
-              <Link href={`/teams/${player.team.id}`} className="hover:text-text transition-colors">
+              <Link href={withSeason(`/teams/${player.team.id}`, SEASON)} className="hover:text-text transition-colors">
                 {player.team.school}
               </Link>
             )}
             <span className="opacity-40">·</span>
-            <span>{SEASON - 1}–{String(SEASON).slice(2)}</span>
+            <span>{seasonLabel(SEASON)}</span>
           </div>
           <h1 className="display text-[56px] sm:text-[72px] leading-[0.95] tracking-tight font-medium">
             {player.name}

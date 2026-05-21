@@ -3,6 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { Prisma } from '../../../../app/generated/prisma/client';
 import { prisma } from '../../../../lib/prisma';
 import { shotDistanceFt } from '../../../../components/Court';
+import { resolveSeason } from '../../../../lib/season';
 import {
   buildMatchupData,
   runTacticalEngine,
@@ -13,7 +14,6 @@ import {
 
 export const dynamic = 'force-dynamic';
 
-const SEASON = 2025;
 const UCI_TEAM_ID = 308;
 /** Bump when brief payload/prompt shape changes (e.g. xeFG added). Stale caches are ignored. */
 const CURRENT_PROMPT_VERSION = 2;
@@ -117,9 +117,13 @@ function classifyZone(range: string | null, rawX: number, rawY: number): Zone {
   return 'mid';
 }
 
-async function buildTeamSnapshot(teamId: number, teamName: string): Promise<TeamSnapshot | null> {
+async function buildTeamSnapshot(
+  teamId: number,
+  teamName: string,
+  season: number,
+): Promise<TeamSnapshot | null> {
   const stats = await prisma.teamSeasonStats.findUnique({
-    where: { teamId_season: { teamId, season: SEASON } },
+    where: { teamId_season: { teamId, season } },
   });
   if (!stats) return null;
 
@@ -164,7 +168,7 @@ async function buildTeamSnapshot(teamId: number, teamName: string): Promise<Team
   // Opp PPG (from games)
   const ourGames = await prisma.game.findMany({
     where: {
-      season: SEASON,
+      season,
       OR: [{ homeTeamId: teamId }, { awayTeamId: teamId }],
     },
     select: { id: true, homeTeamId: true, awayTeamId: true },
@@ -201,7 +205,7 @@ async function buildTeamSnapshot(teamId: number, teamName: string): Promise<Team
       shotX: { not: null },
       shotY: { not: null },
       shotRange: { not: 'free_throw' },
-      game: { season: SEASON },
+      game: { season },
     },
     select: { shotX: true, shotY: true, shotMade: true, shotRange: true },
   });
@@ -246,10 +250,14 @@ async function buildTeamSnapshot(teamId: number, teamName: string): Promise<Team
   };
 }
 
-async function buildTopPlayers(teamId: number, limit = 8): Promise<ThreatPlayer[]> {
+async function buildTopPlayers(
+  teamId: number,
+  season: number,
+  limit = 8,
+): Promise<ThreatPlayer[]> {
   const roster = await prisma.player.findMany({
     where: { teamId },
-    include: { seasonStats: { where: { season: SEASON } } },
+    include: { seasonStats: { where: { season } } },
   });
 
   const withStats = roster
@@ -267,7 +275,7 @@ async function buildTopPlayers(teamId: number, limit = 8): Promise<ThreatPlayer[
           shotX: { not: null },
           shotY: { not: null },
           shotRange: { not: 'free_throw' },
-          game: { season: SEASON },
+          game: { season },
         },
         select: { playerId: true, shotMade: true, shotRange: true, shotX: true, shotY: true },
       })
@@ -285,7 +293,7 @@ async function buildTopPlayers(teamId: number, limit = 8): Promise<ThreatPlayer[
   const xefgRows =
     playerIds.length > 0
       ? await prisma.playerXeFG.findMany({
-          where: { playerId: { in: playerIds }, season: SEASON },
+          where: { playerId: { in: playerIds }, season },
         })
       : [];
   const xefgByPlayer = new Map(xefgRows.map((x) => [x.playerId, x]));
@@ -316,13 +324,17 @@ async function buildTopPlayers(teamId: number, limit = 8): Promise<ThreatPlayer[
   });
 }
 
-async function attachTeamXeFG(teamId: number, snap: TeamSnapshot): Promise<TeamSnapshot> {
+async function attachTeamXeFG(
+  teamId: number,
+  season: number,
+  snap: TeamSnapshot,
+): Promise<TeamSnapshot> {
   const [off, def] = await Promise.all([
     prisma.teamXeFG.findUnique({
-      where: { teamId_season_side: { teamId, season: SEASON, side: 'offense' } },
+      where: { teamId_season_side: { teamId, season, side: 'offense' } },
     }),
     prisma.teamXeFG.findUnique({
-      where: { teamId_season_side: { teamId, season: SEASON, side: 'defense' } },
+      where: { teamId_season_side: { teamId, season, side: 'defense' } },
     }),
   ]);
   const fmtPp = (d: number | null) =>
@@ -654,19 +666,19 @@ function computeCost(input: number, output: number): number {
   return (input / 1_000_000) * 5 + (output / 1_000_000) * 25;
 }
 
-async function loadCached(teamId: number) {
+async function loadCached(teamId: number, season: number) {
   return prisma.coachBriefCache.findUnique({
     where: {
       subjectTeamId_opponentTeamId_season: {
         subjectTeamId: UCI_TEAM_ID,
         opponentTeamId: teamId,
-        season: SEASON,
+        season,
       },
     },
   });
 }
 
-async function generateAndStore(teamId: number): Promise<NextResponse> {
+async function generateAndStore(teamId: number, season: number): Promise<NextResponse> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: 'ANTHROPIC_API_KEY not configured' }, { status: 500 });
@@ -679,17 +691,17 @@ async function generateAndStore(teamId: number): Promise<NextResponse> {
   }
 
   const [opponentRaw, uciRaw, topPlayers] = await Promise.all([
-    buildTeamSnapshot(teamId, opponentTeam.school),
-    buildTeamSnapshot(UCI_TEAM_ID, uciTeam.school),
-    buildTopPlayers(teamId, 8),
+    buildTeamSnapshot(teamId, opponentTeam.school, season),
+    buildTeamSnapshot(UCI_TEAM_ID, uciTeam.school, season),
+    buildTopPlayers(teamId, season, 8),
   ]);
   if (!opponentRaw || !uciRaw) {
     return NextResponse.json({ error: 'Missing team stats' }, { status: 404 });
   }
 
   const [opponent, uci] = await Promise.all([
-    attachTeamXeFG(teamId, opponentRaw),
-    attachTeamXeFG(UCI_TEAM_ID, uciRaw),
+    attachTeamXeFG(teamId, season, opponentRaw),
+    attachTeamXeFG(UCI_TEAM_ID, season, uciRaw),
   ]);
 
   const stats: StatsPayload = {
@@ -699,7 +711,7 @@ async function generateAndStore(teamId: number): Promise<NextResponse> {
     matchupDeltas: computeMatchupDeltas(uci, opponent),
   };
 
-  const matchup = await buildMatchupData(UCI_TEAM_ID, teamId, SEASON);
+  const matchup = await buildMatchupData(UCI_TEAM_ID, teamId, season);
   const firedAll = matchup ? runTacticalEngine(matchup, { maxResults: 8 }) : [];
   const { attack: attackRules, defend: defendRules } = partitionFiredRules(firedAll);
 
@@ -751,13 +763,13 @@ async function generateAndStore(teamId: number): Promise<NextResponse> {
       subjectTeamId_opponentTeamId_season: {
         subjectTeamId: UCI_TEAM_ID,
         opponentTeamId: teamId,
-        season: SEASON,
+        season,
       },
     },
     create: {
       subjectTeamId: UCI_TEAM_ID,
       opponentTeamId: teamId,
-      season: SEASON,
+      season,
       brief: brief as unknown as Prisma.InputJsonValue,
       firedRules: firedAll as unknown as Prisma.InputJsonValue,
       stats: stats as unknown as Prisma.InputJsonValue,
@@ -805,9 +817,10 @@ export async function GET(
 
   const url = new URL(req.url);
   const force = url.searchParams.get('regenerate') === '1';
+  const season = resolveSeason({ season: url.searchParams.get('season') ?? undefined });
 
   if (!force) {
-    const row = await loadCached(teamId);
+    const row = await loadCached(teamId, season);
     if (row && (row.promptVersion ?? 1) >= CURRENT_PROMPT_VERSION) {
       return NextResponse.json({
         brief: row.brief,
@@ -826,7 +839,7 @@ export async function GET(
   }
 
   try {
-    return await generateAndStore(teamId);
+    return await generateAndStore(teamId, season);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('Coach brief generation failed:', err);
@@ -836,7 +849,7 @@ export async function GET(
 
 /** Explicit regenerate via POST — keeps `?regenerate=1` for parity. */
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ teamId: string }> },
 ) {
   const { teamId: teamIdStr } = await params;
@@ -847,8 +860,11 @@ export async function POST(
   if (teamId === UCI_TEAM_ID) {
     return NextResponse.json({ error: 'Brief is for opponents only' }, { status: 400 });
   }
+  const season = resolveSeason({
+    season: new URL(req.url).searchParams.get('season') ?? undefined,
+  });
   try {
-    return await generateAndStore(teamId);
+    return await generateAndStore(teamId, season);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('Coach brief regeneration failed:', err);

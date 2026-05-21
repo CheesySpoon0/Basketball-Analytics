@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { buildPlayerScoutingReport, SEASON } from '../../../../lib/player-scouting';
+import { buildPlayerScoutingReport } from '../../../../lib/player-scouting';
 import { getPlayerXeFGCached } from '../../../../lib/xefg';
 import { PlayerShotQualityPanel } from '../../../../components/ShotQualityPanel';
+import { SeasonSelector } from '../../../../components/SeasonSelector';
 import { prisma } from '../../../../lib/prisma';
+import { resolveSeason, seasonLabel, withSeason } from '../../../../lib/season';
 import { ShotChartView, type Shot } from '../ShotChartView';
 import type { PlayerNote } from '../../../../lib/player-scouting';
 
@@ -20,12 +22,16 @@ function num(x: number | null | undefined, d = 1): string {
 
 export default async function PlayerReportPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ playerId: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { playerId: idStr } = await params;
   const playerId = parseInt(idStr, 10);
   if (Number.isNaN(playerId)) notFound();
+
+  const SEASON = resolveSeason(await searchParams);
 
   const [report, playerXeFG] = await Promise.all([
     buildPlayerScoutingReport(playerId, SEASON),
@@ -82,26 +88,34 @@ export default async function PlayerReportPage({
 
   return (
     <main className="max-w-[1400px] mx-auto px-6 lg:px-8 py-10 lg:py-14">
-      {/* Breadcrumb */}
-      <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim mb-8">
-        <Link href="/" className="hover:text-text transition-colors">Conference</Link>
-        <span className="mx-2 opacity-40">/</span>
-        {player.team && (
-          <>
-            <Link
-              href={`/teams/${player.team.id}`}
-              className="hover:text-text transition-colors"
-            >
-              {player.team.abbreviation ?? player.team.school}
-            </Link>
-            <span className="mx-2 opacity-40">/</span>
-          </>
-        )}
-        <Link href={`/players/${player.id}`} className="hover:text-text transition-colors">
-          {player.name}
-        </Link>
-        <span className="mx-2 opacity-40">/</span>
-        <span>Report</span>
+      {/* Breadcrumb + Season selector */}
+      <div className="flex items-center justify-between gap-4 mb-8 flex-wrap">
+        <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim">
+          <Link href={withSeason('/', SEASON)} className="hover:text-text transition-colors">
+            Conference
+          </Link>
+          <span className="mx-2 opacity-40">/</span>
+          {player.team && (
+            <>
+              <Link
+                href={withSeason(`/teams/${player.team.id}`, SEASON)}
+                className="hover:text-text transition-colors"
+              >
+                {player.team.abbreviation ?? player.team.school}
+              </Link>
+              <span className="mx-2 opacity-40">/</span>
+            </>
+          )}
+          <Link
+            href={withSeason(`/players/${player.id}`, SEASON)}
+            className="hover:text-text transition-colors"
+          >
+            {player.name}
+          </Link>
+          <span className="mx-2 opacity-40">/</span>
+          <span>Report</span>
+        </div>
+        <SeasonSelector season={SEASON} />
       </div>
 
       {/* Header */}
@@ -123,14 +137,14 @@ export default async function PlayerReportPage({
             <span className="opacity-40">·</span>
             {player.team && (
               <Link
-                href={`/teams/${player.team.id}`}
+                href={withSeason(`/teams/${player.team.id}`, SEASON)}
                 className="hover:text-text transition-colors"
               >
                 {player.team.school}
               </Link>
             )}
             <span className="opacity-40">·</span>
-            <span>{SEASON - 1}–{String(SEASON).slice(2)}</span>
+            <span>{seasonLabel(SEASON)}</span>
           </div>
           <h1 className="display text-[56px] sm:text-[72px] leading-[0.95] tracking-tight font-medium">
             {player.name}
