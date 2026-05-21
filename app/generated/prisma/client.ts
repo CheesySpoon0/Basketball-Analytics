@@ -71,3 +71,18 @@ export type TeamSeasonStats = Prisma.TeamSeasonStatsModel
  * 
  */
 export type PlayerSeasonStats = Prisma.PlayerSeasonStatsModel
+/**
+ * Model CoachBriefCache
+ * 
+ */
+export type CoachBriefCache = Prisma.CoachBriefCacheModel
+/**
+ * Model PlayerXeFG
+ * 
+ */
+export type PlayerXeFG = Prisma.PlayerXeFGModel
+/**
+ * Model TeamXeFG
+ * 
+ */
+export type TeamXeFG = Prisma.TeamXeFGModel

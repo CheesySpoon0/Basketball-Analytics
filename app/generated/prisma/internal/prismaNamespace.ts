@@ -389,7 +389,10 @@ export const ModelName = {
   Game: 'Game',
   Play: 'Play',
   TeamSeasonStats: 'TeamSeasonStats',
-  PlayerSeasonStats: 'PlayerSeasonStats'
+  PlayerSeasonStats: 'PlayerSeasonStats',
+  CoachBriefCache: 'CoachBriefCache',
+  PlayerXeFG: 'PlayerXeFG',
+  TeamXeFG: 'TeamXeFG'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "team" | "player" | "game" | "play" | "teamSeasonStats" | "playerSeasonStats"
+    modelProps: "team" | "player" | "game" | "play" | "teamSeasonStats" | "playerSeasonStats" | "coachBriefCache" | "playerXeFG" | "teamXeFG"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -853,6 +856,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CoachBriefCache: {
+      payload: Prisma.$CoachBriefCachePayload<ExtArgs>
+      fields: Prisma.CoachBriefCacheFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CoachBriefCacheFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachBriefCachePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CoachBriefCacheFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachBriefCachePayload>
+        }
+        findFirst: {
+          args: Prisma.CoachBriefCacheFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachBriefCachePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CoachBriefCacheFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachBriefCachePayload>
+        }
+        findMany: {
+          args: Prisma.CoachBriefCacheFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachBriefCachePayload>[]
+        }
+        create: {
+          args: Prisma.CoachBriefCacheCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachBriefCachePayload>
+        }
+        createMany: {
+          args: Prisma.CoachBriefCacheCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CoachBriefCacheCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachBriefCachePayload>[]
+        }
+        delete: {
+          args: Prisma.CoachBriefCacheDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachBriefCachePayload>
+        }
+        update: {
+          args: Prisma.CoachBriefCacheUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachBriefCachePayload>
+        }
+        deleteMany: {
+          args: Prisma.CoachBriefCacheDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CoachBriefCacheUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CoachBriefCacheUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachBriefCachePayload>[]
+        }
+        upsert: {
+          args: Prisma.CoachBriefCacheUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachBriefCachePayload>
+        }
+        aggregate: {
+          args: Prisma.CoachBriefCacheAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCoachBriefCache>
+        }
+        groupBy: {
+          args: Prisma.CoachBriefCacheGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CoachBriefCacheGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CoachBriefCacheCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CoachBriefCacheCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlayerXeFG: {
+      payload: Prisma.$PlayerXeFGPayload<ExtArgs>
+      fields: Prisma.PlayerXeFGFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlayerXeFGFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerXeFGPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlayerXeFGFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerXeFGPayload>
+        }
+        findFirst: {
+          args: Prisma.PlayerXeFGFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerXeFGPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlayerXeFGFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerXeFGPayload>
+        }
+        findMany: {
+          args: Prisma.PlayerXeFGFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerXeFGPayload>[]
+        }
+        create: {
+          args: Prisma.PlayerXeFGCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerXeFGPayload>
+        }
+        createMany: {
+          args: Prisma.PlayerXeFGCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlayerXeFGCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerXeFGPayload>[]
+        }
+        delete: {
+          args: Prisma.PlayerXeFGDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerXeFGPayload>
+        }
+        update: {
+          args: Prisma.PlayerXeFGUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerXeFGPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlayerXeFGDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlayerXeFGUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlayerXeFGUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerXeFGPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlayerXeFGUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerXeFGPayload>
+        }
+        aggregate: {
+          args: Prisma.PlayerXeFGAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlayerXeFG>
+        }
+        groupBy: {
+          args: Prisma.PlayerXeFGGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlayerXeFGGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlayerXeFGCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlayerXeFGCountAggregateOutputType> | number
+        }
+      }
+    }
+    TeamXeFG: {
+      payload: Prisma.$TeamXeFGPayload<ExtArgs>
+      fields: Prisma.TeamXeFGFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TeamXeFGFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamXeFGPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TeamXeFGFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamXeFGPayload>
+        }
+        findFirst: {
+          args: Prisma.TeamXeFGFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamXeFGPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TeamXeFGFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamXeFGPayload>
+        }
+        findMany: {
+          args: Prisma.TeamXeFGFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamXeFGPayload>[]
+        }
+        create: {
+          args: Prisma.TeamXeFGCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamXeFGPayload>
+        }
+        createMany: {
+          args: Prisma.TeamXeFGCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TeamXeFGCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamXeFGPayload>[]
+        }
+        delete: {
+          args: Prisma.TeamXeFGDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamXeFGPayload>
+        }
+        update: {
+          args: Prisma.TeamXeFGUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamXeFGPayload>
+        }
+        deleteMany: {
+          args: Prisma.TeamXeFGDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TeamXeFGUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TeamXeFGUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamXeFGPayload>[]
+        }
+        upsert: {
+          args: Prisma.TeamXeFGUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamXeFGPayload>
+        }
+        aggregate: {
+          args: Prisma.TeamXeFGAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTeamXeFG>
+        }
+        groupBy: {
+          args: Prisma.TeamXeFGGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TeamXeFGGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TeamXeFGCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TeamXeFGCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1008,6 +1233,17 @@ export const TeamSeasonStatsScalarFieldEnum = {
   foulsTotal: 'foulsTotal',
   foulsTechnical: 'foulsTechnical',
   foulsFlagrant: 'foulsFlagrant',
+  oppFieldGoalsMade: 'oppFieldGoalsMade',
+  oppFieldGoalsAttempted: 'oppFieldGoalsAttempted',
+  oppThreePointsMade: 'oppThreePointsMade',
+  oppThreePointsAttempted: 'oppThreePointsAttempted',
+  oppFreeThrowsMade: 'oppFreeThrowsMade',
+  oppFreeThrowsAttempted: 'oppFreeThrowsAttempted',
+  oppOffensiveRebounds: 'oppOffensiveRebounds',
+  oppDefensiveRebounds: 'oppDefensiveRebounds',
+  oppTurnovers: 'oppTurnovers',
+  oppPoints: 'oppPoints',
+  oppPossessions: 'oppPossessions',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1045,12 +1281,84 @@ export const PlayerSeasonStatsScalarFieldEnum = {
 export type PlayerSeasonStatsScalarFieldEnum = (typeof PlayerSeasonStatsScalarFieldEnum)[keyof typeof PlayerSeasonStatsScalarFieldEnum]
 
 
+export const CoachBriefCacheScalarFieldEnum = {
+  id: 'id',
+  subjectTeamId: 'subjectTeamId',
+  opponentTeamId: 'opponentTeamId',
+  season: 'season',
+  brief: 'brief',
+  firedRules: 'firedRules',
+  stats: 'stats',
+  model: 'model',
+  inputTokens: 'inputTokens',
+  outputTokens: 'outputTokens',
+  costUsd: 'costUsd',
+  promptVersion: 'promptVersion',
+  generatedAt: 'generatedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CoachBriefCacheScalarFieldEnum = (typeof CoachBriefCacheScalarFieldEnum)[keyof typeof CoachBriefCacheScalarFieldEnum]
+
+
+export const PlayerXeFGScalarFieldEnum = {
+  id: 'id',
+  playerId: 'playerId',
+  season: 'season',
+  sampleSize: 'sampleSize',
+  fgPct: 'fgPct',
+  actualEfg: 'actualEfg',
+  expectedEfg: 'expectedEfg',
+  delta: 'delta',
+  byZone: 'byZone',
+  modelVersion: 'modelVersion',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PlayerXeFGScalarFieldEnum = (typeof PlayerXeFGScalarFieldEnum)[keyof typeof PlayerXeFGScalarFieldEnum]
+
+
+export const TeamXeFGScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  season: 'season',
+  side: 'side',
+  sampleSize: 'sampleSize',
+  fgPct: 'fgPct',
+  actualEfg: 'actualEfg',
+  expectedEfg: 'expectedEfg',
+  delta: 'delta',
+  byZone: 'byZone',
+  modelVersion: 'modelVersion',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type TeamXeFGScalarFieldEnum = (typeof TeamXeFGScalarFieldEnum)[keyof typeof TeamXeFGScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -1067,6 +1375,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -1135,6 +1452,20 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 /**
@@ -1253,6 +1584,9 @@ export type GlobalOmitConfig = {
   play?: Prisma.PlayOmit
   teamSeasonStats?: Prisma.TeamSeasonStatsOmit
   playerSeasonStats?: Prisma.PlayerSeasonStatsOmit
+  coachBriefCache?: Prisma.CoachBriefCacheOmit
+  playerXeFG?: Prisma.PlayerXeFGOmit
+  teamXeFG?: Prisma.TeamXeFGOmit
 }
 
 /* Types for Logging */

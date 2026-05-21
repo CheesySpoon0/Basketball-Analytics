@@ -54,6 +54,17 @@ export type TeamSeasonStatsAvgAggregateOutputType = {
   foulsTotal: number | null
   foulsTechnical: number | null
   foulsFlagrant: number | null
+  oppFieldGoalsMade: number | null
+  oppFieldGoalsAttempted: number | null
+  oppThreePointsMade: number | null
+  oppThreePointsAttempted: number | null
+  oppFreeThrowsMade: number | null
+  oppFreeThrowsAttempted: number | null
+  oppOffensiveRebounds: number | null
+  oppDefensiveRebounds: number | null
+  oppTurnovers: number | null
+  oppPoints: number | null
+  oppPossessions: number | null
 }
 
 export type TeamSeasonStatsSumAggregateOutputType = {
@@ -84,6 +95,17 @@ export type TeamSeasonStatsSumAggregateOutputType = {
   foulsTotal: number | null
   foulsTechnical: number | null
   foulsFlagrant: number | null
+  oppFieldGoalsMade: number | null
+  oppFieldGoalsAttempted: number | null
+  oppThreePointsMade: number | null
+  oppThreePointsAttempted: number | null
+  oppFreeThrowsMade: number | null
+  oppFreeThrowsAttempted: number | null
+  oppOffensiveRebounds: number | null
+  oppDefensiveRebounds: number | null
+  oppTurnovers: number | null
+  oppPoints: number | null
+  oppPossessions: number | null
 }
 
 export type TeamSeasonStatsMinAggregateOutputType = {
@@ -114,6 +136,17 @@ export type TeamSeasonStatsMinAggregateOutputType = {
   foulsTotal: number | null
   foulsTechnical: number | null
   foulsFlagrant: number | null
+  oppFieldGoalsMade: number | null
+  oppFieldGoalsAttempted: number | null
+  oppThreePointsMade: number | null
+  oppThreePointsAttempted: number | null
+  oppFreeThrowsMade: number | null
+  oppFreeThrowsAttempted: number | null
+  oppOffensiveRebounds: number | null
+  oppDefensiveRebounds: number | null
+  oppTurnovers: number | null
+  oppPoints: number | null
+  oppPossessions: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -146,6 +179,17 @@ export type TeamSeasonStatsMaxAggregateOutputType = {
   foulsTotal: number | null
   foulsTechnical: number | null
   foulsFlagrant: number | null
+  oppFieldGoalsMade: number | null
+  oppFieldGoalsAttempted: number | null
+  oppThreePointsMade: number | null
+  oppThreePointsAttempted: number | null
+  oppFreeThrowsMade: number | null
+  oppFreeThrowsAttempted: number | null
+  oppOffensiveRebounds: number | null
+  oppDefensiveRebounds: number | null
+  oppTurnovers: number | null
+  oppPoints: number | null
+  oppPossessions: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -178,6 +222,17 @@ export type TeamSeasonStatsCountAggregateOutputType = {
   foulsTotal: number
   foulsTechnical: number
   foulsFlagrant: number
+  oppFieldGoalsMade: number
+  oppFieldGoalsAttempted: number
+  oppThreePointsMade: number
+  oppThreePointsAttempted: number
+  oppFreeThrowsMade: number
+  oppFreeThrowsAttempted: number
+  oppOffensiveRebounds: number
+  oppDefensiveRebounds: number
+  oppTurnovers: number
+  oppPoints: number
+  oppPossessions: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -212,6 +267,17 @@ export type TeamSeasonStatsAvgAggregateInputType = {
   foulsTotal?: true
   foulsTechnical?: true
   foulsFlagrant?: true
+  oppFieldGoalsMade?: true
+  oppFieldGoalsAttempted?: true
+  oppThreePointsMade?: true
+  oppThreePointsAttempted?: true
+  oppFreeThrowsMade?: true
+  oppFreeThrowsAttempted?: true
+  oppOffensiveRebounds?: true
+  oppDefensiveRebounds?: true
+  oppTurnovers?: true
+  oppPoints?: true
+  oppPossessions?: true
 }
 
 export type TeamSeasonStatsSumAggregateInputType = {
@@ -242,6 +308,17 @@ export type TeamSeasonStatsSumAggregateInputType = {
   foulsTotal?: true
   foulsTechnical?: true
   foulsFlagrant?: true
+  oppFieldGoalsMade?: true
+  oppFieldGoalsAttempted?: true
+  oppThreePointsMade?: true
+  oppThreePointsAttempted?: true
+  oppFreeThrowsMade?: true
+  oppFreeThrowsAttempted?: true
+  oppOffensiveRebounds?: true
+  oppDefensiveRebounds?: true
+  oppTurnovers?: true
+  oppPoints?: true
+  oppPossessions?: true
 }
 
 export type TeamSeasonStatsMinAggregateInputType = {
@@ -272,6 +349,17 @@ export type TeamSeasonStatsMinAggregateInputType = {
   foulsTotal?: true
   foulsTechnical?: true
   foulsFlagrant?: true
+  oppFieldGoalsMade?: true
+  oppFieldGoalsAttempted?: true
+  oppThreePointsMade?: true
+  oppThreePointsAttempted?: true
+  oppFreeThrowsMade?: true
+  oppFreeThrowsAttempted?: true
+  oppOffensiveRebounds?: true
+  oppDefensiveRebounds?: true
+  oppTurnovers?: true
+  oppPoints?: true
+  oppPossessions?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -304,6 +392,17 @@ export type TeamSeasonStatsMaxAggregateInputType = {
   foulsTotal?: true
   foulsTechnical?: true
   foulsFlagrant?: true
+  oppFieldGoalsMade?: true
+  oppFieldGoalsAttempted?: true
+  oppThreePointsMade?: true
+  oppThreePointsAttempted?: true
+  oppFreeThrowsMade?: true
+  oppFreeThrowsAttempted?: true
+  oppOffensiveRebounds?: true
+  oppDefensiveRebounds?: true
+  oppTurnovers?: true
+  oppPoints?: true
+  oppPossessions?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -336,6 +435,17 @@ export type TeamSeasonStatsCountAggregateInputType = {
   foulsTotal?: true
   foulsTechnical?: true
   foulsFlagrant?: true
+  oppFieldGoalsMade?: true
+  oppFieldGoalsAttempted?: true
+  oppThreePointsMade?: true
+  oppThreePointsAttempted?: true
+  oppFreeThrowsMade?: true
+  oppFreeThrowsAttempted?: true
+  oppOffensiveRebounds?: true
+  oppDefensiveRebounds?: true
+  oppTurnovers?: true
+  oppPoints?: true
+  oppPossessions?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -455,6 +565,17 @@ export type TeamSeasonStatsGroupByOutputType = {
   foulsTotal: number | null
   foulsTechnical: number | null
   foulsFlagrant: number | null
+  oppFieldGoalsMade: number | null
+  oppFieldGoalsAttempted: number | null
+  oppThreePointsMade: number | null
+  oppThreePointsAttempted: number | null
+  oppFreeThrowsMade: number | null
+  oppFreeThrowsAttempted: number | null
+  oppOffensiveRebounds: number | null
+  oppDefensiveRebounds: number | null
+  oppTurnovers: number | null
+  oppPoints: number | null
+  oppPossessions: number | null
   createdAt: Date
   updatedAt: Date
   _count: TeamSeasonStatsCountAggregateOutputType | null
@@ -510,6 +631,17 @@ export type TeamSeasonStatsWhereInput = {
   foulsTotal?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
   foulsTechnical?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
   foulsFlagrant?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppFieldGoalsMade?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppFieldGoalsAttempted?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppThreePointsMade?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppThreePointsAttempted?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppFreeThrowsMade?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppFreeThrowsAttempted?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppOffensiveRebounds?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppDefensiveRebounds?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppTurnovers?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppPoints?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppPossessions?: Prisma.FloatNullableFilter<"TeamSeasonStats"> | number | null
   createdAt?: Prisma.DateTimeFilter<"TeamSeasonStats"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TeamSeasonStats"> | Date | string
   team?: Prisma.XOR<Prisma.TeamScalarRelationFilter, Prisma.TeamWhereInput>
@@ -543,6 +675,17 @@ export type TeamSeasonStatsOrderByWithRelationInput = {
   foulsTotal?: Prisma.SortOrderInput | Prisma.SortOrder
   foulsTechnical?: Prisma.SortOrderInput | Prisma.SortOrder
   foulsFlagrant?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppFieldGoalsMade?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppFieldGoalsAttempted?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppThreePointsMade?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppThreePointsAttempted?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppFreeThrowsMade?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppFreeThrowsAttempted?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppOffensiveRebounds?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppDefensiveRebounds?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppTurnovers?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppPoints?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppPossessions?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   team?: Prisma.TeamOrderByWithRelationInput
@@ -580,6 +723,17 @@ export type TeamSeasonStatsWhereUniqueInput = Prisma.AtLeast<{
   foulsTotal?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
   foulsTechnical?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
   foulsFlagrant?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppFieldGoalsMade?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppFieldGoalsAttempted?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppThreePointsMade?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppThreePointsAttempted?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppFreeThrowsMade?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppFreeThrowsAttempted?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppOffensiveRebounds?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppDefensiveRebounds?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppTurnovers?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppPoints?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppPossessions?: Prisma.FloatNullableFilter<"TeamSeasonStats"> | number | null
   createdAt?: Prisma.DateTimeFilter<"TeamSeasonStats"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TeamSeasonStats"> | Date | string
   team?: Prisma.XOR<Prisma.TeamScalarRelationFilter, Prisma.TeamWhereInput>
@@ -613,6 +767,17 @@ export type TeamSeasonStatsOrderByWithAggregationInput = {
   foulsTotal?: Prisma.SortOrderInput | Prisma.SortOrder
   foulsTechnical?: Prisma.SortOrderInput | Prisma.SortOrder
   foulsFlagrant?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppFieldGoalsMade?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppFieldGoalsAttempted?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppThreePointsMade?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppThreePointsAttempted?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppFreeThrowsMade?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppFreeThrowsAttempted?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppOffensiveRebounds?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppDefensiveRebounds?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppTurnovers?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppPoints?: Prisma.SortOrderInput | Prisma.SortOrder
+  oppPossessions?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TeamSeasonStatsCountOrderByAggregateInput
@@ -653,6 +818,17 @@ export type TeamSeasonStatsScalarWhereWithAggregatesInput = {
   foulsTotal?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
   foulsTechnical?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
   foulsFlagrant?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
+  oppFieldGoalsMade?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
+  oppFieldGoalsAttempted?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
+  oppThreePointsMade?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
+  oppThreePointsAttempted?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
+  oppFreeThrowsMade?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
+  oppFreeThrowsAttempted?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
+  oppOffensiveRebounds?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
+  oppDefensiveRebounds?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
+  oppTurnovers?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
+  oppPoints?: Prisma.IntNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
+  oppPossessions?: Prisma.FloatNullableWithAggregatesFilter<"TeamSeasonStats"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TeamSeasonStats"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TeamSeasonStats"> | Date | string
 }
@@ -683,6 +859,17 @@ export type TeamSeasonStatsCreateInput = {
   foulsTotal?: number | null
   foulsTechnical?: number | null
   foulsFlagrant?: number | null
+  oppFieldGoalsMade?: number | null
+  oppFieldGoalsAttempted?: number | null
+  oppThreePointsMade?: number | null
+  oppThreePointsAttempted?: number | null
+  oppFreeThrowsMade?: number | null
+  oppFreeThrowsAttempted?: number | null
+  oppOffensiveRebounds?: number | null
+  oppDefensiveRebounds?: number | null
+  oppTurnovers?: number | null
+  oppPoints?: number | null
+  oppPossessions?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   team: Prisma.TeamCreateNestedOneWithoutTeamSeasonStatsInput
@@ -716,6 +903,17 @@ export type TeamSeasonStatsUncheckedCreateInput = {
   foulsTotal?: number | null
   foulsTechnical?: number | null
   foulsFlagrant?: number | null
+  oppFieldGoalsMade?: number | null
+  oppFieldGoalsAttempted?: number | null
+  oppThreePointsMade?: number | null
+  oppThreePointsAttempted?: number | null
+  oppFreeThrowsMade?: number | null
+  oppFreeThrowsAttempted?: number | null
+  oppOffensiveRebounds?: number | null
+  oppDefensiveRebounds?: number | null
+  oppTurnovers?: number | null
+  oppPoints?: number | null
+  oppPossessions?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -746,6 +944,17 @@ export type TeamSeasonStatsUpdateInput = {
   foulsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsTechnical?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsFlagrant?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppOffensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppDefensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppTurnovers?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPossessions?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   team?: Prisma.TeamUpdateOneRequiredWithoutTeamSeasonStatsNestedInput
@@ -779,6 +988,17 @@ export type TeamSeasonStatsUncheckedUpdateInput = {
   foulsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsTechnical?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsFlagrant?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppOffensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppDefensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppTurnovers?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPossessions?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -811,6 +1031,17 @@ export type TeamSeasonStatsCreateManyInput = {
   foulsTotal?: number | null
   foulsTechnical?: number | null
   foulsFlagrant?: number | null
+  oppFieldGoalsMade?: number | null
+  oppFieldGoalsAttempted?: number | null
+  oppThreePointsMade?: number | null
+  oppThreePointsAttempted?: number | null
+  oppFreeThrowsMade?: number | null
+  oppFreeThrowsAttempted?: number | null
+  oppOffensiveRebounds?: number | null
+  oppDefensiveRebounds?: number | null
+  oppTurnovers?: number | null
+  oppPoints?: number | null
+  oppPossessions?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -841,6 +1072,17 @@ export type TeamSeasonStatsUpdateManyMutationInput = {
   foulsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsTechnical?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsFlagrant?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppOffensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppDefensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppTurnovers?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPossessions?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -873,6 +1115,17 @@ export type TeamSeasonStatsUncheckedUpdateManyInput = {
   foulsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsTechnical?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsFlagrant?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppOffensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppDefensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppTurnovers?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPossessions?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -920,6 +1173,17 @@ export type TeamSeasonStatsCountOrderByAggregateInput = {
   foulsTotal?: Prisma.SortOrder
   foulsTechnical?: Prisma.SortOrder
   foulsFlagrant?: Prisma.SortOrder
+  oppFieldGoalsMade?: Prisma.SortOrder
+  oppFieldGoalsAttempted?: Prisma.SortOrder
+  oppThreePointsMade?: Prisma.SortOrder
+  oppThreePointsAttempted?: Prisma.SortOrder
+  oppFreeThrowsMade?: Prisma.SortOrder
+  oppFreeThrowsAttempted?: Prisma.SortOrder
+  oppOffensiveRebounds?: Prisma.SortOrder
+  oppDefensiveRebounds?: Prisma.SortOrder
+  oppTurnovers?: Prisma.SortOrder
+  oppPoints?: Prisma.SortOrder
+  oppPossessions?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -952,6 +1216,17 @@ export type TeamSeasonStatsAvgOrderByAggregateInput = {
   foulsTotal?: Prisma.SortOrder
   foulsTechnical?: Prisma.SortOrder
   foulsFlagrant?: Prisma.SortOrder
+  oppFieldGoalsMade?: Prisma.SortOrder
+  oppFieldGoalsAttempted?: Prisma.SortOrder
+  oppThreePointsMade?: Prisma.SortOrder
+  oppThreePointsAttempted?: Prisma.SortOrder
+  oppFreeThrowsMade?: Prisma.SortOrder
+  oppFreeThrowsAttempted?: Prisma.SortOrder
+  oppOffensiveRebounds?: Prisma.SortOrder
+  oppDefensiveRebounds?: Prisma.SortOrder
+  oppTurnovers?: Prisma.SortOrder
+  oppPoints?: Prisma.SortOrder
+  oppPossessions?: Prisma.SortOrder
 }
 
 export type TeamSeasonStatsMaxOrderByAggregateInput = {
@@ -982,6 +1257,17 @@ export type TeamSeasonStatsMaxOrderByAggregateInput = {
   foulsTotal?: Prisma.SortOrder
   foulsTechnical?: Prisma.SortOrder
   foulsFlagrant?: Prisma.SortOrder
+  oppFieldGoalsMade?: Prisma.SortOrder
+  oppFieldGoalsAttempted?: Prisma.SortOrder
+  oppThreePointsMade?: Prisma.SortOrder
+  oppThreePointsAttempted?: Prisma.SortOrder
+  oppFreeThrowsMade?: Prisma.SortOrder
+  oppFreeThrowsAttempted?: Prisma.SortOrder
+  oppOffensiveRebounds?: Prisma.SortOrder
+  oppDefensiveRebounds?: Prisma.SortOrder
+  oppTurnovers?: Prisma.SortOrder
+  oppPoints?: Prisma.SortOrder
+  oppPossessions?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1014,6 +1300,17 @@ export type TeamSeasonStatsMinOrderByAggregateInput = {
   foulsTotal?: Prisma.SortOrder
   foulsTechnical?: Prisma.SortOrder
   foulsFlagrant?: Prisma.SortOrder
+  oppFieldGoalsMade?: Prisma.SortOrder
+  oppFieldGoalsAttempted?: Prisma.SortOrder
+  oppThreePointsMade?: Prisma.SortOrder
+  oppThreePointsAttempted?: Prisma.SortOrder
+  oppFreeThrowsMade?: Prisma.SortOrder
+  oppFreeThrowsAttempted?: Prisma.SortOrder
+  oppOffensiveRebounds?: Prisma.SortOrder
+  oppDefensiveRebounds?: Prisma.SortOrder
+  oppTurnovers?: Prisma.SortOrder
+  oppPoints?: Prisma.SortOrder
+  oppPossessions?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1046,6 +1343,17 @@ export type TeamSeasonStatsSumOrderByAggregateInput = {
   foulsTotal?: Prisma.SortOrder
   foulsTechnical?: Prisma.SortOrder
   foulsFlagrant?: Prisma.SortOrder
+  oppFieldGoalsMade?: Prisma.SortOrder
+  oppFieldGoalsAttempted?: Prisma.SortOrder
+  oppThreePointsMade?: Prisma.SortOrder
+  oppThreePointsAttempted?: Prisma.SortOrder
+  oppFreeThrowsMade?: Prisma.SortOrder
+  oppFreeThrowsAttempted?: Prisma.SortOrder
+  oppOffensiveRebounds?: Prisma.SortOrder
+  oppDefensiveRebounds?: Prisma.SortOrder
+  oppTurnovers?: Prisma.SortOrder
+  oppPoints?: Prisma.SortOrder
+  oppPossessions?: Prisma.SortOrder
 }
 
 export type TeamSeasonStatsCreateNestedManyWithoutTeamInput = {
@@ -1116,6 +1424,17 @@ export type TeamSeasonStatsCreateWithoutTeamInput = {
   foulsTotal?: number | null
   foulsTechnical?: number | null
   foulsFlagrant?: number | null
+  oppFieldGoalsMade?: number | null
+  oppFieldGoalsAttempted?: number | null
+  oppThreePointsMade?: number | null
+  oppThreePointsAttempted?: number | null
+  oppFreeThrowsMade?: number | null
+  oppFreeThrowsAttempted?: number | null
+  oppOffensiveRebounds?: number | null
+  oppDefensiveRebounds?: number | null
+  oppTurnovers?: number | null
+  oppPoints?: number | null
+  oppPossessions?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1147,6 +1466,17 @@ export type TeamSeasonStatsUncheckedCreateWithoutTeamInput = {
   foulsTotal?: number | null
   foulsTechnical?: number | null
   foulsFlagrant?: number | null
+  oppFieldGoalsMade?: number | null
+  oppFieldGoalsAttempted?: number | null
+  oppThreePointsMade?: number | null
+  oppThreePointsAttempted?: number | null
+  oppFreeThrowsMade?: number | null
+  oppFreeThrowsAttempted?: number | null
+  oppOffensiveRebounds?: number | null
+  oppDefensiveRebounds?: number | null
+  oppTurnovers?: number | null
+  oppPoints?: number | null
+  oppPossessions?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1208,6 +1538,17 @@ export type TeamSeasonStatsScalarWhereInput = {
   foulsTotal?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
   foulsTechnical?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
   foulsFlagrant?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppFieldGoalsMade?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppFieldGoalsAttempted?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppThreePointsMade?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppThreePointsAttempted?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppFreeThrowsMade?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppFreeThrowsAttempted?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppOffensiveRebounds?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppDefensiveRebounds?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppTurnovers?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppPoints?: Prisma.IntNullableFilter<"TeamSeasonStats"> | number | null
+  oppPossessions?: Prisma.FloatNullableFilter<"TeamSeasonStats"> | number | null
   createdAt?: Prisma.DateTimeFilter<"TeamSeasonStats"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TeamSeasonStats"> | Date | string
 }
@@ -1239,6 +1580,17 @@ export type TeamSeasonStatsCreateManyTeamInput = {
   foulsTotal?: number | null
   foulsTechnical?: number | null
   foulsFlagrant?: number | null
+  oppFieldGoalsMade?: number | null
+  oppFieldGoalsAttempted?: number | null
+  oppThreePointsMade?: number | null
+  oppThreePointsAttempted?: number | null
+  oppFreeThrowsMade?: number | null
+  oppFreeThrowsAttempted?: number | null
+  oppOffensiveRebounds?: number | null
+  oppDefensiveRebounds?: number | null
+  oppTurnovers?: number | null
+  oppPoints?: number | null
+  oppPossessions?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1269,6 +1621,17 @@ export type TeamSeasonStatsUpdateWithoutTeamInput = {
   foulsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsTechnical?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsFlagrant?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppOffensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppDefensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppTurnovers?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPossessions?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1300,6 +1663,17 @@ export type TeamSeasonStatsUncheckedUpdateWithoutTeamInput = {
   foulsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsTechnical?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsFlagrant?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppOffensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppDefensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppTurnovers?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPossessions?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1331,6 +1705,17 @@ export type TeamSeasonStatsUncheckedUpdateManyWithoutTeamInput = {
   foulsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsTechnical?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   foulsFlagrant?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFieldGoalsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppThreePointsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsMade?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppFreeThrowsAttempted?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppOffensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppDefensiveRebounds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppTurnovers?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  oppPossessions?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1365,6 +1750,17 @@ export type TeamSeasonStatsSelect<ExtArgs extends runtime.Types.Extensions.Inter
   foulsTotal?: boolean
   foulsTechnical?: boolean
   foulsFlagrant?: boolean
+  oppFieldGoalsMade?: boolean
+  oppFieldGoalsAttempted?: boolean
+  oppThreePointsMade?: boolean
+  oppThreePointsAttempted?: boolean
+  oppFreeThrowsMade?: boolean
+  oppFreeThrowsAttempted?: boolean
+  oppOffensiveRebounds?: boolean
+  oppDefensiveRebounds?: boolean
+  oppTurnovers?: boolean
+  oppPoints?: boolean
+  oppPossessions?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   team?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
@@ -1398,6 +1794,17 @@ export type TeamSeasonStatsSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   foulsTotal?: boolean
   foulsTechnical?: boolean
   foulsFlagrant?: boolean
+  oppFieldGoalsMade?: boolean
+  oppFieldGoalsAttempted?: boolean
+  oppThreePointsMade?: boolean
+  oppThreePointsAttempted?: boolean
+  oppFreeThrowsMade?: boolean
+  oppFreeThrowsAttempted?: boolean
+  oppOffensiveRebounds?: boolean
+  oppDefensiveRebounds?: boolean
+  oppTurnovers?: boolean
+  oppPoints?: boolean
+  oppPossessions?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   team?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
@@ -1431,6 +1838,17 @@ export type TeamSeasonStatsSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   foulsTotal?: boolean
   foulsTechnical?: boolean
   foulsFlagrant?: boolean
+  oppFieldGoalsMade?: boolean
+  oppFieldGoalsAttempted?: boolean
+  oppThreePointsMade?: boolean
+  oppThreePointsAttempted?: boolean
+  oppFreeThrowsMade?: boolean
+  oppFreeThrowsAttempted?: boolean
+  oppOffensiveRebounds?: boolean
+  oppDefensiveRebounds?: boolean
+  oppTurnovers?: boolean
+  oppPoints?: boolean
+  oppPossessions?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   team?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
@@ -1464,11 +1882,22 @@ export type TeamSeasonStatsSelectScalar = {
   foulsTotal?: boolean
   foulsTechnical?: boolean
   foulsFlagrant?: boolean
+  oppFieldGoalsMade?: boolean
+  oppFieldGoalsAttempted?: boolean
+  oppThreePointsMade?: boolean
+  oppThreePointsAttempted?: boolean
+  oppFreeThrowsMade?: boolean
+  oppFreeThrowsAttempted?: boolean
+  oppOffensiveRebounds?: boolean
+  oppDefensiveRebounds?: boolean
+  oppTurnovers?: boolean
+  oppPoints?: boolean
+  oppPossessions?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TeamSeasonStatsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "teamId" | "season" | "games" | "wins" | "losses" | "pointsTotal" | "pointsInPaint" | "pointsFastBreak" | "pointsOffTurnovers" | "fieldGoalsMade" | "fieldGoalsAttempted" | "threePointsMade" | "threePointsAttempted" | "freeThrowsMade" | "freeThrowsAttempted" | "offensiveRebounds" | "defensiveRebounds" | "totalRebounds" | "assists" | "steals" | "blocks" | "turnoversTotal" | "turnoversTeam" | "foulsTotal" | "foulsTechnical" | "foulsFlagrant" | "createdAt" | "updatedAt", ExtArgs["result"]["teamSeasonStats"]>
+export type TeamSeasonStatsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "teamId" | "season" | "games" | "wins" | "losses" | "pointsTotal" | "pointsInPaint" | "pointsFastBreak" | "pointsOffTurnovers" | "fieldGoalsMade" | "fieldGoalsAttempted" | "threePointsMade" | "threePointsAttempted" | "freeThrowsMade" | "freeThrowsAttempted" | "offensiveRebounds" | "defensiveRebounds" | "totalRebounds" | "assists" | "steals" | "blocks" | "turnoversTotal" | "turnoversTeam" | "foulsTotal" | "foulsTechnical" | "foulsFlagrant" | "oppFieldGoalsMade" | "oppFieldGoalsAttempted" | "oppThreePointsMade" | "oppThreePointsAttempted" | "oppFreeThrowsMade" | "oppFreeThrowsAttempted" | "oppOffensiveRebounds" | "oppDefensiveRebounds" | "oppTurnovers" | "oppPoints" | "oppPossessions" | "createdAt" | "updatedAt", ExtArgs["result"]["teamSeasonStats"]>
 export type TeamSeasonStatsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   team?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
 }
@@ -1512,6 +1941,17 @@ export type $TeamSeasonStatsPayload<ExtArgs extends runtime.Types.Extensions.Int
     foulsTotal: number | null
     foulsTechnical: number | null
     foulsFlagrant: number | null
+    oppFieldGoalsMade: number | null
+    oppFieldGoalsAttempted: number | null
+    oppThreePointsMade: number | null
+    oppThreePointsAttempted: number | null
+    oppFreeThrowsMade: number | null
+    oppFreeThrowsAttempted: number | null
+    oppOffensiveRebounds: number | null
+    oppDefensiveRebounds: number | null
+    oppTurnovers: number | null
+    oppPoints: number | null
+    oppPossessions: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["teamSeasonStats"]>
@@ -1965,6 +2405,17 @@ export interface TeamSeasonStatsFieldRefs {
   readonly foulsTotal: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
   readonly foulsTechnical: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
   readonly foulsFlagrant: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
+  readonly oppFieldGoalsMade: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
+  readonly oppFieldGoalsAttempted: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
+  readonly oppThreePointsMade: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
+  readonly oppThreePointsAttempted: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
+  readonly oppFreeThrowsMade: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
+  readonly oppFreeThrowsAttempted: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
+  readonly oppOffensiveRebounds: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
+  readonly oppDefensiveRebounds: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
+  readonly oppTurnovers: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
+  readonly oppPoints: Prisma.FieldRef<"TeamSeasonStats", 'Int'>
+  readonly oppPossessions: Prisma.FieldRef<"TeamSeasonStats", 'Float'>
   readonly createdAt: Prisma.FieldRef<"TeamSeasonStats", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TeamSeasonStats", 'DateTime'>
 }

@@ -33,6 +33,7 @@ model Team {
   awayGames        Game[]             @relation("AwayTeam")
   teamSeasonStats  TeamSeasonStats[]
   playerSeasonStats PlayerSeasonStats[]
+  xeFG             TeamXeFG[]
 
   @@map("teams")
 }
@@ -55,6 +56,7 @@ model Player {
   team        Team?               @relation(fields: [teamId], references: [id])
   seasonStats PlayerSeasonStats[]
   plays       Play[]
+  xeFG        PlayerXeFG[]
 
   @@map("players")
 }
@@ -116,6 +118,7 @@ model Play {
 
   @@index([gameId])
   @@index([playerId])
+  @@index([teamId, shotRange])
   @@map("plays")
 }
 
@@ -158,6 +161,19 @@ model TeamSeasonStats {
   foulsTotal     Int? @default(0)
   foulsTechnical Int? @default(0)
   foulsFlagrant  Int? @default(0)
+
+  // Opponent stats (for defensive metrics)
+  oppFieldGoalsMade        Int? @default(0)
+  oppFieldGoalsAttempted   Int? @default(0)
+  oppThreePointsMade       Int? @default(0)
+  oppThreePointsAttempted  Int? @default(0)
+  oppFreeThrowsMade        Int? @default(0)
+  oppFreeThrowsAttempted   Int? @default(0)
+  oppOffensiveRebounds     Int? @default(0)
+  oppDefensiveRebounds     Int? @default(0)
+  oppTurnovers             Int? @default(0)
+  oppPoints                Int? @default(0)
+  oppPossessions           Float? @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -202,4 +218,82 @@ model PlayerSeasonStats {
 
   @@unique([playerId, season])
   @@map("player_season_stats")
+}
+
+// Persistent cache for AI-generated coach briefs.
+// Keyed by (subjectTeamId, opponentTeamId, season). Only regenerated when
+// the user explicitly clicks "Update Brief" (?regenerate=1) — never on a
+// normal page load. brief / firedRules / stats stored as JSON blobs.
+model CoachBriefCache {
+  id              Int      @id @default(autoincrement())
+  subjectTeamId   Int
+  opponentTeamId  Int
+  season          Int
+
+  brief           Json
+  firedRules      Json
+  stats           Json?
+  model           String?
+  inputTokens     Int?
+  outputTokens    Int?
+  costUsd         Float?
+
+  // Bumped whenever the brief prompt/payload shape changes so the route can
+  // serve cached briefs only when they match the current generator version.
+  promptVersion   Int      @default(1)
+
+  generatedAt     DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([subjectTeamId, opponentTeamId, season])
+  @@map("coach_brief_cache")
+}
+
+model PlayerXeFG {
+  id              Int      @id @default(autoincrement())
+  playerId        Int
+  season          Int
+
+  sampleSize      Int
+  fgPct           Float?
+  actualEfg       Float?
+  expectedEfg     Float?
+  delta           Float?
+
+  // { rim: {sampleSize, fgPct, actualEfg, expectedEfg, delta}, mid: {...}, three: {...} }
+  byZone          Json
+
+  modelVersion    Int      @default(1)
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
+
+  player          Player   @relation(fields: [playerId], references: [id])
+
+  @@unique([playerId, season])
+  @@index([season])
+  @@map("player_xefg")
+}
+
+model TeamXeFG {
+  id              Int      @id @default(autoincrement())
+  teamId          Int
+  season          Int
+  side            String   // 'offense' | 'defense'
+
+  sampleSize      Int
+  fgPct           Float?
+  actualEfg       Float?
+  expectedEfg     Float?
+  delta           Float?
+  byZone          Json
+
+  modelVersion    Int      @default(1)
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
+
+  team            Team     @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, season, side])
+  @@index([season])
+  @@map("team_xefg")
 }

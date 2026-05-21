@@ -56,7 +56,10 @@ export const ModelName = {
   Game: 'Game',
   Play: 'Play',
   TeamSeasonStats: 'TeamSeasonStats',
-  PlayerSeasonStats: 'PlayerSeasonStats'
+  PlayerSeasonStats: 'PlayerSeasonStats',
+  CoachBriefCache: 'CoachBriefCache',
+  PlayerXeFG: 'PlayerXeFG',
+  TeamXeFG: 'TeamXeFG'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -191,6 +194,17 @@ export const TeamSeasonStatsScalarFieldEnum = {
   foulsTotal: 'foulsTotal',
   foulsTechnical: 'foulsTechnical',
   foulsFlagrant: 'foulsFlagrant',
+  oppFieldGoalsMade: 'oppFieldGoalsMade',
+  oppFieldGoalsAttempted: 'oppFieldGoalsAttempted',
+  oppThreePointsMade: 'oppThreePointsMade',
+  oppThreePointsAttempted: 'oppThreePointsAttempted',
+  oppFreeThrowsMade: 'oppFreeThrowsMade',
+  oppFreeThrowsAttempted: 'oppFreeThrowsAttempted',
+  oppOffensiveRebounds: 'oppOffensiveRebounds',
+  oppDefensiveRebounds: 'oppDefensiveRebounds',
+  oppTurnovers: 'oppTurnovers',
+  oppPoints: 'oppPoints',
+  oppPossessions: 'oppPossessions',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -228,12 +242,84 @@ export const PlayerSeasonStatsScalarFieldEnum = {
 export type PlayerSeasonStatsScalarFieldEnum = (typeof PlayerSeasonStatsScalarFieldEnum)[keyof typeof PlayerSeasonStatsScalarFieldEnum]
 
 
+export const CoachBriefCacheScalarFieldEnum = {
+  id: 'id',
+  subjectTeamId: 'subjectTeamId',
+  opponentTeamId: 'opponentTeamId',
+  season: 'season',
+  brief: 'brief',
+  firedRules: 'firedRules',
+  stats: 'stats',
+  model: 'model',
+  inputTokens: 'inputTokens',
+  outputTokens: 'outputTokens',
+  costUsd: 'costUsd',
+  promptVersion: 'promptVersion',
+  generatedAt: 'generatedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CoachBriefCacheScalarFieldEnum = (typeof CoachBriefCacheScalarFieldEnum)[keyof typeof CoachBriefCacheScalarFieldEnum]
+
+
+export const PlayerXeFGScalarFieldEnum = {
+  id: 'id',
+  playerId: 'playerId',
+  season: 'season',
+  sampleSize: 'sampleSize',
+  fgPct: 'fgPct',
+  actualEfg: 'actualEfg',
+  expectedEfg: 'expectedEfg',
+  delta: 'delta',
+  byZone: 'byZone',
+  modelVersion: 'modelVersion',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PlayerXeFGScalarFieldEnum = (typeof PlayerXeFGScalarFieldEnum)[keyof typeof PlayerXeFGScalarFieldEnum]
+
+
+export const TeamXeFGScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  season: 'season',
+  side: 'side',
+  sampleSize: 'sampleSize',
+  fgPct: 'fgPct',
+  actualEfg: 'actualEfg',
+  expectedEfg: 'expectedEfg',
+  delta: 'delta',
+  byZone: 'byZone',
+  modelVersion: 'modelVersion',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type TeamXeFGScalarFieldEnum = (typeof TeamXeFGScalarFieldEnum)[keyof typeof TeamXeFGScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -250,4 +336,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
