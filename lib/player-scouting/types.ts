@@ -9,13 +9,8 @@ export type Zone = 'rim' | 'mid' | 'three';
 export type ShotType = 'layup' | 'dunk' | 'jumper' | 'tip' | 'unknown';
 export type ThreeSubzone = 'corner' | 'above_break';
 
-export type Archetype =
-  | 'primary scorer'
-  | 'shooter'
-  | 'driver'
-  | 'big'
-  | 'connector'
-  | 'low-volume role player';
+// Archetype is now defined by the score-based classifier in archetype.ts.
+export type { Archetype } from './archetype';
 
 export type ScoutingPriority =
   | 'Must game-plan'
@@ -93,7 +88,17 @@ export interface PlayerScoutingReport {
   season: number;
   rotation: { eligible: boolean; mpg: number | null; threshold: number; reason?: string };
   scoutingPriority: ScoutingPriority;
-  role: { archetype: Archetype; summary: string };
+  role: {
+    archetype: import('./archetype').Archetype;
+    summary: string;
+    /** Secondary traits from the archetype scorer. */
+    secondary: import('./archetype').Archetype[];
+  };
+
+  /** Full deterministic tendency profile (shot diet, proxies, xeFG quality). */
+  tendencies: import('./tendencies').TendencyProfile;
+  /** Report trust level driven by sample size + coverage. */
+  confidence: import('./confidence').ConfidenceResult;
 
   stats: {
     games: number;
@@ -126,19 +131,8 @@ export interface PlayerScoutingReport {
   creation: CreationAgg;
   context: ContextAgg;
 
-  defenseProxy: {
-    spg: number;
-    bpg: number;
-    rpg: number;
-    fpg: number;
-    minutesPerGame: number | null;
-    position: string | null;
-    sizeNote: string | null;
-    /** Cautious one-line descriptor like "Likely guard/wing defender". */
-    descriptor: string;
-    /** Always true — we have no tracking data. */
-    inferred: true;
-  };
+  /** Inferred-only defensive profile (box-score + size proxies). */
+  defenseProfile: import('./defense').DefenseProfile;
 
   /** Top 2–4 prioritized notes, post dedup. */
   notes: PlayerNote[];

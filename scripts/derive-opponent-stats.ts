@@ -1,7 +1,9 @@
 import 'dotenv/config';
 import { prisma } from '../lib/prisma';
 
-const SEASON = 2025;
+// Season is parametric: `--season=YYYY` (defaults to 2025).
+const seasonArg = process.argv.find((a) => a.startsWith('--season='));
+const SEASON = seasonArg ? Number(seasonArg.split('=')[1]) : 2025;
 
 // Classify playType into categories based on audit results
 const MADE_FIELD_GOAL_TYPES = new Set([

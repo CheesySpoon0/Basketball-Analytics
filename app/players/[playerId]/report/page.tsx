@@ -80,7 +80,9 @@ export default async function PlayerReportPage({
     notes,
     liveWith,
     deny,
-    defenseProxy,
+    defenseProfile,
+    tendencies,
+    confidence,
     rotation,
     caveats,
   } = report;
@@ -128,10 +130,10 @@ export default async function PlayerReportPage({
           <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim mb-2 flex flex-wrap items-center gap-3">
             {player.jersey && <span className="tabular-nums">#{player.jersey}</span>}
             <span>{player.position ?? '—'}</span>
-            {defenseProxy.sizeNote && (
+            {defenseProfile.sizeNote && (
               <>
                 <span className="opacity-40">·</span>
-                <span>{defenseProxy.sizeNote}</span>
+                <span>{defenseProfile.sizeNote}</span>
               </>
             )}
             <span className="opacity-40">·</span>
@@ -153,19 +155,24 @@ export default async function PlayerReportPage({
             <span className="mono text-[10px] uppercase tracking-widest text-accent border border-accent px-2 py-1">
               {role.archetype}
             </span>
+            {role.secondary.map((s) => (
+              <span
+                key={s}
+                className="mono text-[10px] uppercase tracking-widest text-text-dim border border-border px-2 py-1"
+                title="Secondary trait from the archetype model"
+              >
+                {s}
+              </span>
+            ))}
             <span
               className="mono text-[10px] uppercase tracking-widest border border-border text-text px-2 py-1"
               title="How much prep this matchup deserves"
             >
               {scoutingPriority}
             </span>
-            {!rotation.eligible && (
-              <span className="mono text-[10px] uppercase tracking-widest text-text-dim border border-border px-2 py-1">
-                deep bench
-              </span>
-            )}
-            <span className="text-text-dim text-sm">{role.summary}</span>
+            <ConfidenceBadge level={confidence.level} score={confidence.score} />
           </div>
+          <div className="mt-2 text-text-dim text-sm">{role.summary}</div>
         </div>
 
         <div className="grid grid-cols-5 gap-x-6 gap-y-4 lg:min-w-[520px]">
@@ -253,6 +260,61 @@ export default async function PlayerReportPage({
         </Panel>
       </section>
 
+      {/* Tendencies — full shot diet + proxies + xeFG zone deltas */}
+      <section className="mb-10">
+        <div className="flex items-baseline justify-between mb-4 pb-3 border-b border-border">
+          <h2 className="display text-2xl font-medium">Tendencies</h2>
+          <span className="mono text-[11px] uppercase tracking-widest text-text-dim">
+            {tendencies.totalFga} tracked FGAs
+          </span>
+        </div>
+        <div className="bg-surface border border-border">
+          <table className="w-full mono tabular-nums text-sm">
+            <thead>
+              <tr className="border-b border-border text-left">
+                <th className="stat-label py-3 px-4">Shot bucket</th>
+                <th className="stat-label py-3 px-4 text-right">Att</th>
+                <th className="stat-label py-3 px-4 text-right">Share</th>
+                <th className="stat-label py-3 px-4 text-right">FG%</th>
+                <th className="stat-label py-3 px-4 text-right">xeFG Δ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <TendencyRow label="At rim" r={tendencies.rim} delta={tendencies.quality.byZone.rim.delta} />
+              <TendencyRow label="Mid-range" r={tendencies.mid} delta={tendencies.quality.byZone.mid.delta} />
+              <TendencyRow label="Three" r={tendencies.three} delta={tendencies.quality.byZone.three.delta} />
+              <TendencyRow label="— Corner 3" r={tendencies.cornerThree} indent />
+              <TendencyRow label="— Above-break 3" r={tendencies.aboveBreakThree} indent />
+              <TendencyRow label="Tip-ins (2nd chance)" r={tendencies.tip} />
+              <TendencyRow label="Transition (inferred)" r={tendencies.transition} />
+              <TendencyRow label="Late-period <30s (proxy)" r={tendencies.endOfPeriod} />
+            </tbody>
+          </table>
+          <div className="border-t border-border p-4 text-[11px] text-text-dim leading-relaxed grid sm:grid-cols-2 gap-x-8 gap-y-1">
+            <span>
+              Assisted made baskets:{' '}
+              <span className="text-text">
+                {tendencies.creation.assistedMakes}/{tendencies.creation.totalMakes}
+              </span>{' '}
+              ({pctStr(tendencies.creation.assistedMakeShare)})
+            </span>
+            <span>
+              Assisted made threes:{' '}
+              <span className="text-text">
+                {tendencies.creation.assistedThreeMakes}/{tendencies.creation.threeMakes}
+              </span>{' '}
+              ({pctStr(tendencies.creation.assistedThreeMakeShare)})
+            </span>
+            <span className="sm:col-span-2 opacity-80">
+              Assist context is from <span className="text-text">made shots only</span> — the
+              assist tag does not exist on missed shots, so this is not a true assisted-attempt
+              rate. Transition and late-period are play-sequence proxies, not shot-clock or
+              tracking data.
+            </span>
+          </div>
+        </div>
+      </section>
+
       {/* Shot quality profile */}
       {playerXeFG && playerXeFG.sampleSize >= 20 && (
         <section className="mb-10">
@@ -279,29 +341,43 @@ export default async function PlayerReportPage({
         <NoteSection title="What to live with" notes={liveWith} accent="made" />
       )}
 
-      {/* Defensive profile — clearly inferred */}
+      {/* Inferred defensive profile — clearly labeled */}
       <section className="mb-10">
         <div className="flex items-baseline justify-between mb-4 pb-3 border-b border-border">
-          <h2 className="display text-2xl font-medium">Defensive profile</h2>
+          <h2 className="display text-2xl font-medium">Inferred defensive profile</h2>
           <span className="mono text-[11px] uppercase tracking-widest text-text-dim">
-            inferred · no tracking data
+            no tracking data
           </span>
         </div>
         <div className="bg-surface border border-border p-5">
-          <p className="text-text-dim text-sm mb-4 leading-relaxed">
-            We don&apos;t store defensive matchup or tracking data. The numbers below are box-score
-            proxies only — use them as direction, not verdict.
+          <p className="text-text-dim text-sm mb-5 leading-relaxed">
+            We store no defensive matchup or tracking data. Everything below is inferred from
+            box-score production and size only — direction, not verdict.
           </p>
-          <p className="text-sm text-text mb-4">{defenseProxy.descriptor}.</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Stat label="STL/g" value={num(defenseProxy.spg)} />
-            <Stat label="BLK/g" value={num(defenseProxy.bpg)} />
-            <Stat label="REB/g" value={num(defenseProxy.rpg)} />
-            <Stat label="Fouls/g" value={num(defenseProxy.fpg)} />
+          <div className="space-y-3 mb-5">
+            <DefenseLine label="Likely guards" value={defenseProfile.likelyGuards} />
+            <DefenseLine label="Best used defending" value={defenseProfile.bestUsedDefending} />
+            <DefenseLine label="Avoid asking him to" value={defenseProfile.avoidAskingHimTo} />
           </div>
-          {defenseProxy.sizeNote && (
+          <div className="flex flex-wrap gap-2 mb-5">
+            {defenseProfile.descriptors.map((d) => (
+              <span
+                key={d}
+                className="mono text-[10px] uppercase tracking-widest border border-border text-text-dim px-2 py-1"
+              >
+                {d}
+              </span>
+            ))}
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Stat label="STL/g" value={num(defenseProfile.spg)} />
+            <Stat label="BLK/g" value={num(defenseProfile.bpg)} />
+            <Stat label="REB/g" value={num(defenseProfile.rpg)} />
+            <Stat label="Fouls/g" value={num(defenseProfile.fpg)} />
+          </div>
+          {defenseProfile.sizeNote && (
             <div className="mt-4 mono text-[11px] text-text-dim">
-              Size: {defenseProxy.sizeNote}
+              Size: {defenseProfile.sizeNote} · inferred from box-score and size only
             </div>
           )}
         </div>
@@ -351,20 +427,92 @@ export default async function PlayerReportPage({
         </div>
       </section>
 
-      {/* Caveats */}
-      {caveats.length > 0 && (
-        <section className="mb-6 bg-surface border border-border p-4">
-          <div className="mono text-[10px] uppercase tracking-[0.25em] text-text-dim mb-2">
-            Data caveats
-          </div>
-          <ul className="text-sm text-text-dim space-y-1">
+      {/* Data confidence */}
+      <section className="mb-6 bg-surface border border-border p-5">
+        <div className="flex items-baseline justify-between mb-3 pb-2 border-b border-border">
+          <h2 className="display text-lg font-medium">Data confidence</h2>
+          <ConfidenceBadge level={confidence.level} score={confidence.score} />
+        </div>
+        <ul className="text-sm text-text-dim space-y-1 mb-3">
+          {confidence.reasons.map((r, i) => (
+            <li key={i}>• {r}</li>
+          ))}
+        </ul>
+        {caveats.length > 0 && (
+          <ul className="text-sm text-text-dim space-y-1 pt-3 border-t border-border">
             {caveats.map((c, i) => (
               <li key={i}>• {c}</li>
             ))}
           </ul>
-        </section>
-      )}
+        )}
+      </section>
     </main>
+  );
+}
+
+function ConfidenceBadge({ level, score }: { level: string; score: number }) {
+  const cls =
+    level === 'high'
+      ? 'text-made border-made'
+      : level === 'medium'
+      ? 'text-text border-border'
+      : 'text-missed border-missed';
+  return (
+    <span
+      className={`mono text-[10px] uppercase tracking-widest border px-2 py-1 ${cls}`}
+      title="Report confidence from sample size, minutes, games, and xeFG coverage"
+    >
+      {level} confidence · {score}
+    </span>
+  );
+}
+
+function DefenseLine({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <div className="mono text-[10px] uppercase tracking-widest text-text-dim mb-0.5">
+        {label}
+      </div>
+      <div className="text-sm text-text leading-relaxed">{value}</div>
+    </div>
+  );
+}
+
+function TendencyRow({
+  label,
+  r,
+  delta,
+  indent,
+}: {
+  label: string;
+  r: { att: number; share: number | null; pct: number | null };
+  delta?: number | null;
+  indent?: boolean;
+}) {
+  const deltaStr =
+    delta === null || delta === undefined
+      ? '—'
+      : `${delta >= 0 ? '+' : ''}${(delta * 100).toFixed(1)}pp`;
+  const deltaCls =
+    delta === null || delta === undefined
+      ? 'text-text-dim'
+      : delta >= 0
+      ? 'text-made'
+      : 'text-missed';
+  return (
+    <tr className="border-b border-border last:border-b-0 hover:bg-surface-2 transition-colors">
+      <td className={`py-2.5 px-4 ${indent ? 'text-text-dim pl-8' : 'font-medium text-text'}`}>
+        {label}
+      </td>
+      <td className="py-2.5 px-4 text-right">{r.att}</td>
+      <td className="py-2.5 px-4 text-right text-text-dim">
+        {r.share === null ? '—' : `${(r.share * 100).toFixed(1)}%`}
+      </td>
+      <td className="py-2.5 px-4 text-right">
+        {r.pct === null ? '—' : `${(r.pct * 100).toFixed(1)}%`}
+      </td>
+      <td className={`py-2.5 px-4 text-right ${deltaCls}`}>{deltaStr}</td>
+    </tr>
   );
 }
 

@@ -225,15 +225,23 @@ export default async function TeamPage({
   const fgPct = pct(fgm, fga);
   const efg = fga > 0 ? (fgm + 0.5 * tpm) / fga : null;
   const ftr = fga > 0 ? fta / fga : null;
-  // One-sided possession estimate (own team only)
+  // One-sided possession estimate (own team only). Used for pace / ORtg.
   const possessionsTotal = fga + 0.44 * fta - oreb + to;
-  const tovPct = possessionsTotal > 0 ? to / possessionsTotal : null;
+  // TOV% uses the conventional Four Factors denominator (no OREB term) so it
+  // matches KenPom / public scouting numbers. NOT the possession estimate above.
+  const tovDenom = fga + 0.44 * fta + to;
+  const tovPct = tovDenom > 0 ? to / tovDenom : null;
   const ortg = possessionsTotal > 0 ? (pointsTotal / possessionsTotal) * 100 : null;
   const paceEst = games > 0 ? possessionsTotal / games : null;
 
-  // Defensive metrics using opponent stats
-  const oppDreb = teamStats?.oppDefensiveRebounds ?? 0;
-  const orebPct = (oreb + oppDreb) > 0 ? oreb / (oreb + oppDreb) : null;
+  // Defensive metrics using opponent stats.
+  // Opponent fields are 0 when a season's opponent-stat derivation hasn't run.
+  // Treat 0/null as MISSING so OREB% does not collapse to 100% (oreb/oreb).
+  const oppDreb =
+    teamStats?.oppDefensiveRebounds && teamStats.oppDefensiveRebounds > 0
+      ? teamStats.oppDefensiveRebounds
+      : null;
+  const orebPct = oppDreb !== null && oreb + oppDreb > 0 ? oreb / (oreb + oppDreb) : null;
   const oppPoints = teamStats?.oppPoints ?? 0;
   const oppPoss = teamStats?.oppPossessions ?? 0;
   const drtg = oppPoss > 0 ? (oppPoints / oppPoss) * 100 : null;
@@ -371,18 +379,23 @@ export default async function TeamPage({
             <StatBlock
               label="TOV%"
               value={fmtPct(tovPct)}
-              hint="TO / possessions"
+              hint="TO / (FGA + 0.44·FTA + TO)"
               estimated
             />
             <StatBlock
               label="OREB%"
-              value={fmtPct(orebPct)}
-              hint="OREB / (OREB + opp DREB)"
+              value={orebPct === null ? 'Not available' : fmtPct(orebPct)}
+              hint={
+                orebPct === null
+                  ? 'opp DREB not recorded for this season'
+                  : 'OREB / (OREB + opp DREB) · opp DREB from play-by-play'
+              }
+              unavailable={orebPct === null}
             />
             <StatBlock
-              label="FTR"
+              label="FTr%"
               value={fmtPct(ftr)}
-              hint="FTA / FGA"
+              hint="FTA per 100 FGA"
             />
             <StatBlock
               label="ORtg"
@@ -392,8 +405,13 @@ export default async function TeamPage({
             />
             <StatBlock
               label="DRtg"
-              value={fmtNum(drtg)}
-              hint="100 · opp pts / opp possessions"
+              value={drtg === null ? 'Not available' : fmtNum(drtg)}
+              hint={
+                drtg === null
+                  ? 'opp possessions not recorded for this season'
+                  : '100 · opp pts / opp possessions'
+              }
+              unavailable={drtg === null}
             />
             <StatBlock
               label="Pace"

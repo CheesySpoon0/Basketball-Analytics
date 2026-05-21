@@ -121,7 +121,10 @@ async function buildTeamProfile(teamId: number, teamName: string, season: number
   const efgPct = pctSafe(fgm + 0.5 * tpm, fga);
   const ftr = pctSafe(fta, fga);
   const poss = fga + 0.44 * fta - oreb + to;
-  const tovPct = poss > 0 ? to / poss : null;
+  // TOV% uses the conventional Four Factors denominator (no OREB term) so it
+  // matches KenPom / public numbers. NOT the possession estimate above.
+  const tovDenom = fga + 0.44 * fta + to;
+  const tovPct = tovDenom > 0 ? to / tovDenom : null;
   const ortg = poss > 0 ? (pts / poss) * 100 : null;
   const pace = games > 0 ? poss / games : null;
 
@@ -137,9 +140,18 @@ async function buildTeamProfile(teamId: number, teamName: string, season: number
   const oppEfgAllowed = pctSafe(oppFgm + 0.5 * (stats.oppThreePointsMade ?? 0), oppFga);
   const oppFtrAllowed = pctSafe(oppFta, oppFga);
   const oppOrebAllowed = pctSafe(oppOreb, oppOreb + dreb);
-  const oppForcedTovPct = oppPoss > 0 ? oppTo / oppPoss : null;
+  // Forced-TOV rate = the opponent's offensive TOV% — use the same conventional
+  // Four Factors denominator as our own tovPct for consistency.
+  const oppTovDenom = oppFga + 0.44 * oppFta + oppTo;
+  const oppForcedTovPct = oppTovDenom > 0 ? oppTo / oppTovDenom : null;
   const drtg = oppPoss > 0 ? (oppPoints / oppPoss) * 100 : null;
-  const orebPct = pctSafe(oreb, oreb + (stats.oppDefensiveRebounds ?? 0));
+  // Opp DREB is 0 when a season's opponent-stat derivation hasn't run — treat
+  // 0 as MISSING so OREB% doesn't collapse to oreb/oreb = 100%.
+  const oppDrebForOreb =
+    stats.oppDefensiveRebounds && stats.oppDefensiveRebounds > 0
+      ? stats.oppDefensiveRebounds
+      : null;
+  const orebPct = oppDrebForOreb !== null ? pctSafe(oreb, oreb + oppDrebForOreb) : null;
 
   // True defensive shot-zone allowed — derived from Play rows
   const oppZones = await buildOpponentZoneAllowed(teamId, season);

@@ -15,8 +15,13 @@ import {
 export const dynamic = 'force-dynamic';
 
 const UCI_TEAM_ID = 308;
-/** Bump when brief payload/prompt shape changes (e.g. xeFG added). Stale caches are ignored. */
-const CURRENT_PROMPT_VERSION = 2;
+/**
+ * Bump when brief payload/prompt shape changes (e.g. xeFG added). Stale caches
+ * are ignored and regenerated on next visit.
+ * v3: TOV% switched to the conventional Four Factors denominator — older
+ *     cached briefs cite the stale (higher) TOV% and must not be served.
+ */
+const CURRENT_PROMPT_VERSION = 3;
 
 // Persistent cache lives in the CoachBriefCache table. Briefs only regenerate
 // on explicit user action (?regenerate=1). The data is static right now —
@@ -144,7 +149,10 @@ async function buildTeamSnapshot(
   const efg = fga > 0 ? (fgm + 0.5 * tpm) / fga : null;
   const ftr = fga > 0 ? fta / fga : null;
   const poss = fga + 0.44 * fta - oreb + to;
-  const tovPct = poss > 0 ? to / poss : null;
+  // TOV% uses the conventional Four Factors denominator (no OREB term) so it
+  // matches KenPom / public numbers. NOT the possession estimate above.
+  const tovDenom = fga + 0.44 * fta + to;
+  const tovPct = tovDenom > 0 ? to / tovDenom : null;
   const ortg = poss > 0 ? (pointsTotal / poss) * 100 : null;
   const pace = games > 0 ? poss / games : null;
 
@@ -154,11 +162,16 @@ async function buildTeamSnapshot(
   const oppTpa = stats.oppThreePointsAttempted ?? 0;
   const oppTpm = stats.oppThreePointsMade ?? 0;
   const oppFta = stats.oppFreeThrowsAttempted ?? 0;
-  const oppDreb = stats.oppDefensiveRebounds ?? 0;
+  // Opp DREB is 0 when a season's opponent-stat derivation hasn't run — treat
+  // 0 as MISSING so OREB% doesn't collapse to oreb/oreb = 100%.
+  const oppDreb =
+    stats.oppDefensiveRebounds && stats.oppDefensiveRebounds > 0
+      ? stats.oppDefensiveRebounds
+      : null;
   const oppPoints = stats.oppPoints ?? 0;
   const oppPoss = stats.oppPossessions ?? 0;
 
-  const orebPct = (oreb + oppDreb) > 0 ? oreb / (oreb + oppDreb) : null;
+  const orebPct = oppDreb !== null && oreb + oppDreb > 0 ? oreb / (oreb + oppDreb) : null;
   const drtg = oppPoss > 0 ? (oppPoints / oppPoss) * 100 : null;
   const defEfg = oppFga > 0 ? (oppFgm + 0.5 * oppTpm) / oppFga : null;
   const defTpaRate = oppFga > 0 ? oppTpa / oppFga : null;

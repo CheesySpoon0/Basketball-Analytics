@@ -1,11 +1,18 @@
 // ============================================================================
 // Build a PlayerScoutingReport from DB rows.
 //
-// Pure deterministic logic. No AI. Designed to be fast enough to render on
-// every player page load.
+// Pure deterministic logic. No AI, no API calls. Fast enough to render on every
+// player page load. Combines:
+//   - legacy zone / shot-type / creation aggregation (kept for shot tables)
+//   - the tendency profile (tendencies.ts) merged with PlayerXeFG zone deltas
+//   - score-based archetype classification (archetype.ts)
+//   - report confidence (confidence.ts)
+//   - inferred defensive profile (defense.ts)
+//   - two rule engines: volume-based (rules.ts) + xeFG-aware (xefg-rules.ts)
 // ============================================================================
 import { prisma } from '../prisma';
 import { DEFAULT_SEASON } from '../season';
+import { getPlayerXeFGCached } from '../xefg/cache';
 import {
   classifyShotType,
   classifyThreeSubzone,
@@ -13,10 +20,15 @@ import {
   isEndOfPeriod,
 } from './shot-profile';
 import { deriveScoutingPriority, runPlayerRules, type PlayerRuleInput } from './rules';
+import { buildTendencyProfile, deriveTransitionShotIds, type TendencyPlay } from './tendencies';
+import { deriveArchetype } from './archetype';
+import { deriveConfidence } from './confidence';
+import { buildDefenseProfile } from './defense';
+import { runXeFGRules } from './xefg-rules';
 import type {
-  Archetype,
   ContextAgg,
   CreationAgg,
+  PlayerNote,
   PlayerScoutingReport,
   ShotType,
   ShotTypeAgg,
@@ -30,71 +42,30 @@ export const SEASON = DEFAULT_SEASON;
 export const ROTATION_MPG = 5;
 
 const pct = (n: number, d: number): number | null => (d > 0 ? n / d : null);
-const pctStr = (x: number | null, d = 1) => (x === null ? '—' : `${(x * 100).toFixed(d)}%`);
 
 function emptyZone(): ZoneAgg {
   return { att: 0, made: 0, pct: null, share: null };
 }
-
 function emptyShotType(): ShotTypeAgg {
   return { att: 0, made: 0, pct: null, share: null };
 }
 
-function deriveArchetype(args: {
-  ppg: number;
-  shareOfTeamFga: number | null;
-  zones: Record<Zone, ZoneAgg>;
-  position: string | null;
-  rpg: number;
-  apg: number;
-  threePct: number | null;
-  isFrontcourt: boolean;
-}): { archetype: Archetype; summary: string } {
-  const { ppg, shareOfTeamFga, zones, rpg, apg, threePct, isFrontcourt } = args;
-  const threeRate = zones.three.share;
-  const rimRate = zones.rim.share;
-
-  if (shareOfTeamFga !== null && shareOfTeamFga > 0.22 && ppg >= 14) {
-    return {
-      archetype: 'primary scorer',
-      summary: `Primary scorer — ${ppg.toFixed(1)} PPG on ${pctStr(shareOfTeamFga)} of team FGA.`,
-    };
+/** Dedup notes by id, keep highest priority, cap per bucket. */
+function pickNotes(notes: PlayerNote[], bucket: PlayerNote['bucket'], cap: number): PlayerNote[] {
+  const seen = new Set<string>();
+  const out: PlayerNote[] = [];
+  for (const n of notes.filter((x) => x.bucket === bucket).sort((a, b) => b.priority - a.priority)) {
+    if (seen.has(n.id)) continue;
+    seen.add(n.id);
+    out.push(n);
+    if (out.length >= cap) break;
   }
-  if (threeRate !== null && threeRate > 0.5 && (threePct === null || threePct > 0.30)) {
-    return {
-      archetype: 'shooter',
-      summary: `Floor-spacer — ${pctStr(threeRate)} of his shots are threes${
-        threePct !== null ? ` at ${pctStr(threePct)}` : ''
-      }.`,
-    };
-  }
-  if (isFrontcourt) {
-    return {
-      archetype: 'big',
-      summary: `Frontcourt — ${rpg.toFixed(1)} RPG${threeRate !== null && threeRate > 0.2 ? ', can pop' : ''}.`,
-    };
-  }
-  if (rimRate !== null && rimRate > 0.5) {
-    return {
-      archetype: 'driver',
-      summary: `Downhill driver — ${pctStr(rimRate)} of his shots come at the rim.`,
-    };
-  }
-  if (apg > 3 && ppg < 12) {
-    return {
-      archetype: 'connector',
-      summary: `Connector — ${apg.toFixed(1)} APG, secondary scorer.`,
-    };
-  }
-  return {
-    archetype: 'low-volume role player',
-    summary: `Role player — ${ppg.toFixed(1)} PPG, limited shot volume.`,
-  };
+  return out;
 }
 
 export async function buildPlayerScoutingReport(
   playerId: number,
-  season = SEASON,
+  season = DEFAULT_SEASON,
 ): Promise<PlayerScoutingReport | null> {
   const player = await prisma.player.findUnique({
     where: { id: playerId },
@@ -114,7 +85,7 @@ export async function buildPlayerScoutingReport(
     : null;
   const teamFga = teamFgaRow?.fieldGoalsAttempted ?? 0;
 
-  // Pull every FGA with coordinates (excludes FTs) — we need playType, playText, assisted, period, secondsRemaining.
+  // ----- player's coordinate FGAs -----
   const plays = await prisma.play.findMany({
     where: {
       playerId,
@@ -124,6 +95,8 @@ export async function buildPlayerScoutingReport(
       game: { season },
     },
     select: {
+      id: true,
+      gameId: true,
       shotMade: true,
       shotRange: true,
       shotX: true,
@@ -136,13 +109,45 @@ export async function buildPlayerScoutingReport(
     },
   });
 
-  // ----- ZONES -----
-  const zones: Record<Zone, ZoneAgg> = {
-    rim: emptyZone(),
-    mid: emptyZone(),
-    three: emptyZone(),
-  };
-  // ----- SHOT TYPES -----
+  // ----- transition proxy: pull the FULL play stream for his games -----
+  const gameIds = [...new Set(plays.map((p) => p.gameId))];
+  const playerShotIds = new Set(plays.map((p) => p.id));
+  let transitionShotIds = new Set<string>();
+  if (gameIds.length > 0) {
+    const streamPlays = await prisma.play.findMany({
+      where: { gameId: { in: gameIds } },
+      select: { id: true, gameId: true, period: true, secondsRemaining: true, playType: true },
+    });
+    const byGame = new Map<number, typeof streamPlays>();
+    for (const sp of streamPlays) {
+      const arr = byGame.get(sp.gameId) ?? [];
+      arr.push(sp);
+      byGame.set(sp.gameId, arr);
+    }
+    transitionShotIds = deriveTransitionShotIds(byGame, playerShotIds);
+  }
+
+  // ----- xeFG cache (season-keyed; carries per-zone actual vs expected) -----
+  const xefg = await getPlayerXeFGCached(playerId, season);
+
+  // ----- tendency profile -----
+  const tendencyPlays: TendencyPlay[] = plays.map((p) => ({
+    id: p.id,
+    gameId: p.gameId,
+    shotRange: p.shotRange,
+    playType: p.playType,
+    playText: p.playText,
+    shotMade: p.shotMade,
+    shotX: p.shotX,
+    shotY: p.shotY,
+    shotAssisted: p.shotAssisted,
+    period: p.period,
+    secondsRemaining: p.secondsRemaining,
+  }));
+  const tendencies = buildTendencyProfile(tendencyPlays, xefg, transitionShotIds);
+
+  // ----- legacy zone / shot-type / creation aggregation (for shot tables) -----
+  const zones: Record<Zone, ZoneAgg> = { rim: emptyZone(), mid: emptyZone(), three: emptyZone() };
   const shotTypes: Record<ShotType, ShotTypeAgg> = {
     layup: emptyShotType(),
     dunk: emptyShotType(),
@@ -150,12 +155,7 @@ export async function buildPlayerScoutingReport(
     tip: emptyShotType(),
     unknown: emptyShotType(),
   };
-  // ----- THREE SUBZONES -----
-  const threeSubzones: Record<ThreeSubzone, ZoneAgg> = {
-    corner: emptyZone(),
-    above_break: emptyZone(),
-  };
-  // ----- CREATION -----
+  const threeSubzones: Record<ThreeSubzone, ZoneAgg> = { corner: emptyZone(), above_break: emptyZone() };
   let creationTracked = 0;
   let creationAssisted = 0;
   let creationUnassisted = 0;
@@ -165,31 +165,25 @@ export async function buildPlayerScoutingReport(
   let rimTracked = 0;
   let unassistedJumper = 0;
   let jumperTracked = 0;
-  // ----- CONTEXT -----
   let endOfPeriodFga = 0;
   let endOfPeriodMade = 0;
 
   for (const p of plays) {
     const zone = classifyZone({ shotRange: p.shotRange, shotX: p.shotX!, shotY: p.shotY! });
     const stype = classifyShotType({ playType: p.playType, playText: p.playText });
-
     zones[zone].att++;
     if (p.shotMade) zones[zone].made++;
-
     shotTypes[stype].att++;
     if (p.shotMade) shotTypes[stype].made++;
-
     if (zone === 'three') {
       const sub = classifyThreeSubzone(p.shotX!, p.shotY!);
       threeSubzones[sub].att++;
       if (p.shotMade) threeSubzones[sub].made++;
     }
-
     if (p.shotAssisted !== null) {
       creationTracked++;
       if (p.shotAssisted) creationAssisted++;
       else creationUnassisted++;
-
       if (zone === 'three') {
         threeTracked++;
         if (p.shotAssisted) assistedThree++;
@@ -198,13 +192,11 @@ export async function buildPlayerScoutingReport(
         rimTracked++;
         if (p.shotAssisted) assistedRim++;
       }
-      // jumper = midrange + three (i.e. all non-rim, non-tip, non-dunk)
       if (zone === 'mid' || zone === 'three') {
         jumperTracked++;
         if (!p.shotAssisted) unassistedJumper++;
       }
     }
-
     if (isEndOfPeriod(p)) {
       endOfPeriodFga++;
       if (p.shotMade) endOfPeriodMade++;
@@ -247,7 +239,7 @@ export async function buildPlayerScoutingReport(
     endOfPeriodFgPct: pct(endOfPeriodMade, endOfPeriodFga),
   };
 
-  // ----- SEASON STATS -----
+  // ----- season stats -----
   const games = seasonStats?.games ?? 0;
   const minutes = seasonStats?.minutes ?? 0;
   const mpg = games > 0 ? minutes / games : null;
@@ -275,22 +267,9 @@ export async function buildPlayerScoutingReport(
   const astToTov = topg > 0 ? apg / topg : null;
   const threePerGame = games > 0 ? tpa / games : null;
 
-  // ----- ROLE / ARCHETYPE -----
   const pos = (player.position ?? '').toUpperCase();
-  const isFrontcourt =
-    pos.includes('C') || pos.includes('F-C') || (pos === 'F' && rpg > 6);
-  const role = deriveArchetype({
-    ppg,
-    shareOfTeamFga,
-    zones,
-    position: player.position,
-    rpg,
-    apg,
-    threePct,
-    isFrontcourt,
-  });
+  const isFrontcourt = pos.includes('C') || pos.includes('F-C') || (pos === 'F' && rpg > 6);
 
-  // ----- ROTATION -----
   const eligible = mpg !== null && mpg > ROTATION_MPG;
   const rotation = {
     eligible,
@@ -302,6 +281,33 @@ export async function buildPlayerScoutingReport(
       ? 'No minutes data — no season-stats row.'
       : `MPG ${mpg.toFixed(1)} is at or below the ${ROTATION_MPG} rotation threshold; sample is small.`,
   };
+
+  // ----- confidence -----
+  const confidence = deriveConfidence({
+    totalFga: tendencies.totalFga,
+    xefgSample: tendencies.quality.sampleSize,
+    minutesPerGame: mpg,
+    games,
+  });
+
+  // ----- archetype (score-based) -----
+  const archetypeResult = deriveArchetype({
+    ppg,
+    apg,
+    rpg,
+    topg,
+    mpg,
+    shareOfTeamFga,
+    astToTov,
+    threePct,
+    threeAttempts: tpa,
+    threePerGame,
+    efgPct,
+    ftr,
+    isFrontcourt,
+    rotationEligible: eligible,
+    tend: tendencies,
+  });
 
   const volumeCtx = {
     mpg,
@@ -315,7 +321,7 @@ export async function buildPlayerScoutingReport(
   };
   const scoutingPriority = deriveScoutingPriority(volumeCtx);
 
-  // ----- NOTES via rules engine -----
+  // ----- rule engines: volume-based + xeFG-aware -----
   const ruleInput: PlayerRuleInput = {
     name: player.name ?? `${player.firstName ?? ''} ${player.lastName ?? ''}`.trim(),
     position: player.position,
@@ -343,49 +349,52 @@ export async function buildPlayerScoutingReport(
     threeSubzones,
     creation,
   };
-  const allNotes = runPlayerRules(ruleInput);
+  const volumeNotes = runPlayerRules(ruleInput);
+  const xefgNotes = runXeFGRules({
+    name: ruleInput.name,
+    archetype: archetypeResult.archetype,
+    tend: tendencies,
+    threePct,
+    threeAttempts: tpa,
+    efgPct,
+    ftr,
+    ppg,
+    rpg,
+    topg,
+    apg,
+    astToTov,
+    shareOfTeamFga,
+    soften: confidence.soften,
+  });
+  // xeFG rules lead (richer evidence); volume rules fill remaining slots.
+  const allNotes = [...xefgNotes, ...volumeNotes];
+  const guarding = pickNotes(allNotes, 'guarding', 5);
+  const liveWith = pickNotes(allNotes, 'live_with', 4);
+  const deny = pickNotes(allNotes, 'deny', 4);
 
-  // Split by bucket; cap at 4 in guarding, 2 each elsewhere.
-  const guarding = allNotes.filter((n) => n.bucket === 'guarding').slice(0, 4);
-  const liveWith = allNotes.filter((n) => n.bucket === 'live_with').slice(0, 2);
-  const deny = allNotes.filter((n) => n.bucket === 'deny').slice(0, 2);
-
-  // ----- DEFENSIVE PROXY -----
-  let sizeNote: string | null = null;
-  if (player.height) {
-    const ft = Math.floor(player.height / 12);
-    const inch = player.height % 12;
-    sizeNote = `${ft}'${inch}"`;
-    if (player.weight) sizeNote += ` · ${player.weight} lbs`;
-  }
-  const defenseDescriptors: string[] = [];
-  if (bpg > 1.0) defenseDescriptors.push('shot-blocking presence');
-  if (spg > 1.5) defenseDescriptors.push('active hands / event creator');
-  if (bpg < 0.3 && spg < 0.7) defenseDescriptors.push('low-event defender by box-score');
-  if (rpg > 7) defenseDescriptors.push('strong defensive rebounder');
-  if (fpg > 3) defenseDescriptors.push('foul risk');
-  if (defenseDescriptors.length === 0) {
-    if (isFrontcourt) defenseDescriptors.push('Likely interior defender by size and position');
-    else defenseDescriptors.push('Likely guard/wing defender by size and position');
-  }
-  const defenseProxy = {
+  // ----- inferred defensive profile -----
+  const defenseProfile = buildDefenseProfile({
+    position: player.position,
+    heightInches: player.height,
+    weightLbs: player.weight,
+    isFrontcourt,
     spg,
     bpg,
     rpg,
     fpg,
     minutesPerGame: mpg,
-    position: player.position,
-    sizeNote,
-    descriptor: defenseDescriptors.join('; '),
-    inferred: true as const,
-  };
+  });
 
-  // ----- CAVEATS -----
+  // ----- caveats -----
   const caveats: string[] = [];
   if (!eligible && rotation.reason) caveats.push(rotation.reason);
   if (totalShots < 20) caveats.push(`Only ${totalShots} coordinate-bearing FGAs — zone splits are noisy.`);
   if (creationTracked < 10)
-    caveats.push(`Only ${creationTracked} shots with assisted/unassisted data — creation profile is preliminary.`);
+    caveats.push(
+      `Only ${creationTracked} made shots with assist data — creation profile uses made-shot context only.`,
+    );
+  if (confidence.level === 'low')
+    caveats.push('Low report confidence — guarding notes are softened and weak signals suppressed.');
 
   return {
     player: {
@@ -407,7 +416,13 @@ export async function buildPlayerScoutingReport(
     season,
     rotation,
     scoutingPriority,
-    role,
+    role: {
+      archetype: archetypeResult.archetype,
+      summary: archetypeResult.summary,
+      secondary: archetypeResult.secondary,
+    },
+    tendencies,
+    confidence,
     stats: {
       games,
       minutesPerGame: mpg,
@@ -433,7 +448,7 @@ export async function buildPlayerScoutingReport(
     threeSubzones,
     creation,
     context,
-    defenseProxy,
+    defenseProfile,
     notes: guarding,
     liveWith,
     deny,
