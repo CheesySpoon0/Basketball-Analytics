@@ -8,8 +8,12 @@ import {
   buildMatchupData,
   runTacticalEngine,
   partitionFiredRules,
+  buildOpponentAttackPlan,
+  buildMatchupRisks,
   PROXY_RULE_IDS,
   type FiredRule,
+  type AttackPrediction,
+  type MatchupRisk,
 } from '../../../../lib/tactical-engine';
 
 export const dynamic = 'force-dynamic';
@@ -18,10 +22,12 @@ const UCI_TEAM_ID = 308;
 /**
  * Bump when brief payload/prompt shape changes (e.g. xeFG added). Stale caches
  * are ignored and regenerated on next visit.
- * v3: TOV% switched to the conventional Four Factors denominator — older
- *     cached briefs cite the stale (higher) TOV% and must not be served.
+ * v3: TOV% switched to the conventional Four Factors denominator.
+ * v4: brief restructured into 8 sections — "How They Will Attack Us" is now a
+ *     predictive opponent attack plan; added Matchup Risks and Data Notes.
+ *     Old `howToDefend` field no longer produced.
  */
-const CURRENT_PROMPT_VERSION = 3;
+const CURRENT_PROMPT_VERSION = 4;
 
 // Persistent cache lives in the CoachBriefCache table. Briefs only regenerate
 // on explicit user action (?regenerate=1). The data is static right now —
@@ -91,9 +97,13 @@ type BriefSections = {
   identity: string;
   topThreats: Array<{ player: string; playerId?: number; analysis: string }>;
   howToAttack: string[];
-  /** Coach voice — what UCI does on defense. Renamed from howTheyAttackUs. */
-  howToDefend: string[];
+  /** Coach voice — what the OPPONENT will try to do against UCI. */
+  howTheyAttack: string[];
+  /** Where a UCI weakness meets an opponent strength. */
+  matchupRisks: string[];
   threeKeys: string[];
+  /** Deterministic data-confidence / limitation notes. */
+  dataNotes: string[];
   /** Raw engine output, surfaced for transparency / debugging. */
   firedRules: FiredRule[];
 };
@@ -569,15 +579,10 @@ function rulesForBrief(fired: FiredRule[]) {
   });
 }
 
-function tacticalPrompt(opponentName: string, side: 'attack' | 'defend', fired: FiredRule[]): string {
-  const direction =
-    side === 'attack'
-      ? `HOW UCI CAN ATTACK ${opponentName} — what UCI does on offense.`
-      : `HOW UCI SHOULD DEFEND ${opponentName} — what UCI does on defense.`;
-  const voiceRule =
-    side === 'attack'
-      ? `Every bullet is something UCI's OFFENSE does (push tempo, attack the paint, hunt threes). Do NOT describe what ${opponentName} does on offense.`
-      : `Every bullet is something UCI's DEFENSE does (switch, top-lock, ICE, box out, trap). Do NOT describe what ${opponentName} will do on offense — only UCI's defensive response.`;
+/** Attack-side prompt — how UCI can ATTACK the opponent, from fired rules. */
+function tacticalPrompt(opponentName: string, fired: FiredRule[]): string {
+  const direction = `HOW UCI CAN ATTACK ${opponentName} — what UCI does on offense.`;
+  const voiceRule = `Every bullet is something UCI's OFFENSE does (push tempo, attack the paint, hunt threes). Do NOT describe what ${opponentName} does on offense.`;
   return `UCI is preparing to play ${opponentName}.
 
 Our tactical engine fired these recommendations (already grounded in the season data):
@@ -605,22 +610,77 @@ async function generateHowToAttack(
       outputTokens: 0,
     };
   }
-  return callClaude(client, tacticalPrompt(stats.opponent.name, 'attack', fired));
+  return callClaude(client, tacticalPrompt(stats.opponent.name, fired));
 }
 
-async function generateHowTheyAttackUs(
+/**
+ * "How They Will Attack Us" — predictive. Built from the deterministic
+ * opponent attack plan: each prediction is what the OPPONENT will TRY to do,
+ * not a UCI defensive instruction. The LLM only rewrites grounded predictions
+ * in coach voice.
+ */
+async function generateHowTheyAttack(
   client: Anthropic,
-  stats: StatsPayload,
-  fired: FiredRule[],
+  opponentName: string,
+  plan: AttackPrediction[],
 ): Promise<SectionResult> {
-  if (fired.length === 0) {
+  if (plan.length === 0) {
     return {
-      text: '- No standout defensive priorities from current data — stick to base defensive principles.',
+      text: `- ${opponentName} shows no dominant offensive tendency in the data — expect a balanced half-court attack.`,
       inputTokens: 0,
       outputTokens: 0,
     };
   }
-  return callClaude(client, tacticalPrompt(stats.opponent.name, 'defend', fired));
+  const payload = plan.map((p) => ({
+    headline: p.headline,
+    prediction: p.detail,
+    evidence: p.evidence,
+  }));
+  const prompt = `UCI is preparing to play ${opponentName}.
+
+Our analytics engine produced this OPPONENT ATTACK PLAN — grounded predictions of what ${opponentName} will TRY to do on offense against UCI:
+
+${JSON.stringify(payload, null, 2)}
+
+Write EXACTLY ${plan.length} bullet points, one per prediction, IN THE SAME ORDER.
+
+STRICT RULES:
+- Every bullet describes what ${opponentName} (the OPPONENT) will DO on offense — "They will...", "Expect them to...". This is NOT a list of UCI defensive instructions.
+- Cite only the numbers in that prediction's 'evidence' field. Write percentages exactly as given (e.g. "42.1%", never "0.421").
+- One prediction per bullet. Do not merge, drop, or invent.
+- One sentence each, coach voice, concrete.
+
+Start each bullet with "- " on its own line. No preamble.`;
+  return callClaude(client, prompt);
+}
+
+/** "Matchup Risks" — where a UCI weakness meets an opponent strength. */
+async function generateMatchupRisks(
+  client: Anthropic,
+  opponentName: string,
+  risks: MatchupRisk[],
+): Promise<SectionResult> {
+  if (risks.length === 0) {
+    return {
+      text: '- No glaring schematic mismatch in the data — this projects as an even matchup on paper.',
+      inputTokens: 0,
+      outputTokens: 0,
+    };
+  }
+  const payload = risks.map((r) => ({
+    severity: r.severity,
+    headline: r.headline,
+    risk: r.detail,
+    evidence: r.evidence,
+  }));
+  const prompt = `UCI is preparing to play ${opponentName}.
+
+Our engine flagged these MATCHUP RISKS — spots where a UCI weakness directly meets a ${opponentName} strength:
+
+${JSON.stringify(payload, null, 2)}
+
+Write EXACTLY ${risks.length} bullet points, one per risk, IN THE SAME ORDER. Each is a one-sentence coach-voice warning naming both sides of the mismatch and citing the evidence numbers exactly as given (e.g. "36.4%", never "0.364"). Lead high-severity risks with urgency. Do not invent risks. Start each bullet with "- ". No preamble.`;
+  return callClaude(client, prompt);
 }
 
 /**
@@ -659,6 +719,39 @@ async function generateThreeKeys(client: Anthropic, stats: StatsPayload): Promis
   };
   const prompt = `Given this UCI vs ${stats.opponent.name} matchup data:\n${JSON.stringify(data, null, 2)}\n\nWrite EXACTLY 3 game-plan keys for UCI, numbered "1.", "2.", "3.". One sentence each. Each key must reference a specific stat or player from the data. Cite stats EXACTLY as they appear (e.g. "18.1%", not "0.181"). Start each line with the number. No preamble.`;
   return callClaude(client, prompt);
+}
+
+/**
+ * Deterministic data-confidence notes — NO LLM. States exactly what the brief
+ * is and is not built on so a coach knows the limits of the analysis.
+ */
+function buildDataNotes(
+  matchup: Awaited<ReturnType<typeof buildMatchupData>>,
+  opponent: TeamSnapshot,
+  topPlayers: ThreatPlayer[],
+): string[] {
+  const notes: string[] = [];
+  notes.push(
+    'Brief is generated from box-score Four Factors, play-by-play shot locations, and the xeFG shot-quality model — no defensive tracking or shot-clock data.',
+  );
+  if (!matchup) {
+    notes.push('Matchup engine had insufficient data — predictions fall back to baseline reads.');
+  } else if ((matchup.opponent.oppFgaTracked ?? 0) < 1000) {
+    notes.push(
+      `Opponent shot-zone-allowed sample is limited (${matchup.opponent.oppFgaTracked ?? 0} tracked FGAs) — defensive-zone reads are directional.`,
+    );
+  }
+  const xefgPlayers = topPlayers.filter((p) => p.actualEfg !== null).length;
+  if (xefgPlayers < topPlayers.length) {
+    notes.push(
+      `xeFG shot-quality available for ${xefgPlayers}/${topPlayers.length} top players — others use box-score only.`,
+    );
+  }
+  if (!opponent.xefgOffense) {
+    notes.push('Team xeFG offense profile unavailable for this opponent/season — shot-quality deltas omitted.');
+  }
+  notes.push('Assist context is from made shots only; "assisted" rates describe made baskets, not all attempts.');
+  return notes;
 }
 
 // ============================================================================
@@ -726,15 +819,21 @@ async function generateAndStore(teamId: number, season: number): Promise<NextRes
 
   const matchup = await buildMatchupData(UCI_TEAM_ID, teamId, season);
   const firedAll = matchup ? runTacticalEngine(matchup, { maxResults: 8 }) : [];
-  const { attack: attackRules, defend: defendRules } = partitionFiredRules(firedAll);
+  const { attack: attackRules } = partitionFiredRules(firedAll);
+
+  // Deterministic predictive payloads — built before the LLM runs.
+  const attackPlan = matchup ? buildOpponentAttackPlan(matchup) : [];
+  const matchupRiskList = matchup ? buildMatchupRisks(matchup) : [];
+  const dataNotes = buildDataNotes(matchup, opponent, topPlayers);
 
   const client = new Anthropic({ apiKey });
-  const [summary, identity, threats, attack, defense, keys] = await Promise.all([
+  const [summary, identity, threats, attack, theyAttack, risks, keys] = await Promise.all([
     generateExecutiveSummary(client, stats),
     generateIdentity(client, stats),
     generateTopThreats(client, stats),
     generateHowToAttack(client, stats, attackRules),
-    generateHowTheyAttackUs(client, stats, defendRules),
+    generateHowTheyAttack(client, stats.opponent.name, attackPlan),
+    generateMatchupRisks(client, stats.opponent.name, matchupRiskList),
     generateThreeKeys(client, stats),
   ]);
 
@@ -746,17 +845,16 @@ async function generateAndStore(teamId: number, season: number): Promise<NextRes
         ? threats.threats
         : [{ player: '', playerId: 0, analysis: 'Brief unavailable — try regenerate' }],
     howToAttack: parseBulletList(attack.text),
-    howToDefend: parseBulletList(defense.text),
+    howTheyAttack: parseBulletList(theyAttack.text),
+    matchupRisks: parseBulletList(risks.text),
     threeKeys: parseBulletList(keys.text).slice(0, 3),
+    dataNotes,
     firedRules: firedAll,
   };
 
-  const totalIn =
-    summary.inputTokens + identity.inputTokens + threats.result.inputTokens +
-    attack.inputTokens + defense.inputTokens + keys.inputTokens;
-  const totalOut =
-    summary.outputTokens + identity.outputTokens + threats.result.outputTokens +
-    attack.outputTokens + defense.outputTokens + keys.outputTokens;
+  const sections = [summary, identity, threats.result, attack, theyAttack, risks, keys];
+  const totalIn = sections.reduce((s, x) => s + x.inputTokens, 0);
+  const totalOut = sections.reduce((s, x) => s + x.outputTokens, 0);
   const usage: UsageSummary = {
     totalInputTokens: totalIn,
     totalOutputTokens: totalOut,
@@ -766,7 +864,8 @@ async function generateAndStore(teamId: number, season: number): Promise<NextRes
       identity: { inputTokens: identity.inputTokens, outputTokens: identity.outputTokens },
       topThreats: { inputTokens: threats.result.inputTokens, outputTokens: threats.result.outputTokens },
       howToAttack: { inputTokens: attack.inputTokens, outputTokens: attack.outputTokens },
-      howToDefend: { inputTokens: defense.inputTokens, outputTokens: defense.outputTokens },
+      howTheyAttack: { inputTokens: theyAttack.inputTokens, outputTokens: theyAttack.outputTokens },
+      matchupRisks: { inputTokens: risks.inputTokens, outputTokens: risks.outputTokens },
       threeKeys: { inputTokens: keys.inputTokens, outputTokens: keys.outputTokens },
     },
   };

@@ -7,11 +7,16 @@ type Brief = {
   identity: string;
   topThreats: Array<{ player: string; playerId?: number; analysis: string }>;
   howToAttack: string[];
-  /** Renamed from howTheyAttackUs — coach voice for UCI's defense. */
-  howToDefend: string[];
-  /** Legacy field name still present in some old cached briefs. */
-  howTheyAttackUs?: string[];
+  /** Predictive — what the opponent will try to do on offense. */
+  howTheyAttack?: string[];
+  /** Where a UCI weakness meets an opponent strength. */
+  matchupRisks?: string[];
+  /** Deterministic data-confidence / limitation notes. */
+  dataNotes?: string[];
   threeKeys: string[];
+  /** Legacy field names from pre-v4 cached briefs. */
+  howToDefend?: string[];
+  howTheyAttackUs?: string[];
 };
 
 type Usage = {
@@ -152,8 +157,12 @@ export function CoachBriefView({
 
   const { brief, usage, cached } = data;
   const lastUpdated = data.updatedAt ?? data.generatedAt ?? data.cachedAt ?? null;
-  // Backward-compat: legacy cache rows used `howTheyAttackUs`.
-  const defendBullets = brief.howToDefend ?? brief.howTheyAttackUs ?? [];
+  // "How They Will Attack Us" — prefer the v4 predictive field; fall back to
+  // pre-v4 cached rows (which stored UCI defensive instructions).
+  const theyAttackBullets =
+    brief.howTheyAttack ?? brief.howToDefend ?? brief.howTheyAttackUs ?? [];
+  const matchupRisks = brief.matchupRisks ?? [];
+  const dataNotes = brief.dataNotes ?? [];
 
   return (
     <div className="space-y-12">
@@ -264,13 +273,16 @@ export function CoachBriefView({
         </ul>
       </section>
 
-      {/* How UCI Should Defend */}
+      {/* How They Will Attack Us — predictive */}
       <section>
-        <h2 className="display text-2xl font-medium mb-4 pb-2 border-b border-border">
-          How UCI Should Defend
+        <h2 className="display text-2xl font-medium mb-1 pb-2 border-b border-border">
+          How {opponentName} Will Attack Us
         </h2>
+        <p className="mono text-[10px] uppercase tracking-widest text-text-dim mb-4">
+          Predicted opponent offense
+        </p>
         <ul className="space-y-3">
-          {defendBullets.map((bullet, i) => (
+          {theyAttackBullets.map((bullet, i) => (
             <li key={i} className="flex gap-3 items-start">
               <span className="mono text-[11px] text-missed tabular-nums mt-1.5 shrink-0">
                 ←
@@ -301,6 +313,41 @@ export function CoachBriefView({
           ))}
         </ol>
       </section>
+
+      {/* Matchup Risks */}
+      {matchupRisks.length > 0 && (
+        <section>
+          <h2 className="display text-2xl font-medium mb-4 pb-2 border-b border-border">
+            Matchup Risks
+          </h2>
+          <ul className="space-y-3">
+            {matchupRisks.map((risk, i) => (
+              <li
+                key={i}
+                className="bg-surface border border-border border-l-2 border-l-missed p-4"
+              >
+                <span className="text-text leading-relaxed">
+                  <MonoNumbers text={risk} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Data Confidence / Notes */}
+      {dataNotes.length > 0 && (
+        <section>
+          <h2 className="display text-lg font-medium mb-3 pb-2 border-b border-border">
+            Data Confidence & Notes
+          </h2>
+          <ul className="space-y-1.5 text-sm text-text-dim">
+            {dataNotes.map((note, i) => (
+              <li key={i}>• {note}</li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="pt-6 border-t border-border mono text-[10px] uppercase tracking-widest text-text-dim">
