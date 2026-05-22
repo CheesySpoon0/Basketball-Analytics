@@ -34,6 +34,7 @@ model Team {
   teamSeasonStats  TeamSeasonStats[]
   playerSeasonStats PlayerSeasonStats[]
   xeFG             TeamXeFG[]
+  lineupStints     LineupStint[]
 
   @@map("teams")
 }
@@ -57,6 +58,7 @@ model Player {
   seasonStats PlayerSeasonStats[]
   plays       Play[]
   xeFG        PlayerXeFG[]
+  impact      PlayerImpact[]
 
   @@map("players")
 }
@@ -79,9 +81,10 @@ model Game {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  homeTeam Team?  @relation("HomeTeam", fields: [homeTeamId], references: [id])
-  awayTeam Team?  @relation("AwayTeam", fields: [awayTeamId], references: [id])
-  plays    Play[]
+  homeTeam     Team?        @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam     Team?        @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  plays        Play[]
+  lineupStints LineupStint[]
 
   @@map("games")
 }
@@ -220,6 +223,43 @@ model PlayerSeasonStats {
   @@map("player_season_stats")
 }
 
+// RAPM (Regularized Adjusted Plus-Minus) impact metrics for players.
+// Each player has one record per season with separate offensive and defensive ratings.
+// ORAPM/DRAPM are in points per 100 possessions relative to league average.
+model PlayerImpact {
+  id              Int      @id @default(autoincrement())
+  season          Int
+  playerId        Int
+  teamId          Int?
+
+  // Primary RAPM components (points per 100 possessions)
+  orapm           Float?   // Offensive impact (actual target)
+  drapm           Float?   // Defensive impact (actual target)
+  rapm            Float?   // Net impact (orapm + drapm)
+
+  // Expected targets (xeFG-based)
+  orapmExpected   Float?
+  drapmExpected   Float?
+  rapmExpected    Float?
+
+  // Sample size and confidence
+  confidence      String?  // 'high' | 'moderate' | 'low' based on possessions
+  possessions     Int?     // Total possessions used in RAPM calculation
+  minutes         Int?     // Season minutes (from PlayerSeasonStats)
+
+  // Model metadata
+  modelVersion    Int      @default(1)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  player          Player   @relation(fields: [playerId], references: [id])
+
+  @@unique([playerId, season])
+  @@index([season])
+  @@index([teamId, season])
+  @@map("player_impact")
+}
+
 // Persistent cache for AI-generated coach briefs.
 // Keyed by (subjectTeamId, opponentTeamId, season). Only regenerated when
 // the user explicitly clicks "Update Brief" (?regenerate=1) — never on a
@@ -296,4 +336,89 @@ model TeamXeFG {
   @@unique([teamId, season, side])
   @@index([season])
   @@map("team_xefg")
+}
+
+// One on-court stint for one team in one game. A stint begins whenever the
+// lineup changes (substitution, period start) and ends at the next lineup
+// change or game end. Only "Substitution" plays are used — no onFloor data
+// is stored in the DB, so the starting 5 is inferred from the first
+// substitution wave (players who sub OUT before anyone subs IN).
+//
+// confidence levels:
+//   'full'    — starting lineup reconstructed + all subs accounted for
+//   'partial' — some subs had null playerId; gaps filled or stint dropped
+//   'gap'     — period had no sub events; lineup unknown for that stretch
+model LineupStint {
+  id               Int     @id @default(autoincrement())
+  season           Int
+  gameId           Int
+  teamId           Int
+  opponentTeamId   Int?
+
+  period           Int
+  // Seconds remaining at the START of the stint (higher = earlier in period).
+  startSeconds     Int
+  // Seconds remaining at the END of the stint (lower = later; 0 = period end).
+  endSeconds       Int
+
+  // Sorted comma-separated player IDs, e.g. "1234,2345,3456,4567,5678".
+  // Canonical: always 5 values, ascending. NULL means lineup unknown.
+  playerIds        String?
+  // MD5 of playerIds for fast groupBy queries (NULL when playerIds is NULL).
+  lineupHash       String?
+
+  // Raw box-score accumulators for this stint.
+  pointsFor        Int     @default(0)
+  pointsAgainst    Int     @default(0)
+  fga              Int     @default(0)
+  fgm              Int     @default(0)
+  threepa          Int     @default(0)
+  threepm          Int     @default(0)
+  fta              Int     @default(0)
+  ftm              Int     @default(0)
+  offRebounds      Int     @default(0)
+  defRebounds      Int     @default(0)
+  turnovers        Int     @default(0)
+  assists          Int     @default(0)
+  steals           Int     @default(0)
+  blocks           Int     @default(0)
+
+  // Possession estimates (standard Four Factors formula).
+  possessionsFor   Float?
+  possessionsAgainst Float?
+
+  // Per-100 derived metrics (NULL when possessions too low to be meaningful).
+  pppFor           Float?
+  pppAgainst       Float?
+  netPpp           Float?
+
+  // ---- Expected scoring (xeFG model) ----
+  // expectedPointsFor = sum over our FGA of P(make)*2 (twos) or P(make)*3 (threes),
+  // plus actual made FT points (FTs are not modelled by xeFG — labelled choice).
+  // expectedPointsAgainst is the same for the opponent's FGA in this stint.
+  expectedPointsFor    Float?
+  expectedPointsAgainst Float?
+  // expectedPpp = expectedPoints / possessions (per-possession, NOT per-100).
+  expectedPppFor       Float?
+  expectedPppAgainst   Float?
+  expectedNetPpp       Float?
+  // Count of FGA that had usable shot coordinates and got an xeFG prediction.
+  shotQualityFgaFor    Int    @default(0)
+  shotQualityFgaAgainst Int   @default(0)
+
+  // 'full' | 'partial' | 'gap'
+  confidence       String  @default("full")
+  // Human-readable notes (e.g., "2 subs had null playerId at 14:01")
+  notes            String?
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  game             Game    @relation(fields: [gameId], references: [id])
+  team             Team    @relation(fields: [teamId], references: [id])
+
+  @@index([gameId, teamId])
+  @@index([season, teamId])
+  @@index([lineupHash])
+  @@map("lineup_stints")
 }
