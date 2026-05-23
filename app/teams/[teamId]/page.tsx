@@ -170,7 +170,7 @@ export default async function TeamPage({
   const UCI_TEAM_ID = 308;
   const isUci = teamId === UCI_TEAM_ID;
   let uciStats = null;
-  let uciShotPlays: any[] = [];
+  let uciShotPlays: { shotRange: string | null; shotX: number | null; shotY: number | null; shotMade: boolean | null }[] = [];
 
   if (!isUci) {
     // Fetch UCI's team stats
@@ -264,7 +264,7 @@ export default async function TeamPage({
   const aggregateShots: AggregateShot[] = heatmapShots;
 
   // Process UCI zone data for matchup analysis
-  let uciZones: Record<Zone, { att: number; made: number }> = {
+  const uciZones: Record<Zone, { att: number; made: number }> = {
     rim: { att: 0, made: 0 },
     mid: { att: 0, made: 0 },
     three: { att: 0, made: 0 },
@@ -272,9 +272,11 @@ export default async function TeamPage({
 
   if (!isUci && uciShotPlays.length > 0) {
     for (const p of uciShotPlays) {
-      const z = classifyZone(p.shotRange, p.shotX!, p.shotY!);
-      uciZones[z].att++;
-      if (p.shotMade) uciZones[z].made++;
+      if (p.shotRange && p.shotX !== null && p.shotY !== null) {
+        const z = classifyZone(p.shotRange, p.shotX, p.shotY);
+        uciZones[z].att++;
+        if (p.shotMade) uciZones[z].made++;
+      }
     }
   }
 

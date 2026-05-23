@@ -9,8 +9,8 @@ import { ProjectedLineups } from './ProjectedLineups';
 export const dynamic = 'force-dynamic';
 
 interface LineupData {
-  lineupHash: string;
-  playerIds: string;
+  lineupHash: string | null;
+  playerIds: string | null;
   playerNames: string[];
   minutes: number;
   games: number;
@@ -145,8 +145,10 @@ export default async function TeamLineupsPage({
   );
 
   // Process lineup data
-  const lineups: LineupData[] = lineupDetails.map(row => {
-    const playerIds = row.playerIds.split(',').map((id: string) => parseInt(id, 10));
+  const lineups: LineupData[] = lineupDetails
+    .filter(row => row.playerIds !== null) // Filter out null playerIds
+    .map(row => {
+    const playerIds = row.playerIds!.split(',').map((id: string) => parseInt(id, 10));
     const playerNames = playerIds
       .map((id: number) => playerMap.get(id) || `Player ${id}`)
       .sort(); // Alphabetical for consistency
