@@ -55,6 +55,13 @@ function calculateConfidence(possessions: number, minutes: number | null): strin
   return "low";
 }
 
+function calculateNetRAMP(orapm: number | undefined, drapm: number | undefined): number | null {
+  // Net RAPM = ORAPM + DRAPM
+  // Return null if both components are missing
+  if (orapm === undefined && drapm === undefined) return null;
+  return (orapm || 0) + (drapm || 0);
+}
+
 async function loadPhase3CData(): Promise<Map<number, Phase3CPlayer>> {
   try {
     console.log("📁 Loading Phase 3C data (ORAPM + Net RAPM)...");
@@ -171,9 +178,9 @@ async function importRAPMData() {
       drapm: phase3d?.drapm_model_b_actual || null,
       drapmExpected: phase3d?.drapm_model_b_expected || null,
 
-      // Net RAPM from Phase 3C
-      rapm: phase3c?.rapm_actual || null,
-      rapmExpected: phase3c?.rapm_xefg || null,
+      // Net RAPM = ORAPM + DRAPM (calculated from both phases)
+      rapm: calculateNetRAMP(phase3c?.orapm_actual, phase3d?.drapm_model_b_actual),
+      rapmExpected: calculateNetRAMP(phase3c?.orapm_xefg, phase3d?.drapm_model_b_expected),
 
       confidence,
       possessions: Math.round(totalPossessions),

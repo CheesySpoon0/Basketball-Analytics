@@ -17,5 +17,12 @@ scripts/python/xefg/.venv/
 scripts/python/xefg/__pycache__/
 scripts/python/xefg/.env
 
+# RAPM Python pipeline — ignore CSV/JSON intermediates and venv
+scripts/python/rapm/data/
+scripts/python/rapm/output/
+scripts/python/rapm/.venv/
+scripts/python/rapm/__pycache__/
+scripts/python/rapm/.env
+
 # Runtime artifacts written by maintenance scripts
 scripts/output/
