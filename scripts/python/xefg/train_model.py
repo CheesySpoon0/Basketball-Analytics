@@ -46,6 +46,12 @@ PARITY_OUT = OUTPUT_DIR / "parity_sample.csv"
 
 SEED = 42
 
+# Validation mode: train on the earliest season in the CSV, test on the
+# latest, and report cross-season generalization. Does NOT write
+# coefficients.json (it is a diagnostic, not the production model).
+#   XEFG_VALIDATION=1 python train_model.py
+VALIDATION_MODE = os.environ.get("XEFG_VALIDATION", "").strip() in ("1", "true", "yes")
+
 # ============================================================================
 # Feature set
 #
@@ -133,20 +139,44 @@ def main() -> None:
 
     raw_X = df[ALL_FEATURES].astype(float).values
     y = df["made"].astype(int).values
-
-    # Fit scaler on numeric columns ONLY (first len(NUMERIC_FEATURES) columns);
-    # indicators (0/1) are passed through. We store the resulting means/stds in
-    # coefficients.json so the TS predictor can apply the same transform.
     n_num = len(NUMERIC_FEATURES)
+
+    # ------------------------------------------------------------------
+    # Train/test split. Two modes:
+    #   - VALIDATION_MODE: train on the earliest season, test on the latest
+    #     (cross-season generalization check). Requires >= 2 seasons in the CSV.
+    #   - default: random 80/20 stratified by shot zone (production training).
+    # The scaler is fit on the TRAIN rows only so the test set stays honest.
+    # ------------------------------------------------------------------
+    idx = np.arange(len(df))
+    if VALIDATION_MODE:
+        if "season" not in df.columns or df["season"].nunique() < 2:
+            raise SystemExit(
+                "XEFG_VALIDATION needs a multi-season CSV — "
+                "run: XEFG_SEASONS=2025,2026 python extract_shots.py"
+            )
+        seasons_sorted = sorted(df["season"].unique())
+        train_season = seasons_sorted[0]
+        test_season = seasons_sorted[-1]
+        idx_train = idx[df["season"].values == train_season]
+        idx_test = idx[df["season"].values == test_season]
+        print(
+            f"  VALIDATION: train on {train_season} ({len(idx_train):,}), "
+            f"test on {test_season} ({len(idx_test):,})"
+        )
+    else:
+        idx_train, idx_test = train_test_split(
+            idx, test_size=0.20, random_state=SEED, stratify=df["shot_zone"]
+        )
+        print(f"  train: {len(idx_train):,}   test: {len(idx_test):,}")
+
     scaler = StandardScaler()
-    scaler.fit(raw_X[:, :n_num])
+    scaler.fit(raw_X[idx_train][:, :n_num])
     scaled_X = raw_X.copy()
     scaled_X[:, :n_num] = scaler.transform(raw_X[:, :n_num])
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        scaled_X, y, test_size=0.20, random_state=SEED, stratify=df["shot_zone"]
-    )
-    print(f"  train: {len(X_train):,}   test: {len(X_test):,}")
+    X_train, y_train = scaled_X[idx_train], y[idx_train]
+    X_test, y_test = scaled_X[idx_test], y[idx_test]
 
     # ========================================================================
     # Logistic Regression — the production model
@@ -163,24 +193,34 @@ def main() -> None:
     lr_train_metrics = evaluate("LR train", y_train, lr_train_p)
     lr_test_metrics = evaluate("LR test", y_test, lr_test_p)
 
-    # Per-zone evaluation — re-do the split using indices so we can recover the
-    # underlying DataFrame rows for the test set.
-    print("\n  Per-zone LR test metrics:")
-    idx = np.arange(len(df))
-    idx_train, idx_test = train_test_split(
-        idx, test_size=0.20, random_state=SEED, stratify=df["shot_zone"]
-    )
+    # Per-zone evaluation — reuse the same idx_test computed above so the
+    # DataFrame rows line up exactly with the test predictions.
+    print("\n  Per-zone LR test metrics (predicted vs actual):")
     test_df = df.iloc[idx_test].copy()
     test_df["p_lr"] = lr.predict_proba(scaled_X[idx_test])[:, 1]
 
+    # rim / mid / three, plus the two three-point subzones broken out.
+    zone_groups: list[tuple[str, pd.Series]] = []
     for zone, sub in test_df.groupby("shot_zone"):
+        zone_groups.append((zone, sub.index.to_series()))
+    corner = test_df[test_df["is_corner_three"] == 1]
+    above_break = test_df[(test_df["shot_zone"] == "three") & (test_df["is_corner_three"] == 0)]
+    zone_groups.append(("corner3", corner.index.to_series()))
+    zone_groups.append(("abv-brk3", above_break.index.to_series()))
+
+    for label, _ in zone_groups:
+        sub = (
+            corner if label == "corner3"
+            else above_break if label == "abv-brk3"
+            else test_df[test_df["shot_zone"] == label]
+        )
         if len(sub) < 50:
             continue
         actual = sub["made"].mean()
         pred = sub["p_lr"].mean()
         print(
-            f"    {zone:6s}  n={len(sub):5d}  actual={actual*100:5.2f}%  "
-            f"xeFG_mean={pred*100:5.2f}%  delta={(actual-pred)*100:+5.2f}pp"
+            f"    {label:9s} n={len(sub):6d}  actual={actual*100:5.2f}%  "
+            f"predicted={pred*100:5.2f}%  delta={(actual-pred)*100:+5.2f}pp"
         )
 
     # Sanity by context
@@ -191,7 +231,7 @@ def main() -> None:
             if len(sub) < 50:
                 continue
             print(
-                f"    {ctx_col}={v} n={len(sub):5d}  "
+                f"    {ctx_col}={v} n={len(sub):6d}  "
                 f"actual={sub['made'].mean()*100:5.2f}%  "
                 f"xeFG_mean={sub['p_lr'].mean()*100:5.2f}%"
             )
@@ -222,13 +262,17 @@ def main() -> None:
         print(f"  XGBoost saved to {OUTPUT_DIR.relative_to(REPO_ROOT) / 'model.json'}")
 
     # ========================================================================
-    # Write coefficients.json (production)
+    # Write coefficients.json (production) — skipped in validation mode
     # ========================================================================
+    seasons_in_data = (
+        sorted(int(s) for s in df["season"].unique()) if "season" in df.columns else []
+    )
     payload = {
         "model": "logistic_regression",
         "trained_on": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         "model_version": 1,
         "seed": SEED,
+        "seasons": seasons_in_data,
         "n_shots": int(len(df)),
         "n_train": int(len(X_train)),
         "n_test": int(len(X_test)),
@@ -257,29 +301,35 @@ def main() -> None:
             "is_end_of_period is a coarse <30s-in-period proxy; no shot-clock data.",
         ],
     }
-    COEFS_OUT.write_text(json.dumps(payload, indent=2))
-    print(f"\nWrote coefficients to {COEFS_OUT.relative_to(REPO_ROOT)}")
+    if VALIDATION_MODE:
+        print(
+            "\n⚠️  VALIDATION mode — coefficients.json and parity sample NOT written.\n"
+            "   This run is a cross-season generalization diagnostic only."
+        )
+    else:
+        COEFS_OUT.write_text(json.dumps(payload, indent=2))
+        print(f"\nWrote coefficients to {COEFS_OUT.relative_to(REPO_ROOT)}")
 
-    # ========================================================================
-    # Parity sample for TS-side test
-    # ========================================================================
-    sample_df = df.sample(n=min(100, len(df)), random_state=SEED).copy()
-    sample_raw = sample_df[ALL_FEATURES].astype(float).values
-    sample_scaled = sample_raw.copy()
-    sample_scaled[:, :n_num] = scaler.transform(sample_raw[:, :n_num])
-    sample_df["p_lr"] = lr.predict_proba(sample_scaled)[:, 1]
-    parity_cols = [
-        "id", "shot_zone", "shotX", "shotY", "shotRange", "playType",
-        "distance_from_rim",
-        "is_corner_three", "is_above_break_three",
-        "is_layup", "is_dunk", "is_jumper", "is_tip",
-        "dist_0_3", "dist_3_10", "dist_10_22", "dist_22_plus",
-        "is_end_of_period", "is_transition", "home_team",
-        "seconds_remaining_in_period", "score_differential", "period",
-        "made", "p_lr",
-    ]
-    sample_df[parity_cols].to_csv(PARITY_OUT, index=False)
-    print(f"Wrote parity sample to {PARITY_OUT.relative_to(REPO_ROOT)}")
+        # ====================================================================
+        # Parity sample for TS-side test
+        # ====================================================================
+        sample_df = df.sample(n=min(100, len(df)), random_state=SEED).copy()
+        sample_raw = sample_df[ALL_FEATURES].astype(float).values
+        sample_scaled = sample_raw.copy()
+        sample_scaled[:, :n_num] = scaler.transform(sample_raw[:, :n_num])
+        sample_df["p_lr"] = lr.predict_proba(sample_scaled)[:, 1]
+        parity_cols = [
+            "id", "shot_zone", "shotX", "shotY", "shotRange", "playType",
+            "distance_from_rim",
+            "is_corner_three", "is_above_break_three",
+            "is_layup", "is_dunk", "is_jumper", "is_tip",
+            "dist_0_3", "dist_3_10", "dist_10_22", "dist_22_plus",
+            "is_end_of_period", "is_transition", "home_team",
+            "seconds_remaining_in_period", "score_differential", "period",
+            "made", "p_lr",
+        ]
+        sample_df[parity_cols].to_csv(PARITY_OUT, index=False)
+        print(f"Wrote parity sample to {PARITY_OUT.relative_to(REPO_ROOT)}")
 
     # ========================================================================
     # Coefficient inspection (sanity check before shipping)

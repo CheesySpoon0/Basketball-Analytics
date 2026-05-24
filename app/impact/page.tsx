@@ -5,60 +5,50 @@ import { resolveSeason, withSeason } from '../../lib/season';
 
 export const dynamic = 'force-dynamic';
 
-type SortOption = 'ppg' | 'rpg' | 'apg' | 'efg' | 'rapm' | 'orapm' | 'drapm' | 'games' | 'minutes';
+type SortOption = 'rapm' | 'orapm' | 'drapm' | 'rapmExpected' | 'possessions' | 'minutes' | 'ppg';
 
-export default async function PlayersPage({
+export default async function ImpactMetricsPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const params = await searchParams;
   const season = resolveSeason(params);
-  const sortBy = (params.sort as SortOption) || 'ppg';
+  const sortBy = (params.sort as SortOption) || 'rapm';
   const conference = params.conference as string | undefined;
-  const team = params.team as string | undefined;
   const position = params.position as string | undefined;
   const minGames = parseInt((params.minGames as string) || '5');
   const search = params.search as string | undefined;
-  const scope = params.scope as 'bigwest' | 'all' || 'all';
 
-  // Build where conditions
-  const whereConditions: any = {
-    AND: [
-      search ? {
-        name: {
-          contains: search,
-          mode: 'insensitive'
-        }
-      } : {},
-      {
-        seasonStats: {
-          some: {
-            season,
-            games: { gte: minGames }
-          }
-        }
-      },
-      position ? { position } : {},
-      team ? { teamId: parseInt(team) } : {},
-      conference ? { team: { conference } } : {},
-      scope === 'bigwest' ? {
-        team: {
-          school: {
-            in: [
-              'UC Irvine', 'UC Santa Barbara', 'Long Beach State', 'Cal Poly',
-              'Cal State Bakersfield', 'Cal State Fullerton', 'Cal State Northridge',
-              "Hawai'i", 'UC Davis', 'UC Riverside', 'UC San Diego'
-            ]
-          }
-        }
-      } : {}
-    ]
-  };
-
-  // Get players with stats and RAPM data
+  // Get players with RAPM data
   const players = await prisma.player.findMany({
-    where: whereConditions,
+    where: {
+      AND: [
+        search ? {
+          name: {
+            contains: search,
+            mode: 'insensitive'
+          }
+        } : {},
+        {
+          seasonStats: {
+            some: {
+              season,
+              games: { gte: minGames }
+            }
+          }
+        },
+        {
+          impact: {
+            some: {
+              season
+            }
+          }
+        },
+        position ? { position } : {},
+        conference ? { team: { conference } } : {}
+      ]
+    },
     include: {
       team: true,
       seasonStats: {
@@ -67,64 +57,54 @@ export default async function PlayersPage({
       impact: {
         where: { season }
       }
-    },
-    take: 500 // Limit for performance
+    }
   });
 
   // Transform and sort
   const playerData = players
     .map(player => {
       const stats = player.seasonStats[0];
-      const rapm = player.impact[0];
+      const impact = player.impact[0];
 
-      if (!stats) return null;
+      if (!stats || !impact) return null;
 
       const ppg = stats.games && stats.games > 0 ? (stats.points || 0) / stats.games : 0;
       const rpg = stats.games && stats.games > 0 ? (stats.rebounds || 0) / stats.games : 0;
       const apg = stats.games && stats.games > 0 ? (stats.assists || 0) / stats.games : 0;
-      const fgAtt = stats.fieldGoalsAttempted || 0;
-      const threePtAtt = stats.threePointsAttempted || 0;
-      const efg = fgAtt > 0 ?
-        ((stats.fieldGoalsMade || 0) + 0.5 * (stats.threePointsMade || 0)) / fgAtt : 0;
 
       return {
         id: player.id,
         name: player.name,
         position: player.position,
         team: player.team,
-        games: stats.games,
+        games: stats.games || 0,
         minutes: stats.minutes || 0,
         ppg,
         rpg,
         apg,
-        efg: efg * 100,
-        rapm: rapm?.rapm || null,
-        orapm: rapm?.orapm || null,
-        drapm: rapm?.drapm || null,
-        confidence: rapm?.confidence || null
+        rapm: impact.rapm,
+        orapm: impact.orapm,
+        drapm: impact.drapm,
+        rapmExpected: impact.rapmExpected,
+        possessions: impact.possessions,
+        confidence: impact.confidence
       };
     })
     .filter((player): player is NonNullable<typeof player> => Boolean(player))
     .sort((a, b) => {
       switch (sortBy) {
-        case 'ppg': return b.ppg - a.ppg;
-        case 'rpg': return b.rpg - a.rpg;
-        case 'apg': return b.apg - a.apg;
-        case 'efg': return b.efg - a.efg;
         case 'rapm': return (b.rapm || -999) - (a.rapm || -999);
         case 'orapm': return (b.orapm || -999) - (a.orapm || -999);
         case 'drapm': return (b.drapm || -999) - (a.drapm || -999);
-        case 'games': return (b.games || 0) - (a.games || 0);
+        case 'possessions': return (b.possessions || 0) - (a.possessions || 0);
         case 'minutes': return (b.minutes || 0) - (a.minutes || 0);
-        default: return b.ppg - a.ppg;
+        case 'ppg': return (b.ppg || 0) - (a.ppg || 0);
+        default: return (b.rapm || -999) - (a.rapm || -999);
       }
     });
 
-  // Get filter options
   const conferences = [...new Set(players.map(p => p.team?.conference).filter((conf): conf is string => Boolean(conf)))].sort();
   const positions = [...new Set(players.map(p => p.position).filter((pos): pos is string => Boolean(pos)))].sort();
-  const teamsForFilter = [...new Set(players.map(p => p.team).filter((team): team is NonNullable<typeof team> => Boolean(team)))]
-    .sort((a, b) => a.school.localeCompare(b.school));
 
   return (
     <main className="max-w-[1400px] mx-auto px-6 lg:px-8 py-8 lg:py-12">
@@ -132,46 +112,50 @@ export default async function PlayersPage({
       <div className="flex items-center justify-between gap-4 mb-8 flex-wrap">
         <div>
           <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim mb-2">
-            Player Database
+            Player Impact Analysis
           </div>
           <h1 className="display text-[44px] sm:text-[56px] leading-[0.95] tracking-tight font-medium">
-            Players
+            RAPM Leaderboards
           </h1>
           <p className="text-text-dim mt-4 max-w-2xl">
-            Search and filter players across all D1 programs. View traditional stats, advanced impact metrics,
-            and individual player pages with shot charts and detailed analysis.
+            Regularized Adjusted Plus-Minus measures individual player impact in points per 100 possessions.
+            Filter and sort players by offensive, defensive, and total impact metrics.
           </p>
         </div>
         <SeasonSelector season={season} />
       </div>
 
-      {/* Scope Toggle */}
-      <div className="flex gap-2 mb-6">
-        <Link
-          href={`?${new URLSearchParams({ ...params, scope: 'all' }).toString()}`}
-          className={`px-4 py-2 text-sm border transition-colors ${
-            scope === 'all'
-              ? 'border-accent text-accent bg-accent/10'
-              : 'border-border text-text-dim hover:border-accent/50'
-          }`}
-        >
-          All D1 ({playerData.length})
-        </Link>
-        <Link
-          href={`?${new URLSearchParams({ ...params, scope: 'bigwest' }).toString()}`}
-          className={`px-4 py-2 text-sm border transition-colors ${
-            scope === 'bigwest'
-              ? 'border-accent text-accent bg-accent/10'
-              : 'border-border text-text-dim hover:border-accent/50'
-          }`}
-        >
-          Big West Only
-        </Link>
+      {/* RAPM Explanation */}
+      <div className="bg-surface-2/50 border border-border p-6 mb-8">
+        <h2 className="display text-xl font-medium mb-4">Understanding RAPM</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+          <div>
+            <h3 className="font-medium text-blue-400 mb-2">ORAPM (Offensive)</h3>
+            <p className="text-text-dim leading-relaxed">
+              Points per 100 possessions added when the player's team has the ball.
+              Positive values indicate the player helps their offense score more efficiently.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-medium text-red-400 mb-2">DRAPM (Defensive)</h3>
+            <p className="text-text-dim leading-relaxed">
+              Points per 100 possessions prevented when opponents have the ball.
+              Positive values indicate the player helps their defense prevent scoring.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-medium text-accent mb-2">Net RAPM (Total)</h3>
+            <p className="text-text-dim leading-relaxed">
+              Combined offensive and defensive impact. The total points per 100 possessions
+              added by the player across both ends of the floor.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Filters */}
       <div className="bg-surface border border-border p-6 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           {/* Search */}
           <div>
             <label className="stat-label mb-2 block">Search Player</label>
@@ -205,38 +189,12 @@ export default async function PlayersPage({
                 } else {
                   url.searchParams.delete('conference');
                 }
-                url.searchParams.delete('team'); // Reset team filter when changing conference
                 window.location.href = url.toString();
               }}
             >
               <option value="">All Conferences</option>
               {conferences.map(conf => (
                 <option key={conf} value={conf}>{conf}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Team Filter */}
-          <div>
-            <label className="stat-label mb-2 block">Team</label>
-            <select
-              defaultValue={team || ''}
-              className="w-full bg-surface-2 border border-border px-3 py-2 text-sm"
-              onChange={(e) => {
-                const url = new URL(window.location.href);
-                if (e.target.value) {
-                  url.searchParams.set('team', e.target.value);
-                } else {
-                  url.searchParams.delete('team');
-                }
-                window.location.href = url.toString();
-              }}
-            >
-              <option value="">All Teams</option>
-              {teamsForFilter.map(t => (
-                <option key={t.id} value={t.id.toString()}>
-                  {t.abbreviation || t.school}
-                </option>
               ))}
             </select>
           </div>
@@ -289,14 +247,11 @@ export default async function PlayersPage({
         <div className="flex flex-wrap gap-2">
           <span className="stat-label mr-3">Sort by:</span>
           {[
-            { value: 'ppg', label: 'PPG' },
-            { value: 'rpg', label: 'RPG' },
-            { value: 'apg', label: 'APG' },
-            { value: 'efg', label: 'eFG%' },
             { value: 'rapm', label: 'Net RAPM' },
             { value: 'orapm', label: 'ORAPM' },
             { value: 'drapm', label: 'DRAPM' },
-            { value: 'games', label: 'Games' }
+            { value: 'possessions', label: 'Sample Size' },
+            { value: 'ppg', label: 'PPG' }
           ].map(option => (
             <Link
               key={option.value}
@@ -313,7 +268,7 @@ export default async function PlayersPage({
         </div>
       </div>
 
-      {/* Results Table */}
+      {/* Results */}
       <div className="bg-surface border border-border">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -322,17 +277,16 @@ export default async function PlayersPage({
                 <th className="stat-label py-3 px-4">Player</th>
                 <th className="stat-label py-3 px-4">Team</th>
                 <th className="stat-label py-3 px-4">Pos</th>
-                <th className="stat-label py-3 px-4 text-right">G</th>
+                <th className="stat-label py-3 px-4 text-right">Games</th>
                 <th className="stat-label py-3 px-4 text-right">PPG</th>
-                <th className="stat-label py-3 px-4 text-right">RPG</th>
-                <th className="stat-label py-3 px-4 text-right">APG</th>
-                <th className="stat-label py-3 px-4 text-right">eFG%</th>
-                <th className="stat-label py-3 px-4 text-right">RAPM</th>
-                <th className="stat-label py-3 px-4 text-right">Conf.</th>
+                <th className="stat-label py-3 px-4 text-right">Net RAPM</th>
+                <th className="stat-label py-3 px-4 text-right">ORAPM</th>
+                <th className="stat-label py-3 px-4 text-right">DRAPM</th>
+                <th className="stat-label py-3 px-4 text-right">Confidence</th>
               </tr>
             </thead>
             <tbody>
-              {playerData.map((player, index) => (
+              {playerData.slice(0, 100).map((player, index) => (
                 <tr key={player.id} className="border-b border-border hover:bg-surface-2 transition-colors">
                   <td className="py-3 px-4">
                     <Link
@@ -342,22 +296,19 @@ export default async function PlayersPage({
                       {player.name}
                     </Link>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4 text-text-dim">
                     {player.team ? (
                       <Link
                         href={withSeason(`/teams/${player.team.id}`, season)}
-                        className="text-text-dim hover:text-accent transition-colors text-xs"
+                        className="hover:text-accent transition-colors"
                       >
                         {player.team.abbreviation || player.team.school}
                       </Link>
                     ) : '—'}
                   </td>
-                  <td className="py-3 px-4 text-text-dim text-xs">{player.position || '—'}</td>
-                  <td className="py-3 px-4 text-right mono tabular-nums text-xs">{player.games}</td>
+                  <td className="py-3 px-4 text-text-dim">{player.position || '—'}</td>
+                  <td className="py-3 px-4 text-right mono tabular-nums">{player.games}</td>
                   <td className="py-3 px-4 text-right mono tabular-nums">{player.ppg.toFixed(1)}</td>
-                  <td className="py-3 px-4 text-right mono tabular-nums">{player.rpg.toFixed(1)}</td>
-                  <td className="py-3 px-4 text-right mono tabular-nums">{player.apg.toFixed(1)}</td>
-                  <td className="py-3 px-4 text-right mono tabular-nums">{player.efg.toFixed(1)}</td>
                   <td className="py-3 px-4 text-right mono tabular-nums">
                     {player.rapm !== null ? (
                       <span className={player.rapm >= 0 ? 'text-[var(--made)]' : 'text-[var(--missed)]'}>
@@ -367,8 +318,32 @@ export default async function PlayersPage({
                       <span className="text-text-dim">—</span>
                     )}
                   </td>
-                  <td className="py-3 px-4 text-right text-xs text-text-dim">
-                    {player.team?.conference || '—'}
+                  <td className="py-3 px-4 text-right mono tabular-nums">
+                    {player.orapm !== null ? (
+                      <span className={player.orapm >= 0 ? 'text-[var(--made)]' : 'text-[var(--missed)]'}>
+                        {player.orapm >= 0 ? '+' : ''}{player.orapm.toFixed(1)}
+                      </span>
+                    ) : (
+                      <span className="text-text-dim">—</span>
+                    )}
+                  </td>
+                  <td className="py-3 px-4 text-right mono tabular-nums">
+                    {player.drapm !== null ? (
+                      <span className={player.drapm >= 0 ? 'text-[var(--made)]' : 'text-[var(--missed)]'}>
+                        {player.drapm >= 0 ? '+' : ''}{player.drapm.toFixed(1)}
+                      </span>
+                    ) : (
+                      <span className="text-text-dim">—</span>
+                    )}
+                  </td>
+                  <td className="py-3 px-4 text-right">
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      player.confidence === 'high' ? 'bg-[var(--made)]/20 text-[var(--made)]' :
+                      player.confidence === 'moderate' ? 'bg-amber-400/20 text-amber-400' :
+                      'bg-[var(--missed)]/20 text-[var(--missed)]'
+                    }`}>
+                      {player.confidence}
+                    </span>
                   </td>
                 </tr>
               ))}
@@ -376,9 +351,9 @@ export default async function PlayersPage({
           </table>
         </div>
 
-        {playerData.length === 0 && (
-          <div className="p-8 text-center text-text-dim">
-            No players found matching your filters.
+        {playerData.length > 100 && (
+          <div className="p-4 text-center text-text-dim text-sm border-t border-border">
+            Showing top 100 results. Use filters to narrow your search.
           </div>
         )}
       </div>

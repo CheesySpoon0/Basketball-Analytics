@@ -6,13 +6,14 @@ import 'dotenv/config';
 import { prisma } from '../lib/prisma';
 import { formatDelta, formatRate } from '../lib/xefg';
 
-const SEASON = 2025;
+const seasonArg = process.argv.find((a) => a.startsWith('--season='));
+const SEASON = seasonArg ? Number(seasonArg.split('=')[1]) : 2025;
 
 const CHECKS: Array<{ name: string; teamId?: number }> = [
   { name: 'Tyler McGhie', teamId: 310 },
   { name: 'Hayden Gray', teamId: 310 },
   { name: 'Aniwaniwa Tait-Jones', teamId: 310 },
-  { name: 'Nordin Kapic', teamId: 310 },
+  { name: 'Nordin Kapic', teamId: 266 },
   { name: 'Bent Leuchten' },
 ];
 

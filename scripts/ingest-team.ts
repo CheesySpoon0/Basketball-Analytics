@@ -229,40 +229,42 @@ async function main() {
   const ts = teamStatsArr[0];
   if (ts) {
     const s = ts.teamStats;
+    // Single source of truth for the field map — used for both create and update
+    // so reruns always overwrite stale or partially-mapped rows.
+    const teamStatsData = {
+      teamId: team.id,
+      season,
+      games: ts.games,
+      wins: ts.wins,
+      losses: ts.losses,
+      pointsTotal: s.points?.total ?? 0,
+      pointsInPaint: s.points?.inPaint ?? 0,
+      pointsFastBreak: s.points?.fastBreak ?? 0,
+      pointsOffTurnovers: s.points?.offTurnovers ?? 0,
+      fieldGoalsMade: s.fieldGoals?.made ?? 0,
+      fieldGoalsAttempted: s.fieldGoals?.attempted ?? 0,
+      threePointsMade: s.threePointFieldGoals?.made ?? 0,
+      threePointsAttempted: s.threePointFieldGoals?.attempted ?? 0,
+      freeThrowsMade: s.freeThrows?.made ?? 0,
+      freeThrowsAttempted: s.freeThrows?.attempted ?? 0,
+      offensiveRebounds: s.rebounds?.offensive ?? 0,
+      defensiveRebounds: s.rebounds?.defensive ?? 0,
+      totalRebounds: s.rebounds?.total ?? 0,
+      assists: s.assists ?? 0,
+      steals: s.steals ?? 0,
+      blocks: s.blocks ?? 0,
+      turnoversTotal: s.turnovers?.total ?? 0,
+      turnoversTeam: s.turnovers?.teamTotal ?? 0,
+      foulsTotal: s.fouls?.total ?? 0,
+      foulsTechnical: s.fouls?.technical ?? 0,
+      foulsFlagrant: s.fouls?.flagrant ?? 0,
+    };
     await prisma.teamSeasonStats.upsert({
       where: { teamId_season: { teamId: team.id, season } },
-      create: {
-        teamId: team.id, season,
-        games: ts.games, wins: ts.wins, losses: ts.losses,
-        pointsTotal: s.points?.total ?? 0,
-        pointsInPaint: s.points?.inPaint ?? 0,
-        pointsFastBreak: s.points?.fastBreak ?? 0,
-        pointsOffTurnovers: s.points?.offTurnovers ?? 0,
-        fieldGoalsMade: s.fieldGoals?.made ?? 0,
-        fieldGoalsAttempted: s.fieldGoals?.attempted ?? 0,
-        threePointsMade: s.threePointFieldGoals?.made ?? 0,
-        threePointsAttempted: s.threePointFieldGoals?.attempted ?? 0,
-        freeThrowsMade: s.freeThrows?.made ?? 0,
-        freeThrowsAttempted: s.freeThrows?.attempted ?? 0,
-        offensiveRebounds: s.rebounds?.offensive ?? 0,
-        defensiveRebounds: s.rebounds?.defensive ?? 0,
-        totalRebounds: s.rebounds?.total ?? 0,
-        assists: s.assists ?? 0,
-        steals: s.steals ?? 0,
-        blocks: s.blocks ?? 0,
-        turnoversTotal: s.turnovers?.total ?? 0,
-        turnoversTeam: s.turnovers?.teamTotal ?? 0,
-        foulsTotal: s.fouls?.total ?? 0,
-        foulsTechnical: s.fouls?.technical ?? 0,
-        foulsFlagrant: s.fouls?.flagrant ?? 0,
-      },
-      update: {
-        pointsTotal: s.points?.total ?? 0,
-        fieldGoalsMade: s.fieldGoals?.made ?? 0,
-        fieldGoalsAttempted: s.fieldGoals?.attempted ?? 0,
-      },
+      create: teamStatsData,
+      update: teamStatsData,
     });
-    console.log(`   ${ts.games}G ${ts.wins}-${ts.losses}, ${s.points?.total} pts, ${s.fieldGoals?.made}/${s.fieldGoals?.attempted} FG`);
+    console.log(`   ${ts.games}G ${ts.wins}-${ts.losses}, ${s.points?.total} pts, ${s.fieldGoals?.made}/${s.fieldGoals?.attempted} FG, ${s.freeThrows?.attempted} FTA, ${s.rebounds?.offensive} OREB`);
   }
 
   // ===== 8. Player season stats — nested mapping =====
@@ -277,32 +279,33 @@ async function main() {
       playerStatsSkippedNoPlayer++;
       continue;
     }
+    const playerStatsData = {
+      playerId: p.athleteId,
+      teamId: p.teamId,
+      season: p.season,
+      games: p.games,
+      gamesStarted: p.starts,
+      minutes: p.minutes,
+      points: p.points,
+      rebounds: p.rebounds?.total ?? 0,
+      offRebounds: p.rebounds?.offensive ?? 0,
+      defRebounds: p.rebounds?.defensive ?? 0,
+      assists: p.assists,
+      steals: p.steals,
+      blocks: p.blocks,
+      turnovers: p.turnovers,
+      fouls: p.fouls,
+      fieldGoalsMade: p.fieldGoals?.made ?? 0,
+      fieldGoalsAttempted: p.fieldGoals?.attempted ?? 0,
+      threePointsMade: p.threePointFieldGoals?.made ?? 0,
+      threePointsAttempted: p.threePointFieldGoals?.attempted ?? 0,
+      freeThrowsMade: p.freeThrows?.made ?? 0,
+      freeThrowsAttempted: p.freeThrows?.attempted ?? 0,
+    };
     await prisma.playerSeasonStats.upsert({
       where: { playerId_season: { playerId: p.athleteId, season } },
-      create: {
-        playerId: p.athleteId,
-        teamId: p.teamId,
-        season: p.season,
-        games: p.games,
-        gamesStarted: p.starts,
-        minutes: p.minutes,
-        points: p.points,
-        rebounds: p.rebounds?.total ?? 0,
-        offRebounds: p.rebounds?.offensive ?? 0,
-        defRebounds: p.rebounds?.defensive ?? 0,
-        assists: p.assists,
-        steals: p.steals,
-        blocks: p.blocks,
-        turnovers: p.turnovers,
-        fouls: p.fouls,
-        fieldGoalsMade: p.fieldGoals?.made ?? 0,
-        fieldGoalsAttempted: p.fieldGoals?.attempted ?? 0,
-        threePointsMade: p.threePointFieldGoals?.made ?? 0,
-        threePointsAttempted: p.threePointFieldGoals?.attempted ?? 0,
-        freeThrowsMade: p.freeThrows?.made ?? 0,
-        freeThrowsAttempted: p.freeThrows?.attempted ?? 0,
-      },
-      update: {},
+      create: playerStatsData,
+      update: playerStatsData,
     });
     playerStatsInserted++;
   }

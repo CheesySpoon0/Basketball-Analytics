@@ -390,9 +390,11 @@ export const ModelName = {
   Play: 'Play',
   TeamSeasonStats: 'TeamSeasonStats',
   PlayerSeasonStats: 'PlayerSeasonStats',
+  PlayerImpact: 'PlayerImpact',
   CoachBriefCache: 'CoachBriefCache',
   PlayerXeFG: 'PlayerXeFG',
-  TeamXeFG: 'TeamXeFG'
+  TeamXeFG: 'TeamXeFG',
+  LineupStint: 'LineupStint'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "team" | "player" | "game" | "play" | "teamSeasonStats" | "playerSeasonStats" | "coachBriefCache" | "playerXeFG" | "teamXeFG"
+    modelProps: "team" | "player" | "game" | "play" | "teamSeasonStats" | "playerSeasonStats" | "playerImpact" | "coachBriefCache" | "playerXeFG" | "teamXeFG" | "lineupStint"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -856,6 +858,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PlayerImpact: {
+      payload: Prisma.$PlayerImpactPayload<ExtArgs>
+      fields: Prisma.PlayerImpactFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlayerImpactFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerImpactPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlayerImpactFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerImpactPayload>
+        }
+        findFirst: {
+          args: Prisma.PlayerImpactFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerImpactPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlayerImpactFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerImpactPayload>
+        }
+        findMany: {
+          args: Prisma.PlayerImpactFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerImpactPayload>[]
+        }
+        create: {
+          args: Prisma.PlayerImpactCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerImpactPayload>
+        }
+        createMany: {
+          args: Prisma.PlayerImpactCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlayerImpactCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerImpactPayload>[]
+        }
+        delete: {
+          args: Prisma.PlayerImpactDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerImpactPayload>
+        }
+        update: {
+          args: Prisma.PlayerImpactUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerImpactPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlayerImpactDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlayerImpactUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlayerImpactUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerImpactPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlayerImpactUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerImpactPayload>
+        }
+        aggregate: {
+          args: Prisma.PlayerImpactAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlayerImpact>
+        }
+        groupBy: {
+          args: Prisma.PlayerImpactGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlayerImpactGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlayerImpactCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlayerImpactCountAggregateOutputType> | number
+        }
+      }
+    }
     CoachBriefCache: {
       payload: Prisma.$CoachBriefCachePayload<ExtArgs>
       fields: Prisma.CoachBriefCacheFieldRefs
@@ -1078,6 +1154,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LineupStint: {
+      payload: Prisma.$LineupStintPayload<ExtArgs>
+      fields: Prisma.LineupStintFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LineupStintFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LineupStintPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LineupStintFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LineupStintPayload>
+        }
+        findFirst: {
+          args: Prisma.LineupStintFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LineupStintPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LineupStintFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LineupStintPayload>
+        }
+        findMany: {
+          args: Prisma.LineupStintFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LineupStintPayload>[]
+        }
+        create: {
+          args: Prisma.LineupStintCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LineupStintPayload>
+        }
+        createMany: {
+          args: Prisma.LineupStintCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LineupStintCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LineupStintPayload>[]
+        }
+        delete: {
+          args: Prisma.LineupStintDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LineupStintPayload>
+        }
+        update: {
+          args: Prisma.LineupStintUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LineupStintPayload>
+        }
+        deleteMany: {
+          args: Prisma.LineupStintDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LineupStintUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LineupStintUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LineupStintPayload>[]
+        }
+        upsert: {
+          args: Prisma.LineupStintUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LineupStintPayload>
+        }
+        aggregate: {
+          args: Prisma.LineupStintAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLineupStint>
+        }
+        groupBy: {
+          args: Prisma.LineupStintGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LineupStintGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LineupStintCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LineupStintCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1281,6 +1431,28 @@ export const PlayerSeasonStatsScalarFieldEnum = {
 export type PlayerSeasonStatsScalarFieldEnum = (typeof PlayerSeasonStatsScalarFieldEnum)[keyof typeof PlayerSeasonStatsScalarFieldEnum]
 
 
+export const PlayerImpactScalarFieldEnum = {
+  id: 'id',
+  season: 'season',
+  playerId: 'playerId',
+  teamId: 'teamId',
+  orapm: 'orapm',
+  drapm: 'drapm',
+  rapm: 'rapm',
+  orapmExpected: 'orapmExpected',
+  drapmExpected: 'drapmExpected',
+  rapmExpected: 'rapmExpected',
+  confidence: 'confidence',
+  possessions: 'possessions',
+  minutes: 'minutes',
+  modelVersion: 'modelVersion',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlayerImpactScalarFieldEnum = (typeof PlayerImpactScalarFieldEnum)[keyof typeof PlayerImpactScalarFieldEnum]
+
+
 export const CoachBriefCacheScalarFieldEnum = {
   id: 'id',
   subjectTeamId: 'subjectTeamId',
@@ -1336,6 +1508,52 @@ export const TeamXeFGScalarFieldEnum = {
 } as const
 
 export type TeamXeFGScalarFieldEnum = (typeof TeamXeFGScalarFieldEnum)[keyof typeof TeamXeFGScalarFieldEnum]
+
+
+export const LineupStintScalarFieldEnum = {
+  id: 'id',
+  season: 'season',
+  gameId: 'gameId',
+  teamId: 'teamId',
+  opponentTeamId: 'opponentTeamId',
+  period: 'period',
+  startSeconds: 'startSeconds',
+  endSeconds: 'endSeconds',
+  playerIds: 'playerIds',
+  lineupHash: 'lineupHash',
+  pointsFor: 'pointsFor',
+  pointsAgainst: 'pointsAgainst',
+  fga: 'fga',
+  fgm: 'fgm',
+  threepa: 'threepa',
+  threepm: 'threepm',
+  fta: 'fta',
+  ftm: 'ftm',
+  offRebounds: 'offRebounds',
+  defRebounds: 'defRebounds',
+  turnovers: 'turnovers',
+  assists: 'assists',
+  steals: 'steals',
+  blocks: 'blocks',
+  possessionsFor: 'possessionsFor',
+  possessionsAgainst: 'possessionsAgainst',
+  pppFor: 'pppFor',
+  pppAgainst: 'pppAgainst',
+  netPpp: 'netPpp',
+  expectedPointsFor: 'expectedPointsFor',
+  expectedPointsAgainst: 'expectedPointsAgainst',
+  expectedPppFor: 'expectedPppFor',
+  expectedPppAgainst: 'expectedPppAgainst',
+  expectedNetPpp: 'expectedNetPpp',
+  shotQualityFgaFor: 'shotQualityFgaFor',
+  shotQualityFgaAgainst: 'shotQualityFgaAgainst',
+  confidence: 'confidence',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LineupStintScalarFieldEnum = (typeof LineupStintScalarFieldEnum)[keyof typeof LineupStintScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1584,9 +1802,11 @@ export type GlobalOmitConfig = {
   play?: Prisma.PlayOmit
   teamSeasonStats?: Prisma.TeamSeasonStatsOmit
   playerSeasonStats?: Prisma.PlayerSeasonStatsOmit
+  playerImpact?: Prisma.PlayerImpactOmit
   coachBriefCache?: Prisma.CoachBriefCacheOmit
   playerXeFG?: Prisma.PlayerXeFGOmit
   teamXeFG?: Prisma.TeamXeFGOmit
+  lineupStint?: Prisma.LineupStintOmit
 }
 
 /* Types for Logging */

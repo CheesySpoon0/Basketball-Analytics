@@ -23,7 +23,7 @@ const TARGET_TEAMS = [
 
 interface PlayerRAMP {
   id: number;
-  name: string;
+  name: string | null;
   orapm?: number;
   drapm?: number;
   rapm?: number;

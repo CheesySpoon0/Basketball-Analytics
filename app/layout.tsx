@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Fraunces, Manrope, JetBrains_Mono } from 'next/font/google';
+import { Suspense } from 'react';
+import { SeasonDisplay } from '../components/SeasonDisplay';
 import './globals.css';
 
 const fraunces = Fraunces({
@@ -43,9 +45,13 @@ function Nav() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <span className="mono text-[11px] uppercase tracking-wider px-2.5 py-1 border border-border rounded text-text-dim">
-            2024–25 Season
-          </span>
+          <Suspense fallback={
+            <span className="mono text-[11px] uppercase tracking-wider px-2.5 py-1 border border-border rounded text-text-dim">
+              Loading...
+            </span>
+          }>
+            <SeasonDisplay />
+          </Suspense>
         </div>
       </div>
     </nav>

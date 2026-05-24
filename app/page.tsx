@@ -252,7 +252,7 @@ export default async function HomePage({
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {/* Lineup Optimizer */}
           <Link
-            href={withSeason('/teams/308/lineups', season)}
+            href={withSeason('/lineups', season)}
             className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-accent"
           >
             <div className="flex items-start justify-between mb-4">
@@ -264,17 +264,17 @@ export default async function HomePage({
               </div>
             </div>
             <p className="text-text-dim leading-relaxed text-sm mb-4">
-              Compare observed lineups and build projected 5-man units using RAPM and lineup stint data.
-              Test different combinations and see projected ORtg/DRtg.
+              Compare observed lineups and build projected 5-man units using RAPM estimates.
+              Select any team to analyze their combinations and test new lineups.
             </p>
             <div className="text-xs text-accent group-hover:text-text transition-colors">
-              View UCI Lineup Optimizer →
+              Choose Team & Analyze Lineups →
             </div>
           </Link>
 
           {/* Impact Metrics / RAPM */}
           <Link
-            href={withSeason('/players/4971', season)}
+            href={withSeason('/impact', season)}
             className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-blue-400"
           >
             <div className="flex items-start justify-between mb-4">
@@ -286,17 +286,17 @@ export default async function HomePage({
               </div>
             </div>
             <p className="text-text-dim leading-relaxed text-sm mb-4">
-              Advanced player impact analysis with ORAPM, DRAPM, and Net RAPM.
-              Measures points per 100 possessions added by individual players.
+              Advanced player impact leaderboards with ORAPM, DRAPM, and Net RAPM.
+              Filter and sort players by impact metrics across all D1 programs.
             </p>
             <div className="text-xs text-blue-400 group-hover:text-text transition-colors">
-              View Sample Player Report →
+              Explore RAPM Leaderboards →
             </div>
           </Link>
 
           {/* Coach Briefs */}
           <Link
-            href={withSeason('/teams/35/brief', season)}
+            href={withSeason('/briefs', season)}
             className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-green-400"
           >
             <div className="flex items-start justify-between mb-4">
@@ -308,77 +308,77 @@ export default async function HomePage({
               </div>
             </div>
             <p className="text-text-dim leading-relaxed text-sm mb-4">
-              Comprehensive opponent scouting reports with tactical analysis,
-              top threats, attack patterns, and strategic recommendations.
+              Comprehensive scouting reports with tactical breakdowns, player matchups,
+              and strategic recommendations. Select opponent and generate briefs.
             </p>
             <div className="text-xs text-green-400 group-hover:text-text transition-colors">
-              View Sample Brief →
+              Generate Coach Briefs →
             </div>
           </Link>
 
           {/* Shot Quality / xeFG */}
           <Link
-            href={withSeason('/teams/308', season)}
-            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-purple-400"
+            href={withSeason('/shot-quality', season)}
+            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-orange-400"
           >
             <div className="flex items-start justify-between mb-4">
-              <h3 className="display text-xl font-medium group-hover:text-purple-400 transition-colors">
+              <h3 className="display text-xl font-medium group-hover:text-orange-400 transition-colors">
                 Shot Quality
               </h3>
-              <div className="mono text-xs text-purple-400 border border-purple-400/40 px-2 py-1 uppercase tracking-wider">
-                xeFG
+              <div className="mono text-xs text-orange-400 border border-orange-400/40 px-2 py-1 uppercase tracking-wider">
+                xeFG Model
               </div>
             </div>
             <p className="text-text-dim leading-relaxed text-sm mb-4">
-              Expected effective field goal percentage based on shot location and contest level.
-              Measures shooting skill vs shot selection quality.
+              Expected effective field goal analysis based on shot location and context.
+              Explore team and player shooting efficiency across all D1 programs.
             </p>
-            <div className="text-xs text-purple-400 group-hover:text-text transition-colors">
-              View UCI Shot Analysis →
+            <div className="text-xs text-orange-400 group-hover:text-text transition-colors">
+              Explore Shot Quality Hub →
             </div>
           </Link>
 
           {/* Team Analytics */}
           <Link
-            href={withSeason('/teams/308', season)}
-            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-yellow-400"
+            href={withSeason('/teams', season)}
+            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-purple-400"
           >
             <div className="flex items-start justify-between mb-4">
-              <h3 className="display text-xl font-medium group-hover:text-yellow-400 transition-colors">
+              <h3 className="display text-xl font-medium group-hover:text-purple-400 transition-colors">
                 Team Analytics
               </h3>
-              <div className="mono text-xs text-yellow-400 border border-yellow-400/40 px-2 py-1 uppercase tracking-wider">
-                Four Factors
+              <div className="mono text-xs text-purple-400 border border-purple-400/40 px-2 py-1 uppercase tracking-wider">
+                Database
               </div>
             </div>
             <p className="text-text-dim leading-relaxed text-sm mb-4">
-              Complete team profiles with efficiency metrics, Four Factors analysis,
-              shooting zones, and advanced statistics for game planning.
+              Complete team performance database with filtering by conference, record,
+              and performance metrics across all D1 programs.
             </p>
-            <div className="text-xs text-yellow-400 group-hover:text-text transition-colors">
-              View UCI Team Profile →
+            <div className="text-xs text-purple-400 group-hover:text-text transition-colors">
+              Explore Team Database →
             </div>
           </Link>
 
-          {/* Player Reports */}
+          {/* Player Database */}
           <Link
             href={withSeason('/players', season)}
-            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-red-400"
+            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-pink-400"
           >
             <div className="flex items-start justify-between mb-4">
-              <h3 className="display text-xl font-medium group-hover:text-red-400 transition-colors">
+              <h3 className="display text-xl font-medium group-hover:text-pink-400 transition-colors">
                 Player Database
               </h3>
-              <div className="mono text-xs text-red-400 border border-red-400/40 px-2 py-1 uppercase tracking-wider">
-                5,400+ Players
+              <div className="mono text-xs text-pink-400 border border-pink-400/40 px-2 py-1 uppercase tracking-wider">
+                Searchable
               </div>
             </div>
             <p className="text-text-dim leading-relaxed text-sm mb-4">
-              Comprehensive player database with advanced metrics, shooting analysis,
-              and individual impact measurements across all Division I programs.
+              Search and filter all D1 players by stats, impact metrics, team, conference,
+              and position. Sort by PPG, RAPM, eFG%, and more.
             </p>
-            <div className="text-xs text-red-400 group-hover:text-text transition-colors">
-              Browse All Players →
+            <div className="text-xs text-pink-400 group-hover:text-text transition-colors">
+              Search Player Database →
             </div>
           </Link>
         </div>

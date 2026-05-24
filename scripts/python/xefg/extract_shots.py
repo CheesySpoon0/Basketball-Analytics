@@ -51,7 +51,20 @@ if not DATABASE_URL:
     print("ERROR: DATABASE_URL not set. Copy .env.example to .env.", file=sys.stderr)
     sys.exit(1)
 
-SEASON = int(os.environ.get("XEFG_SEASON", "2025"))
+
+def _resolve_seasons() -> list[int]:
+    """Seasons to extract.
+
+    XEFG_SEASONS (comma-separated) takes precedence, e.g. XEFG_SEASONS=2025,2026.
+    Falls back to XEFG_SEASON (single), then defaults to 2025.
+    """
+    multi = os.environ.get("XEFG_SEASONS")
+    if multi:
+        return sorted({int(s.strip()) for s in multi.split(",") if s.strip()})
+    return [int(os.environ.get("XEFG_SEASON", "2025"))]
+
+
+SEASONS = _resolve_seasons()
 OUTPUT = HERE / "data" / "shots.csv"
 OUTPUT.parent.mkdir(parents=True, exist_ok=True)
 
@@ -113,9 +126,14 @@ DEFENSIVE_EVENT_PLAYTYPES = {
 
 
 # ============================================================================
-# Pull all plays for the season so we can compute "time since previous
-# defensive event" (transition feature) before filtering to shots.
+# Pull all plays for the requested season(s) so we can compute "time since
+# previous defensive event" (transition feature) before filtering to shots.
+# `season` is carried through to the output so downstream train/test splits
+# can be season-aware (validation: train one season, test another).
 # ============================================================================
+# NOTE: no ORDER BY in SQL. Sorting ~5M rows server-side spills to the
+# Postgres temp area and can exhaust disk on a small instance. We pull
+# unordered and sort in pandas (cheap in memory) before the transition pass.
 QUERY = """
 SELECT
   p.id, p."gameId", p."playerId", p."teamId", p.period,
@@ -123,20 +141,43 @@ SELECT
   p."playType", p."playText",
   p."shotMade", p."shotRange", p."shotAssisted",
   p."shotX", p."shotY", p."assisterId",
-  g."homeTeamId", g."awayTeamId"
+  g.season, g."homeTeamId", g."awayTeamId"
 FROM plays p
 JOIN games g ON g.id = p."gameId"
-WHERE g.season = %(season)s
-ORDER BY p."gameId", p.period, p."secondsRemaining" DESC, p.id
+WHERE g.season = ANY(%(seasons)s)
 """
 
 
 def main() -> None:
-    print(f"Connecting to Postgres; pulling plays for season {SEASON}...")
+    print(f"Connecting to Postgres; pulling plays for season(s) {SEASONS}...")
+    # Fetch one season at a time with a server-side cursor streamed in chunks.
+    # Pulling ~5M rows in a single round-trip exceeds the statement timeout;
+    # per-season chunked reads keep each query small and bounded.
+    frames: list[pd.DataFrame] = []
     with psycopg2.connect(_strip_unsupported_params(DATABASE_URL)) as conn:
-        df = pd.read_sql(QUERY, conn, params={"season": SEASON})
+        for season in SEASONS:
+            print(f"  season {season}...", end="", flush=True)
+            season_frames = list(
+                pd.read_sql(
+                    QUERY,
+                    conn,
+                    params={"seasons": [season]},
+                    chunksize=200_000,
+                )
+            )
+            sdf = pd.concat(season_frames, ignore_index=True)
+            print(f" {len(sdf):,} plays")
+            frames.append(sdf)
+    df = pd.concat(frames, ignore_index=True)
 
-    print(f"  {len(df):,} total plays loaded")
+    print(f"  {len(df):,} total plays loaded across {len(SEASONS)} season(s)")
+
+    # Order within each game: period asc, then clock descending (counts down),
+    # then play id. The transition feature's groupby().ffill() depends on this.
+    df = df.sort_values(
+        ["gameId", "period", "secondsRemaining", "id"],
+        ascending=[True, True, False, True],
+    ).reset_index(drop=True)
 
     # Mark defensive events (used by every shot to compute time-since)
     df["is_def_event"] = df["playType"].isin(DEFENSIVE_EVENT_PLAYTYPES)
@@ -221,7 +262,7 @@ def main() -> None:
 
     # Final columns
     keep = [
-        "id", "gameId", "playerId", "teamId",
+        "id", "season", "gameId", "playerId", "teamId",
         "shotX", "shotY", "shotRange", "playType",
         "distance_from_rim", "shot_zone",
         "is_corner_three", "is_above_break_three",
@@ -244,6 +285,12 @@ def main() -> None:
     # ============================================================================
     # Sanity summary
     # ============================================================================
+    if len(SEASONS) > 1:
+        print("\n=== Training shots by season ===")
+        per = out.groupby("season")["made"].agg(["count", "mean"])
+        for season, row in per.iterrows():
+            print(f"  {season}: {int(row['count']):,} shots, FG% {row['mean'] * 100:.2f}%")
+
     print("\n=== Sanity check: FG% by zone ===")
     z = out.groupby("shot_zone")["made"].agg(["count", "mean"])
     z["mean"] = (z["mean"] * 100).round(2)

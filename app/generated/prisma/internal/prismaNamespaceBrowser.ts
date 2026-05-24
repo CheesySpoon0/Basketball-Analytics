@@ -57,9 +57,11 @@ export const ModelName = {
   Play: 'Play',
   TeamSeasonStats: 'TeamSeasonStats',
   PlayerSeasonStats: 'PlayerSeasonStats',
+  PlayerImpact: 'PlayerImpact',
   CoachBriefCache: 'CoachBriefCache',
   PlayerXeFG: 'PlayerXeFG',
-  TeamXeFG: 'TeamXeFG'
+  TeamXeFG: 'TeamXeFG',
+  LineupStint: 'LineupStint'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -242,6 +244,28 @@ export const PlayerSeasonStatsScalarFieldEnum = {
 export type PlayerSeasonStatsScalarFieldEnum = (typeof PlayerSeasonStatsScalarFieldEnum)[keyof typeof PlayerSeasonStatsScalarFieldEnum]
 
 
+export const PlayerImpactScalarFieldEnum = {
+  id: 'id',
+  season: 'season',
+  playerId: 'playerId',
+  teamId: 'teamId',
+  orapm: 'orapm',
+  drapm: 'drapm',
+  rapm: 'rapm',
+  orapmExpected: 'orapmExpected',
+  drapmExpected: 'drapmExpected',
+  rapmExpected: 'rapmExpected',
+  confidence: 'confidence',
+  possessions: 'possessions',
+  minutes: 'minutes',
+  modelVersion: 'modelVersion',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlayerImpactScalarFieldEnum = (typeof PlayerImpactScalarFieldEnum)[keyof typeof PlayerImpactScalarFieldEnum]
+
+
 export const CoachBriefCacheScalarFieldEnum = {
   id: 'id',
   subjectTeamId: 'subjectTeamId',
@@ -297,6 +321,52 @@ export const TeamXeFGScalarFieldEnum = {
 } as const
 
 export type TeamXeFGScalarFieldEnum = (typeof TeamXeFGScalarFieldEnum)[keyof typeof TeamXeFGScalarFieldEnum]
+
+
+export const LineupStintScalarFieldEnum = {
+  id: 'id',
+  season: 'season',
+  gameId: 'gameId',
+  teamId: 'teamId',
+  opponentTeamId: 'opponentTeamId',
+  period: 'period',
+  startSeconds: 'startSeconds',
+  endSeconds: 'endSeconds',
+  playerIds: 'playerIds',
+  lineupHash: 'lineupHash',
+  pointsFor: 'pointsFor',
+  pointsAgainst: 'pointsAgainst',
+  fga: 'fga',
+  fgm: 'fgm',
+  threepa: 'threepa',
+  threepm: 'threepm',
+  fta: 'fta',
+  ftm: 'ftm',
+  offRebounds: 'offRebounds',
+  defRebounds: 'defRebounds',
+  turnovers: 'turnovers',
+  assists: 'assists',
+  steals: 'steals',
+  blocks: 'blocks',
+  possessionsFor: 'possessionsFor',
+  possessionsAgainst: 'possessionsAgainst',
+  pppFor: 'pppFor',
+  pppAgainst: 'pppAgainst',
+  netPpp: 'netPpp',
+  expectedPointsFor: 'expectedPointsFor',
+  expectedPointsAgainst: 'expectedPointsAgainst',
+  expectedPppFor: 'expectedPppFor',
+  expectedPppAgainst: 'expectedPppAgainst',
+  expectedNetPpp: 'expectedNetPpp',
+  shotQualityFgaFor: 'shotQualityFgaFor',
+  shotQualityFgaAgainst: 'shotQualityFgaAgainst',
+  confidence: 'confidence',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LineupStintScalarFieldEnum = (typeof LineupStintScalarFieldEnum)[keyof typeof LineupStintScalarFieldEnum]
 
 
 export const SortOrder = {

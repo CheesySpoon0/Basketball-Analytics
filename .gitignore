@@ -26,3 +26,5 @@ scripts/python/rapm/.env
 
 # Runtime artifacts written by maintenance scripts
 scripts/output/
+.vercel
+.env*.local

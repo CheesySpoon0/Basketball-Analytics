@@ -52,7 +52,7 @@ export async function getPlayers(teamId: number, season: number): Promise<CbbdPl
   const res = await fetch(url, { headers: authHeaders() });
   if (!res.ok) throw new Error(`CBBD /teams/roster failed: ${res.status} ${res.statusText}`);
   const data = await res.json();
-  const teamData = Array.isArray(data) ? data.find((team: any) => team.teamId === teamId) : data;
+  const teamData = Array.isArray(data) ? data.find((team: unknown) => (team as { teamId: number }).teamId === teamId) : data;
   return teamData?.players || [];
 }
 

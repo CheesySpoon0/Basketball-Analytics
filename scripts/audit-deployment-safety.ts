@@ -9,7 +9,7 @@ import 'dotenv/config';
 import { PrismaClient } from '../app/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
-import { readdir, stat } from 'fs/promises';
+import { readdir, stat, readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -204,7 +204,7 @@ async function auditProductionReadiness() {
   if (existsSync('package.json')) {
     console.log("✅ package.json exists");
     try {
-      const pkg = JSON.parse(await Bun.file('package.json').text());
+      const pkg = JSON.parse(await readFile('package.json', 'utf-8'));
       const requiredScripts = ['build', 'start', 'dev'];
 
       for (const script of requiredScripts) {
