@@ -660,7 +660,24 @@ async function main() {
       if (WRITE) {
         // Delete old stints for this game+team, then insert fresh.
         await prisma.lineupStint.deleteMany({ where: { gameId: game.id, teamId } });
-        const rows = stints.map((s) => {
+
+        // Only write valid stints: exactly 5 players and positive minutes
+        const validStints = stints.filter(s => {
+          // Require exactly 5 players
+          if (!s.playerIds || s.playerIds.length !== 5) return false;
+
+          // Require positive minutes
+          const minutes = (s.startSeconds - s.endSeconds) / 60;
+          if (minutes <= 0) return false;
+
+          return true;
+        });
+
+        if (validStints.length < stints.length) {
+          console.log(`    → Filtered out ${stints.length - validStints.length} invalid stints (non-5-player or negative minutes)`);
+        }
+
+        const rows = validStints.map((s) => {
           const poss = possessions(s.fga, s.fta, s.offRebounds, s.turnovers);
           const oppPoss = possessions(s.oppFga, s.oppFta, s.oppOreb, s.oppTurnovers);
           // PPP is per-possession (points / possessions), NOT per-100.
@@ -727,7 +744,7 @@ async function main() {
   console.log(`  Games with sub data:    ${gamesWithSubs}`);
   console.log(`  Games without sub data: ${gamesWithoutSubs} (skipped)`);
   console.log(`  Total stints derived:   ${totalStints}`);
-  if (WRITE) console.log(`  Stints written to DB:   ${totalWritten}`);
+  if (WRITE) console.log(`  Valid stints written:   ${totalWritten} (filtered from ${totalStints} total)`);
 
   if (allValidations.length > 0) {
     const allFiveCount = allValidations.filter((v) => v.allFive).length;
