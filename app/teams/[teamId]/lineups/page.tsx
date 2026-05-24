@@ -89,6 +89,9 @@ export default async function TeamLineupsPage({
     minutes: p.minutes || undefined,
   }));
 
+  // Note: For now using league baseline. Team-specific baseline would require
+  // proper possession and efficiency calculations from TeamSeasonStats
+
   // Build lineup aggregates - use Prisma for proper parameterization
   const whereClause = {
     teamId,
@@ -135,10 +138,13 @@ export default async function TeamLineupsPage({
         },
       });
 
-      // Fix negative minutes by ensuring proper calculation and guarding against bad data
+      // Calculate minutes using basketball clock logic: startSeconds > endSeconds
+      // startSeconds = seconds remaining at START (higher value)
+      // endSeconds = seconds remaining at END (lower value)
+      // Duration = startSeconds - endSeconds
       const minutes = stints.reduce((sum, stint) => {
-        const stintMinutes = (stint.endSeconds - stint.startSeconds) / 60;
-        // Guard against negative stint durations (data inconsistencies)
+        const stintMinutes = (stint.startSeconds - stint.endSeconds) / 60;
+        // Guard against negative durations (should not happen with correct clock logic)
         return sum + Math.max(0, stintMinutes);
       }, 0);
       const games = new Set(stints.map(s => s.gameId)).size;
@@ -363,7 +369,11 @@ export default async function TeamLineupsPage({
       ) : (
         /* Projected Lineups */
         <section>
-          <ProjectedLineups players={playersWithRAMP} teamId={teamId} />
+          <ProjectedLineups
+            players={playersWithRAMP}
+            teamId={teamId}
+            teamBaseline={{ ortg: 110, drtg: 110 }}
+          />
         </section>
       )}
     </main>

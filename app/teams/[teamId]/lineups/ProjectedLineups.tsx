@@ -16,9 +16,13 @@ interface Player {
 interface ProjectedLineupsProps {
   players: Player[];
   teamId: number;
+  teamBaseline: {
+    ortg: number;
+    drtg: number;
+  };
 }
 
-export function ProjectedLineups({ players, teamId }: ProjectedLineupsProps) {
+export function ProjectedLineups({ players, teamId, teamBaseline }: ProjectedLineupsProps) {
   const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
   const [projectedStats, setProjectedStats] = useState<{
     projectedORtg: number;
@@ -53,12 +57,12 @@ export function ProjectedLineups({ players, teamId }: ProjectedLineupsProps) {
 
   const calculateProjection = (lineup: Player[]) => {
     // Simple RAPM-based projection
-    const totalORAMP = selectedPlayers.reduce((sum, p) => sum + (p.orapm || 0), 0);
-    const totalDRAMP = selectedPlayers.reduce((sum, p) => sum + (p.drapm || 0), 0);
+    const totalORAMP = lineup.reduce((sum, p) => sum + (p.orapm || 0), 0);
+    const totalDRAMP = lineup.reduce((sum, p) => sum + (p.drapm || 0), 0);
 
-    // Baseline is league-average (~110 ORtg, ~110 DRtg)
-    const baselineORtg = 110;
-    const baselineDRtg = 110;
+    // Use team's actual baseline performance
+    const baselineORtg = teamBaseline.ortg;
+    const baselineDRtg = teamBaseline.drtg;
 
     // Project based on RAPM impact
     const projectedORtg = baselineORtg + totalORAMP;
@@ -66,7 +70,7 @@ export function ProjectedLineups({ players, teamId }: ProjectedLineupsProps) {
     const projectedNet = projectedORtg - projectedDRtg;
 
     // Calculate confidence based on sample sizes
-    const avgPossessions = selectedPlayers.reduce((sum, p) => sum + (p.possessions || 0), 0) / 5;
+    const avgPossessions = lineup.reduce((sum, p) => sum + (p.possessions || 0), 0) / 5;
     const confidence: 'high' | 'moderate' | 'low' =
       avgPossessions >= 800 ? 'high' :
       avgPossessions >= 400 ? 'moderate' : 'low';
@@ -248,8 +252,7 @@ export function ProjectedLineups({ players, teamId }: ProjectedLineupsProps) {
             </div>
 
             <div className="mt-4 p-3 bg-surface-3/30 border border-border text-xs text-text-dim leading-relaxed">
-              <strong className="text-text">Projection Method:</strong> Uses individual player ORAPM and DRAPM values
-              to estimate lineup performance. Baseline assumes league-average efficiency (~110 ORtg/DRtg).
+              <strong className="text-text">Projection Method:</strong> Uses league baseline ({teamBaseline.ortg.toFixed(1)} ORtg, {teamBaseline.drtg.toFixed(1)} DRtg) plus selected players' RAPM impact, measured in points per 100 possessions.
               <strong className="text-text"> Lower confidence</strong> indicates limited sample sizes for RAPM estimates.
               These projections should be used as rough estimates, not precise predictions.
             </div>
