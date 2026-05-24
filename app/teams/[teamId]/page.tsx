@@ -332,7 +332,7 @@ export default async function TeamPage({
             style={{ backgroundColor: accentColor }}
           />
           <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim mb-2">
-            {team.conference ?? 'Independent'} · {seasonLabel(SEASON)}
+{team.conference ?? 'Independent'}
           </div>
           <h1 className="display text-[56px] sm:text-[72px] leading-[0.95] tracking-tight font-medium">
             {team.school}

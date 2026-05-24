@@ -219,7 +219,7 @@ export default async function TeamLineupsPage({
             style={{ backgroundColor: accentColor }}
           />
           <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim mb-2">
-            {team.school} · {seasonLabel(season)} · Lineups
+{team.school} · Lineups
           </div>
           <h1 className="display text-[56px] sm:text-[72px] leading-[0.95] tracking-tight font-medium">
             Lineup Analysis

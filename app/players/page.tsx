@@ -42,7 +42,7 @@ export default async function PlayersIndex({
     <main className="max-w-[1400px] mx-auto px-6 lg:px-8 py-12 lg:py-16">
       <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
         <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim">
-          Big West · {seasonLabel(season)}
+Big West
         </div>
         <SeasonSelector season={season} />
       </div>

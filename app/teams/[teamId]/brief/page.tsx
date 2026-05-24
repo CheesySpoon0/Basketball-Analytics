@@ -52,7 +52,7 @@ export default async function CoachBriefPage({
       {/* Header */}
       <header className="mb-10 pb-6 border-b border-border">
         <div className="mono text-[11px] uppercase tracking-[0.25em] text-text-dim mb-3">
-          Scouting Brief · UC Irvine vs Opponent · {seasonLabel(season)}
+Scouting Brief · UC Irvine vs Opponent
         </div>
         <h1 className="display text-[44px] sm:text-[56px] leading-[0.95] tracking-tight font-medium">
           {team.school}

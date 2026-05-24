@@ -161,8 +161,6 @@ export default async function PlayerPage({
                 {player.team.school}
               </Link>
             )}
-            <span className="opacity-40">·</span>
-            <span>{seasonLabel(SEASON)}</span>
           </div>
           <h1 className="display text-[56px] sm:text-[72px] leading-[0.95] tracking-tight font-medium">
             {player.name}
