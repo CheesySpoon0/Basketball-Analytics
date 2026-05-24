@@ -161,10 +161,28 @@ export default async function TeamPage({
   const oppPpg = gamesWithFinalScore > 0 ? oppPointsTotal / gamesWithFinalScore : null;
 
   // Roster + per-player season stats
-  const roster = await prisma.player.findMany({
-    where: { teamId },
-    include: { seasonStats: { where: { season: SEASON } } },
+  // Get season-specific roster from PlayerSeasonStats (not Player.teamId)
+  // CRITICAL: Only include players with actual participation/stat evidence
+  const seasonRosterStats = await prisma.playerSeasonStats.findMany({
+    where: {
+      teamId,
+      season: SEASON,
+      OR: [
+        { games: { gt: 0 } },
+        { minutes: { gt: 0 } },
+        { points: { gt: 0 } },
+        { rebounds: { gt: 0 } },
+        { assists: { gt: 0 } },
+        { fieldGoalsMade: { gt: 0 } },
+        { fieldGoalsAttempted: { gt: 0 } }
+      ]
+    },
+    include: { player: true },
   });
+  const roster = seasonRosterStats.map(pss => ({
+    ...pss.player,
+    seasonStats: [pss], // Match original structure
+  }));
 
   // UCI matchup data (only fetch if this is not UCI)
   const UCI_TEAM_ID = 308;
@@ -668,11 +686,11 @@ export default async function TeamPage({
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
           {rosterRows.map((p) => {
-            const s = p.stats;
-            const played = s !== null && (s.games ?? 0) > 0;
-            const ppg = played ? (s!.points ?? 0) / (s!.games ?? 1) : 0;
-            const rpg = played ? (s!.rebounds ?? 0) / (s!.games ?? 1) : 0;
-            const apg = played ? (s!.assists ?? 0) / (s!.games ?? 1) : 0;
+            const s = p.stats!; // Non-null since we filtered for participation
+            const games = s.games || 1; // Avoid division by zero
+            const ppg = (s.points ?? 0) / games;
+            const rpg = (s.rebounds ?? 0) / games;
+            const apg = (s.assists ?? 0) / games;
             return (
               <Link
                 key={p.id}
@@ -693,34 +711,26 @@ export default async function TeamPage({
                       {p.name ?? `${p.firstName} ${p.lastName}`}
                     </div>
                   </div>
-                  {played && (
-                    <div className="text-right shrink-0">
-                      <div className="mono text-2xl tabular-nums font-medium">{ppg.toFixed(1)}</div>
-                      <div className="stat-label mt-0.5">PPG</div>
-                    </div>
-                  )}
+                  <div className="text-right shrink-0">
+                    <div className="mono text-2xl tabular-nums font-medium">{ppg.toFixed(1)}</div>
+                    <div className="stat-label mt-0.5">PPG</div>
+                  </div>
                 </div>
 
-                {played ? (
-                  <div className="grid grid-cols-3 gap-3 pt-3 border-t border-border">
-                    <div>
-                      <div className="stat-label">G</div>
-                      <div className="mono text-sm tabular-nums mt-0.5">{s!.games}</div>
-                    </div>
-                    <div>
-                      <div className="stat-label">RPG</div>
-                      <div className="mono text-sm tabular-nums mt-0.5">{rpg.toFixed(1)}</div>
-                    </div>
-                    <div>
-                      <div className="stat-label">APG</div>
-                      <div className="mono text-sm tabular-nums mt-0.5">{apg.toFixed(1)}</div>
-                    </div>
+                <div className="grid grid-cols-3 gap-3 pt-3 border-t border-border">
+                  <div>
+                    <div className="stat-label">G</div>
+                    <div className="mono text-sm tabular-nums mt-0.5">{s.games || 0}</div>
                   </div>
-                ) : (
-                  <div className="pt-3 border-t border-border mono text-xs text-text-dim">
-                    No stats recorded
+                  <div>
+                    <div className="stat-label">RPG</div>
+                    <div className="mono text-sm tabular-nums mt-0.5">{rpg.toFixed(1)}</div>
                   </div>
-                )}
+                  <div>
+                    <div className="stat-label">APG</div>
+                    <div className="mono text-sm tabular-nums mt-0.5">{apg.toFixed(1)}</div>
+                  </div>
+                </div>
               </Link>
             );
           })}

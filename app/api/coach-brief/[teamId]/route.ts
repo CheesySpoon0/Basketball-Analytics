@@ -278,14 +278,31 @@ async function buildTopPlayers(
   season: number,
   limit = 8,
 ): Promise<ThreatPlayer[]> {
-  const roster = await prisma.player.findMany({
-    where: { teamId },
-    include: { seasonStats: { where: { season } } },
+  // Get season-specific roster from PlayerSeasonStats (not Player.teamId)
+  // CRITICAL: Only include players with actual participation/stat evidence
+  const seasonRosterStats = await prisma.playerSeasonStats.findMany({
+    where: {
+      teamId,
+      season,
+      OR: [
+        { games: { gt: 0 } },
+        { minutes: { gt: 0 } },
+        { points: { gt: 0 } },
+        { rebounds: { gt: 0 } },
+        { assists: { gt: 0 } },
+        { fieldGoalsMade: { gt: 0 } },
+        { fieldGoalsAttempted: { gt: 0 } }
+      ]
+    },
+    include: { player: true },
   });
+  const roster = seasonRosterStats.map(pss => ({
+    ...pss.player,
+    seasonStats: [pss], // Match original structure
+  }));
 
   const withStats = roster
-    .map((p) => ({ player: p, stats: p.seasonStats[0] ?? null }))
-    .filter((r) => r.stats && (r.stats.games ?? 0) > 0)
+    .map((p) => ({ player: p, stats: p.seasonStats[0]! })) // Non-null since filtered
     .sort((a, b) => (b.stats!.points ?? 0) - (a.stats!.points ?? 0))
     .slice(0, limit);
 
