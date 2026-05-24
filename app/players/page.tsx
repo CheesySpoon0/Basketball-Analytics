@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '../../lib/prisma';
 import { SeasonSelector } from '../../components/SeasonSelector';
+import { PlayerFilters } from '../../components/PlayerFilters';
 import { resolveSeason, withSeason } from '../../lib/season';
 
 export const dynamic = 'force-dynamic';
@@ -171,119 +172,16 @@ export default async function PlayersPage({
 
       {/* Filters */}
       <div className="bg-surface border border-border p-6 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
-          {/* Search */}
-          <div>
-            <label className="stat-label mb-2 block">Search Player</label>
-            <input
-              type="text"
-              placeholder="Player name..."
-              defaultValue={search || ''}
-              className="w-full bg-surface-2 border border-border px-3 py-2 text-sm"
-              onChange={(e) => {
-                const url = new URL(window.location.href);
-                if (e.target.value) {
-                  url.searchParams.set('search', e.target.value);
-                } else {
-                  url.searchParams.delete('search');
-                }
-                window.history.pushState({}, '', url);
-              }}
-            />
-          </div>
-
-          {/* Conference Filter */}
-          <div>
-            <label className="stat-label mb-2 block">Conference</label>
-            <select
-              defaultValue={conference || ''}
-              className="w-full bg-surface-2 border border-border px-3 py-2 text-sm"
-              onChange={(e) => {
-                const url = new URL(window.location.href);
-                if (e.target.value) {
-                  url.searchParams.set('conference', e.target.value);
-                } else {
-                  url.searchParams.delete('conference');
-                }
-                url.searchParams.delete('team'); // Reset team filter when changing conference
-                window.location.href = url.toString();
-              }}
-            >
-              <option value="">All Conferences</option>
-              {conferences.map(conf => (
-                <option key={conf} value={conf}>{conf}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Team Filter */}
-          <div>
-            <label className="stat-label mb-2 block">Team</label>
-            <select
-              defaultValue={team || ''}
-              className="w-full bg-surface-2 border border-border px-3 py-2 text-sm"
-              onChange={(e) => {
-                const url = new URL(window.location.href);
-                if (e.target.value) {
-                  url.searchParams.set('team', e.target.value);
-                } else {
-                  url.searchParams.delete('team');
-                }
-                window.location.href = url.toString();
-              }}
-            >
-              <option value="">All Teams</option>
-              {teamsForFilter.map(t => (
-                <option key={t.id} value={t.id.toString()}>
-                  {t.abbreviation || t.school}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Position Filter */}
-          <div>
-            <label className="stat-label mb-2 block">Position</label>
-            <select
-              defaultValue={position || ''}
-              className="w-full bg-surface-2 border border-border px-3 py-2 text-sm"
-              onChange={(e) => {
-                const url = new URL(window.location.href);
-                if (e.target.value) {
-                  url.searchParams.set('position', e.target.value);
-                } else {
-                  url.searchParams.delete('position');
-                }
-                window.location.href = url.toString();
-              }}
-            >
-              <option value="">All Positions</option>
-              {positions.map(pos => (
-                <option key={pos} value={pos}>{pos}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Min Games */}
-          <div>
-            <label className="stat-label mb-2 block">Min Games</label>
-            <select
-              defaultValue={minGames.toString()}
-              className="w-full bg-surface-2 border border-border px-3 py-2 text-sm"
-              onChange={(e) => {
-                const url = new URL(window.location.href);
-                url.searchParams.set('minGames', e.target.value);
-                window.location.href = url.toString();
-              }}
-            >
-              <option value="1">1+</option>
-              <option value="5">5+</option>
-              <option value="10">10+</option>
-              <option value="15">15+</option>
-              <option value="20">20+</option>
-            </select>
-          </div>
-        </div>
+        <PlayerFilters
+          search={search}
+          conference={conference}
+          team={team}
+          position={position}
+          minGames={minGames}
+          conferences={conferences}
+          positions={positions}
+          teams={teamsForFilter}
+        />
 
         {/* Sort Options */}
         <div className="flex flex-wrap gap-2">

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '../../lib/prisma';
 import { SeasonSelector } from '../../components/SeasonSelector';
+import { TeamFilters } from '../../components/TeamFilters';
 import { resolveSeason, withSeason } from '../../lib/season';
 
 export const dynamic = 'force-dynamic';
@@ -95,69 +96,12 @@ export default async function TeamsHubPage({
 
       {/* Filters */}
       <div className="bg-surface border border-border p-6 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          {/* Search */}
-          <div>
-            <label className="stat-label mb-2 block">Search Team</label>
-            <input
-              type="text"
-              placeholder="Team name..."
-              defaultValue={search || ''}
-              className="w-full bg-surface-2 border border-border px-3 py-2 text-sm"
-              onChange={(e) => {
-                const url = new URL(window.location.href);
-                if (e.target.value) {
-                  url.searchParams.set('search', e.target.value);
-                } else {
-                  url.searchParams.delete('search');
-                }
-                window.history.pushState({}, '', url);
-              }}
-            />
-          </div>
-
-          {/* Conference Filter */}
-          <div>
-            <label className="stat-label mb-2 block">Conference</label>
-            <select
-              defaultValue={conference || ''}
-              className="w-full bg-surface-2 border border-border px-3 py-2 text-sm"
-              onChange={(e) => {
-                const url = new URL(window.location.href);
-                if (e.target.value) {
-                  url.searchParams.set('conference', e.target.value);
-                } else {
-                  url.searchParams.delete('conference');
-                }
-                window.location.href = url.toString();
-              }}
-            >
-              <option value="">All Conferences</option>
-              {conferences.map(conf => (
-                <option key={conf} value={conf}>{conf}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Sort */}
-          <div>
-            <label className="stat-label mb-2 block">Sort By</label>
-            <select
-              defaultValue={sortBy}
-              className="w-full bg-surface-2 border border-border px-3 py-2 text-sm"
-              onChange={(e) => {
-                const url = new URL(window.location.href);
-                url.searchParams.set('sort', e.target.value);
-                window.location.href = url.toString();
-              }}
-            >
-              <option value="wins">Most Wins</option>
-              <option value="losses">Fewest Losses</option>
-              <option value="pointsAvg">Highest Scoring</option>
-              <option value="school">Alphabetical</option>
-            </select>
-          </div>
-        </div>
+        <TeamFilters
+          search={search}
+          conference={conference}
+          sortBy={sortBy}
+          conferences={conferences}
+        />
       </div>
 
       {/* Results */}
