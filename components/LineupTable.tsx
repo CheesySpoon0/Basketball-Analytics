@@ -28,7 +28,7 @@ interface LineupTableProps {
   season: number;
 }
 
-const TOOLTIP_STYLES = "absolute z-50 bg-gray-900 text-white text-xs p-2 rounded shadow-lg border border-gray-700 max-w-xs whitespace-normal pointer-events-none";
+const TOOLTIP_STYLES = "absolute z-50 bg-gray-900 text-white text-xs p-2 rounded shadow-lg border border-gray-700 max-w-xs whitespace-normal pointer-events-none hidden md:block";
 
 const STAT_EXPLANATIONS = {
   min: "Total minutes this 5-man lineup played together on the court",
@@ -323,13 +323,32 @@ export function LineupTable({ lineups, season }: LineupTableProps) {
         </div>
       </div>
 
-      {/* Methodology Note */}
+      {/* Methodology Note and Mobile Legend */}
       {sortedLineups.length > 0 && (
-        <div className="mt-6 p-4 bg-surface-2/50 border border-border rounded-lg">
-          <div className="text-sm text-text-dim leading-relaxed">
-            <strong className="text-text">Methodology:</strong> Observed lineups are based on substitution-derived stints.
-            ORTG/DRTG use actual scoring. XORTG/XDRTG use shot-quality estimates from the xeFG model.
-            Small-sample lineups can be noisy.
+        <div className="mt-6 space-y-4">
+          <div className="p-4 bg-surface-2/50 border border-border rounded-lg">
+            <div className="text-sm text-text-dim leading-relaxed">
+              <strong className="text-text">Methodology:</strong> Observed lineups are based on substitution-derived stints.
+              ORTG/DRTG use actual scoring. XORTG/XDRTG use shot-quality estimates from the xeFG model.
+              Small-sample lineups can be noisy.
+            </div>
+          </div>
+
+          {/* Mobile-only stat explanations */}
+          <div className="block md:hidden p-4 bg-surface-2/30 border border-border rounded-lg">
+            <h4 className="text-sm font-medium text-text mb-3">Column Definitions:</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-text-dim">
+              <div><strong className="text-text">MIN:</strong> Minutes played together</div>
+              <div><strong className="text-text">G:</strong> Games this lineup appeared in</div>
+              <div><strong className="text-text">POSS:</strong> Total possessions</div>
+              <div><strong className="text-text">ORTG:</strong> Points scored per 100 poss</div>
+              <div><strong className="text-text">DRTG:</strong> Points allowed per 100 poss</div>
+              <div><strong className="text-text">NET:</strong> ORTG minus DRTG</div>
+              <div><strong className="text-text">XORTG:</strong> Expected offensive rating</div>
+              <div><strong className="text-text">XDRTG:</strong> Expected defensive rating</div>
+              <div><strong className="text-text">XNET:</strong> Expected net rating</div>
+              <div><strong className="text-text">CONF:</strong> Data confidence level</div>
+            </div>
           </div>
         </div>
       )}
