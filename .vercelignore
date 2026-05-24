@@ -1,0 +1,39 @@
+# Exclude large data files and outputs from Vercel deployment
+scripts/python/*/output/
+scripts/python/**/*.csv
+scripts/python/**/*.pkl
+scripts/python/**/*.json
+scripts/debug-*.ts
+scripts/audit-*.ts
+scripts/test-*.ts
+
+# Node modules (already excluded by default but explicit)
+node_modules/
+
+# Development files
+.env
+.env.local
+.env.development
+.env.test
+
+# Build outputs
+.next/
+out/
+
+# Logs
+logs/
+*.log
+
+# Cache directories
+.cache/
+.tmp/
+
+# Large generated files
+*.gz
+*.tar
+*.zip
+*.7z
+
+# OS files
+.DS_Store
+Thumbs.db
