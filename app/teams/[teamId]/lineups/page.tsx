@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { prisma } from '../../../../lib/prisma';
 import { SeasonSelector } from '../../../../components/SeasonSelector';
+import { LineupTable } from '../../../../components/LineupTable';
 import { resolveSeason, seasonLabel, withSeason } from '../../../../lib/season';
 import { LineupFilters } from './LineupFilters';
 import { ProjectedLineups } from './ProjectedLineups';
@@ -134,8 +135,12 @@ export default async function TeamLineupsPage({
         },
       });
 
-      const minutes = stints.reduce((sum, stint) =>
-        sum + (stint.endSeconds - stint.startSeconds) / 60, 0);
+      // Fix negative minutes by ensuring proper calculation and guarding against bad data
+      const minutes = stints.reduce((sum, stint) => {
+        const stintMinutes = (stint.endSeconds - stint.startSeconds) / 60;
+        // Guard against negative stint durations (data inconsistencies)
+        return sum + Math.max(0, stintMinutes);
+      }, 0);
       const games = new Set(stints.map(s => s.gameId)).size;
       const confidence = stints.find(s => s.confidence === 'full')?.confidence ||
                         stints.find(s => s.confidence === 'partial')?.confidence || 'gap';
@@ -164,7 +169,7 @@ export default async function TeamLineupsPage({
       lineupHash: row.lineupHash,
       playerIds: row.playerIds,
       playerNames,
-      minutes: Math.round(row.minutes),
+      minutes: Math.max(0, Math.round(row.minutes)), // Additional guard against negative minutes in display
       games: row.games,
       possessionsFor: Math.round(possFor),
       possessionsAgainst: Math.round(possAgainst),
@@ -352,92 +357,7 @@ export default async function TeamLineupsPage({
 
       {/* Lineups table */}
       <section>
-        <div className="bg-surface border border-border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full mono text-sm">
-              <thead>
-                <tr className="border-b border-border text-left bg-surface-2">
-                  <th className="stat-label py-4 px-4 text-left min-w-[300px]">Lineup</th>
-                  <th className="stat-label py-4 px-3 text-right">Min</th>
-                  <th className="stat-label py-4 px-3 text-right">G</th>
-                  <th className="stat-label py-4 px-3 text-right">Poss</th>
-                  <th className="stat-label py-4 px-3 text-right">ORtg</th>
-                  <th className="stat-label py-4 px-3 text-right">DRtg</th>
-                  <th className="stat-label py-4 px-3 text-right">Net</th>
-                  <th className="stat-label py-4 px-3 text-right">xORtg</th>
-                  <th className="stat-label py-4 px-3 text-right">xDRtg</th>
-                  <th className="stat-label py-4 px-3 text-right">xNet</th>
-                  <th className="stat-label py-4 px-3 text-center">Conf</th>
-                </tr>
-              </thead>
-              <tbody>
-                {lineups.length === 0 ? (
-                  <tr>
-                    <td colSpan={11} className="py-8 px-4 text-center text-text-dim">
-                      No lineups found matching the current filters.
-                      Try lowering the minimum possessions or including partial confidence stints.
-                    </td>
-                  </tr>
-                ) : (
-                  lineups.map((lineup, i) => (
-                    <tr key={lineup.lineupHash} className="border-b border-border last:border-b-0 hover:bg-surface-2 transition-colors">
-                      <td className="py-3 px-4">
-                        <div className="space-y-1">
-                          {lineup.playerNames.map((name, j) => (
-                            <div key={j} className="text-text text-xs">
-                              {name}
-                            </div>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="py-3 px-3 text-right tabular-nums">{lineup.minutes}</td>
-                      <td className="py-3 px-3 text-right tabular-nums">{lineup.games}</td>
-                      <td className="py-3 px-3 text-right tabular-nums">{lineup.possessionsFor + lineup.possessionsAgainst}</td>
-                      <td className="py-3 px-3 text-right tabular-nums">{(lineup.pppFor * 100).toFixed(1)}</td>
-                      <td className="py-3 px-3 text-right tabular-nums">{(lineup.pppAgainst * 100).toFixed(1)}</td>
-                      <td className="py-3 px-3 text-right tabular-nums">
-                        <span className={lineup.netPpp >= 0 ? 'text-[var(--made)]' : 'text-[var(--missed)]'}>
-                          {lineup.netPpp >= 0 ? '+' : ''}{(lineup.netPpp * 100).toFixed(1)}
-                        </span>
-                      </td>
-                      <td className="py-3 px-3 text-right tabular-nums text-text-dim">
-                        {lineup.expectedPppFor ? (lineup.expectedPppFor * 100).toFixed(1) : '—'}
-                      </td>
-                      <td className="py-3 px-3 text-right tabular-nums text-text-dim">
-                        {lineup.expectedPppAgainst ? (lineup.expectedPppAgainst * 100).toFixed(1) : '—'}
-                      </td>
-                      <td className="py-3 px-3 text-right tabular-nums text-text-dim">
-                        {lineup.expectedNetPpp !== undefined ? (
-                          <span className={lineup.expectedNetPpp >= 0 ? 'text-[var(--made)]/70' : 'text-[var(--missed)]/70'}>
-                            {lineup.expectedNetPpp >= 0 ? '+' : ''}{(lineup.expectedNetPpp * 100).toFixed(1)}
-                          </span>
-                        ) : '—'}
-                      </td>
-                      <td className="py-3 px-3 text-center">
-                        <span className={`inline-block w-2 h-2 rounded-full ${
-                          lineup.confidence === 'full' ? 'bg-[var(--made)]' :
-                          lineup.confidence === 'partial' ? 'bg-amber-400' :
-                          'bg-[var(--missed)]'
-                        }`} title={`${lineup.confidence} confidence`} />
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {lineups.length > 0 && (
-          <div className="mt-4 text-xs text-text-dim">
-            Showing {lineups.length} lineups ·
-            ORtg/DRtg/Net in points per 100 possessions ·
-            xORtg/xDRtg/xNet are xeFG-based expectations ·
-            Confidence: <span className="text-[var(--made)]">●</span> Full,
-            <span className="text-amber-400"> ●</span> Partial,
-            <span className="text-[var(--missed)]"> ●</span> Gap
-          </div>
-        )}
+        <LineupTable lineups={lineups} season={season} />
       </section>
         </>
       ) : (

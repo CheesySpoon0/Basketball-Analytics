@@ -4,6 +4,7 @@
   --bg: #0B0E14;
   --surface: #161A23;
   --surface-2: #1F242F;
+  --surface-3: #2A2F3A;
   --border: #2A2F3A;
   --text: #EBE9E2;
   --text-dim: #8A8B82;
@@ -16,6 +17,7 @@
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
   --color-border: var(--border);
   --color-text: var(--text);
   --color-text-dim: var(--text-dim);
