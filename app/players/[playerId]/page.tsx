@@ -249,17 +249,26 @@ export default async function PlayerPage({
             </div>
           </div>
 
-          {/* Impact (RAPM) */}
+          {/* Advanced Impact Analysis */}
           {playerImpact && (
             <div>
               <div className="mono text-[10px] uppercase tracking-[0.25em] text-text-dim mb-3">
-                Impact · RAPM
+                Advanced Impact · RAPM
               </div>
               <div className="bg-surface border border-border">
-                {/* Net RAPM */}
-                <div className="p-4 border-b border-border">
-                  <div className="stat-label mb-2">Net RAPM</div>
-                  <div className="mono text-2xl tabular-nums mb-1">
+                {/* Net RAPM - Main Impact Score */}
+                <div className="p-6 border-b border-border">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="stat-label">Net RAPM (Total Impact)</div>
+                    <div className={`mono text-xs px-2 py-1 border ${
+                      playerImpact.confidence === 'high' ? 'border-green-400 text-green-400' :
+                      playerImpact.confidence === 'moderate' ? 'border-yellow-400 text-yellow-400' :
+                      'border-red-400 text-red-400'
+                    }`}>
+                      {playerImpact.confidence?.toUpperCase() || 'UNKNOWN'} CONFIDENCE
+                    </div>
+                  </div>
+                  <div className="mono text-4xl tabular-nums mb-2">
                     {playerImpact.rapm !== null ? (
                       <span className={playerImpact.rapm >= 0 ? 'text-[var(--made)]' : 'text-[var(--missed)]'}>
                         {playerImpact.rapm >= 0 ? '+' : ''}{playerImpact.rapm.toFixed(1)}
@@ -268,16 +277,20 @@ export default async function PlayerPage({
                       <span className="text-text-dim">—</span>
                     )}
                   </div>
-                  <div className="text-text-dim text-xs">
-                    {playerImpact.rapm !== null ? 'points per 100 possessions' : 'No RAPM data'}
+                  <div className="text-text-dim text-sm mb-4">
+                    {playerImpact.rapm !== null ? 'points per 100 possessions' : 'No RAPM data available'}
+                  </div>
+                  <div className="text-text-dim text-xs leading-relaxed">
+                    <strong className="text-text">Net RAPM</strong> measures total player impact when on court.
+                    Positive values help the team score more points per 100 possessions than average.
                   </div>
                 </div>
 
-                {/* ORAPM + DRAPM */}
+                {/* Component Breakdown */}
                 <div className="grid grid-cols-2 divide-x divide-border">
                   <div className="p-4">
-                    <div className="stat-label">ORAPM</div>
-                    <div className="mono text-lg tabular-nums mt-1">
+                    <div className="stat-label mb-3">Offensive RAPM</div>
+                    <div className="mono text-2xl tabular-nums mb-2">
                       {playerImpact.orapm !== null ? (
                         <span className={playerImpact.orapm >= 0 ? 'text-[var(--made)]' : 'text-[var(--missed)]'}>
                           {playerImpact.orapm >= 0 ? '+' : ''}{playerImpact.orapm.toFixed(1)}
@@ -286,11 +299,13 @@ export default async function PlayerPage({
                         <span className="text-text-dim">—</span>
                       )}
                     </div>
-                    <div className="text-text-dim text-xs">Offensive</div>
+                    <div className="text-text-dim text-xs leading-relaxed">
+                      Impact when team has the ball. Positive ORAPM helps offense score more efficiently.
+                    </div>
                   </div>
                   <div className="p-4">
-                    <div className="stat-label">DRAPM</div>
-                    <div className="mono text-lg tabular-nums mt-1">
+                    <div className="stat-label mb-3">Defensive RAPM</div>
+                    <div className="mono text-2xl tabular-nums mb-2">
                       {playerImpact.drapm !== null ? (
                         <span className={playerImpact.drapm >= 0 ? 'text-[var(--made)]' : 'text-[var(--missed)]'}>
                           {playerImpact.drapm >= 0 ? '+' : ''}{playerImpact.drapm.toFixed(1)}
@@ -299,80 +314,63 @@ export default async function PlayerPage({
                         <span className="text-text-dim">—</span>
                       )}
                     </div>
-                    <div className="text-text-dim text-xs">Defensive</div>
+                    <div className="text-text-dim text-xs leading-relaxed">
+                      Impact when opponent has the ball. Positive DRAPM helps defense prevent scoring.
+                    </div>
                   </div>
                 </div>
 
-                {/* Confidence and sample size */}
-                <div className="p-4 bg-surface-2 border-t border-border">
-                  <div className="flex items-center justify-between text-xs text-text-dim">
+                {/* Expected vs Actual */}
+                {(playerImpact.rapmExpected !== null || playerImpact.orapmExpected !== null) && (
+                  <div className="border-t border-border">
+                    <div className="p-4 bg-surface-2/50">
+                      <div className="stat-label mb-3">Expected vs Actual Performance</div>
+                      <div className="grid grid-cols-2 gap-6 text-sm">
+                        {playerImpact.rapmExpected !== null && (
+                          <div>
+                            <div className="text-text-dim text-xs">Net RAPM</div>
+                            <div className="mono tabular-nums">
+                              Actual: <span className="text-text">{playerImpact.rapm?.toFixed(1) || '—'}</span>
+                            </div>
+                            <div className="mono tabular-nums">
+                              Expected: <span className="text-text-dim">{playerImpact.rapmExpected.toFixed(1)}</span>
+                            </div>
+                          </div>
+                        )}
+                        {playerImpact.orapmExpected !== null && (
+                          <div>
+                            <div className="text-text-dim text-xs">ORAPM</div>
+                            <div className="mono tabular-nums">
+                              Actual: <span className="text-text">{playerImpact.orapm?.toFixed(1) || '—'}</span>
+                            </div>
+                            <div className="mono tabular-nums">
+                              Expected: <span className="text-text-dim">{playerImpact.orapmExpected.toFixed(1)}</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Methodology and Confidence */}
+                <div className="p-4 bg-surface-3/30 border-t border-border">
+                  <div className="flex items-center justify-between text-sm mb-3">
                     <span>
-                      Confidence: <span className="text-text font-medium capitalize">{playerImpact.confidence || 'unknown'}</span>
+                      Sample Size: <span className="text-text mono">{playerImpact.possessions?.toLocaleString() || '—'} possessions</span>
                     </span>
-                    <span>
-                      {playerImpact.possessions ? `${playerImpact.possessions.toLocaleString()} possessions` :
-                       playerImpact.minutes ? `${playerImpact.minutes.toLocaleString()} minutes` : 'Limited sample'}
-                    </span>
+                    {playerImpact.minutes && (
+                      <span>
+                        Minutes: <span className="text-text mono">{playerImpact.minutes.toLocaleString()}</span>
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-xs text-text-dim leading-relaxed">
+                    <strong className="text-text">RAPM Methodology:</strong> Regularized Adjusted Plus-Minus isolates individual player impact
+                    using lineup stint data. Higher confidence estimates come from larger sample sizes and more game time.
                   </div>
                 </div>
               </div>
-
-              {/* Expected RAPM comparison (if available) */}
-              {(playerImpact.rapmExpected !== null || playerImpact.orapmExpected !== null || playerImpact.drapmExpected !== null) && (
-                <div className="mt-3 bg-surface-2/50 border border-border">
-                  <div className="p-3">
-                    <div className="stat-label mb-2 text-xs">Expected vs Actual</div>
-                    <div className="grid grid-cols-3 gap-3 text-xs mono tabular-nums">
-                      {playerImpact.rapmExpected !== null && playerImpact.rapm !== null && (
-                        <div>
-                          <span className="text-text-dim block">Net:</span>
-                          <span className={
-                            playerImpact.rapm > playerImpact.rapmExpected
-                              ? 'text-[var(--made)]'
-                              : playerImpact.rapm < playerImpact.rapmExpected
-                                ? 'text-[var(--missed)]'
-                                : ''
-                          }>
-                            {(playerImpact.rapm - playerImpact.rapmExpected >= 0 ? '+' : '')}
-                            {(playerImpact.rapm - playerImpact.rapmExpected).toFixed(1)}
-                          </span>
-                        </div>
-                      )}
-                      {playerImpact.orapmExpected !== null && playerImpact.orapm !== null && (
-                        <div>
-                          <span className="text-text-dim block">Off:</span>
-                          <span className={
-                            playerImpact.orapm > playerImpact.orapmExpected
-                              ? 'text-[var(--made)]'
-                              : playerImpact.orapm < playerImpact.orapmExpected
-                                ? 'text-[var(--missed)]'
-                                : ''
-                          }>
-                            {(playerImpact.orapm - playerImpact.orapmExpected >= 0 ? '+' : '')}
-                            {(playerImpact.orapm - playerImpact.orapmExpected).toFixed(1)}
-                          </span>
-                        </div>
-                      )}
-                      {playerImpact.drapmExpected !== null && playerImpact.drapm !== null && (
-                        <div>
-                          <span className="text-text-dim block">Def:</span>
-                          <span className={
-                            playerImpact.drapm > playerImpact.drapmExpected
-                              ? 'text-[var(--made)]'
-                              : playerImpact.drapm < playerImpact.drapmExpected
-                                ? 'text-[var(--missed)]'
-                                : ''
-                          }>
-                            {(playerImpact.drapm - playerImpact.drapmExpected >= 0 ? '+' : '')}
-                            {(playerImpact.drapm - playerImpact.drapmExpected).toFixed(1)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="text-text-dim text-xs mt-1">vs xeFG-based expectation</div>
-                  </div>
-                </div>
-              )}
 
               {/* RAPM Explanation */}
               <div className="mt-3 p-3 bg-surface-3/30 border border-border text-xs text-text-dim leading-relaxed">

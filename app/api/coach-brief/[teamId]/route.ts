@@ -785,9 +785,22 @@ async function loadCached(teamId: number, season: number) {
 }
 
 async function generateAndStore(teamId: number, season: number): Promise<NextResponse> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
+  // Defensive cleanup of API key
+  const rawApiKey = process.env.ANTHROPIC_API_KEY;
+  if (!rawApiKey) {
     return NextResponse.json({ error: 'ANTHROPIC_API_KEY not configured' }, { status: 500 });
+  }
+
+  // Clean up potential environment variable issues
+  const apiKey = rawApiKey
+    .trim()                    // Remove whitespace
+    .replace(/^["']|["']$/g, '') // Remove quotes
+    .replace(/^\s*|\s*$/g, '');  // Extra trim
+
+  // Validate API key format
+  if (!apiKey.startsWith('sk-ant-')) {
+    console.error('Invalid ANTHROPIC_API_KEY format - should start with sk-ant-');
+    return NextResponse.json({ error: 'Coach brief service temporarily unavailable' }, { status: 500 });
   }
 
   const opponentTeam = await prisma.team.findUnique({ where: { id: teamId } });

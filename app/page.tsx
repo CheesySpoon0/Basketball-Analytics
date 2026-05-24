@@ -240,6 +240,212 @@ export default async function HomePage({
         ))}
       </section>
 
+      {/* Features Dashboard */}
+      <section className="mt-24">
+        <div className="flex items-baseline justify-between mb-8 pb-3 border-b border-border">
+          <h2 className="display text-2xl font-medium">Analytical Tools</h2>
+          <span className="mono text-[11px] uppercase tracking-widest text-text-dim">
+            Coach-Ready Analytics
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {/* Lineup Optimizer */}
+          <Link
+            href={withSeason('/teams/308/lineups', season)}
+            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-accent"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="display text-xl font-medium group-hover:text-accent transition-colors">
+                Lineup Optimizer
+              </h3>
+              <div className="mono text-xs text-accent border border-accent/40 px-2 py-1 uppercase tracking-wider">
+                Interactive
+              </div>
+            </div>
+            <p className="text-text-dim leading-relaxed text-sm mb-4">
+              Compare observed lineups and build projected 5-man units using RAPM and lineup stint data.
+              Test different combinations and see projected ORtg/DRtg.
+            </p>
+            <div className="text-xs text-accent group-hover:text-text transition-colors">
+              View UCI Lineup Optimizer →
+            </div>
+          </Link>
+
+          {/* Impact Metrics / RAPM */}
+          <Link
+            href={withSeason('/players/4971', season)}
+            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-blue-400"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="display text-xl font-medium group-hover:text-blue-400 transition-colors">
+                Impact Metrics
+              </h3>
+              <div className="mono text-xs text-blue-400 border border-blue-400/40 px-2 py-1 uppercase tracking-wider">
+                RAPM
+              </div>
+            </div>
+            <p className="text-text-dim leading-relaxed text-sm mb-4">
+              Advanced player impact analysis with ORAPM, DRAPM, and Net RAPM.
+              Measures points per 100 possessions added by individual players.
+            </p>
+            <div className="text-xs text-blue-400 group-hover:text-text transition-colors">
+              View Sample Player Report →
+            </div>
+          </Link>
+
+          {/* Coach Briefs */}
+          <Link
+            href={withSeason('/teams/35/brief', season)}
+            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-green-400"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="display text-xl font-medium group-hover:text-green-400 transition-colors">
+                Coach Briefs
+              </h3>
+              <div className="mono text-xs text-green-400 border border-green-400/40 px-2 py-1 uppercase tracking-wider">
+                AI-Generated
+              </div>
+            </div>
+            <p className="text-text-dim leading-relaxed text-sm mb-4">
+              Comprehensive opponent scouting reports with tactical analysis,
+              top threats, attack patterns, and strategic recommendations.
+            </p>
+            <div className="text-xs text-green-400 group-hover:text-text transition-colors">
+              View Sample Brief →
+            </div>
+          </Link>
+
+          {/* Shot Quality / xeFG */}
+          <Link
+            href={withSeason('/teams/308', season)}
+            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-purple-400"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="display text-xl font-medium group-hover:text-purple-400 transition-colors">
+                Shot Quality
+              </h3>
+              <div className="mono text-xs text-purple-400 border border-purple-400/40 px-2 py-1 uppercase tracking-wider">
+                xeFG
+              </div>
+            </div>
+            <p className="text-text-dim leading-relaxed text-sm mb-4">
+              Expected effective field goal percentage based on shot location and contest level.
+              Measures shooting skill vs shot selection quality.
+            </p>
+            <div className="text-xs text-purple-400 group-hover:text-text transition-colors">
+              View UCI Shot Analysis →
+            </div>
+          </Link>
+
+          {/* Team Analytics */}
+          <Link
+            href={withSeason('/teams/308', season)}
+            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-yellow-400"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="display text-xl font-medium group-hover:text-yellow-400 transition-colors">
+                Team Analytics
+              </h3>
+              <div className="mono text-xs text-yellow-400 border border-yellow-400/40 px-2 py-1 uppercase tracking-wider">
+                Four Factors
+              </div>
+            </div>
+            <p className="text-text-dim leading-relaxed text-sm mb-4">
+              Complete team profiles with efficiency metrics, Four Factors analysis,
+              shooting zones, and advanced statistics for game planning.
+            </p>
+            <div className="text-xs text-yellow-400 group-hover:text-text transition-colors">
+              View UCI Team Profile →
+            </div>
+          </Link>
+
+          {/* Player Reports */}
+          <Link
+            href={withSeason('/players', season)}
+            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-red-400"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="display text-xl font-medium group-hover:text-red-400 transition-colors">
+                Player Database
+              </h3>
+              <div className="mono text-xs text-red-400 border border-red-400/40 px-2 py-1 uppercase tracking-wider">
+                5,400+ Players
+              </div>
+            </div>
+            <p className="text-text-dim leading-relaxed text-sm mb-4">
+              Comprehensive player database with advanced metrics, shooting analysis,
+              and individual impact measurements across all Division I programs.
+            </p>
+            <div className="text-xs text-red-400 group-hover:text-text transition-colors">
+              Browse All Players →
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      {/* Quick Start for Friend */}
+      <section className="mt-16 bg-surface-2 p-8 border border-border">
+        <div className="max-w-4xl">
+          <h3 className="display text-xl font-medium mb-4 text-accent">
+            Quick Start Guide
+          </h3>
+          <p className="text-text-dim text-sm mb-6 leading-relaxed">
+            New to the platform? Start with these working examples to see the analytical power:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div className="space-y-3">
+              <div>
+                <Link
+                  href={withSeason('/teams/308', season)}
+                  className="text-accent hover:text-text transition-colors font-medium"
+                >
+                  1. UCI Team Overview →
+                </Link>
+                <p className="text-text-dim text-xs mt-1">
+                  Complete team profile with advanced metrics and shot analysis
+                </p>
+              </div>
+              <div>
+                <Link
+                  href={withSeason('/teams/308/lineups', season)}
+                  className="text-accent hover:text-text transition-colors font-medium"
+                >
+                  2. Interactive Lineup Builder →
+                </Link>
+                <p className="text-text-dim text-xs mt-1">
+                  Project 5-man lineups using individual RAPM impact data
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <Link
+                  href={withSeason('/players/4971', season)}
+                  className="text-accent hover:text-text transition-colors font-medium"
+                >
+                  3. Sample Player Impact Report →
+                </Link>
+                <p className="text-text-dim text-xs mt-1">
+                  ORAPM, DRAPM, and advanced individual impact metrics
+                </p>
+              </div>
+              <div>
+                <Link
+                  href={withSeason('/teams/35/brief', season)}
+                  className="text-accent hover:text-text transition-colors font-medium"
+                >
+                  4. AI Coach Brief →
+                </Link>
+                <p className="text-text-dim text-xs mt-1">
+                  Comprehensive opponent analysis and tactical recommendations
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <footer className="mt-24 pt-8 border-t border-border text-text-dim text-xs flex justify-between">
         <span className="mono uppercase tracking-widest">SCOUT · v0.1</span>
         <span className="mono">Data: CBBD · React + Prisma</span>

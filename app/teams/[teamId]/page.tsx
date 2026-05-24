@@ -362,6 +362,72 @@ export default async function TeamPage({
         )}
       </header>
 
+      {/* Navigation Cards */}
+      <section className="mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          {/* Team Overview - Current page, highlighted */}
+          <div className="bg-surface-2 border-2 border-accent p-4 opacity-90">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium text-accent">Team Overview</h3>
+              <div className="mono text-[10px] text-accent border border-accent/40 px-2 py-0.5">
+                Current
+              </div>
+            </div>
+            <p className="text-xs text-text-dim">
+              Four Factors, ratings, shot profile, and team identity analysis
+            </p>
+          </div>
+
+          {/* Coach Brief */}
+          <Link
+            href={withSeason(`/teams/${teamId}/brief`, SEASON)}
+            className="group bg-surface hover:bg-surface-2 transition-colors p-4 border border-border hover:border-accent/40"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium group-hover:text-accent transition-colors">Coach Brief</h3>
+              <div className="mono text-[10px] text-green-400 border border-green-400/40 px-2 py-0.5">
+                AI
+              </div>
+            </div>
+            <p className="text-xs text-text-dim">
+              Opponent analysis with tactical recommendations and threat assessment
+            </p>
+          </Link>
+
+          {/* Lineup Optimizer */}
+          <Link
+            href={withSeason(`/teams/${teamId}/lineups`, SEASON)}
+            className="group bg-surface hover:bg-surface-2 transition-colors p-4 border border-border hover:border-accent/40"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium group-hover:text-accent transition-colors">Lineup Optimizer</h3>
+              <div className="mono text-[10px] text-blue-400 border border-blue-400/40 px-2 py-0.5">
+                RAPM
+              </div>
+            </div>
+            <p className="text-xs text-text-dim">
+              Build projected 5-man lineups using advanced impact metrics
+            </p>
+          </Link>
+
+          {/* Player Reports */}
+          <Link
+            href={withSeason('/players', SEASON) + `?team=${teamId}`}
+            className="group bg-surface hover:bg-surface-2 transition-colors p-4 border border-border hover:border-accent/40"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium group-hover:text-accent transition-colors">Roster Reports</h3>
+              <div className="mono text-[10px] text-purple-400 border border-purple-400/40 px-2 py-0.5">
+                Impact
+              </div>
+            </div>
+            <p className="text-xs text-text-dim">
+              Individual player analytics and RAPM impact measurements
+            </p>
+          </Link>
+        </div>
+      </section>
+
       {/* 2. Four Factors + Ratings */}
       <section className="mb-14">
         <div className="flex items-baseline justify-between mb-4 pb-3 border-b border-border">

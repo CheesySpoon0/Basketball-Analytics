@@ -53,8 +53,8 @@ export function ProjectedLineups({ players, teamId }: ProjectedLineupsProps) {
 
   const calculateProjection = (lineup: Player[]) => {
     // Simple RAPM-based projection
-    const totalORAMP = lineup.reduce((sum, p) => sum + (p.orapm || 0), 0);
-    const totalDRAMP = lineup.reduce((sum, p) => sum + (p.drapm || 0), 0);
+    const totalORAMP = selectedPlayers.reduce((sum, p) => sum + (p.orapm || 0), 0);
+    const totalDRAMP = selectedPlayers.reduce((sum, p) => sum + (p.drapm || 0), 0);
 
     // Baseline is league-average (~110 ORtg, ~110 DRtg)
     const baselineORtg = 110;
@@ -66,7 +66,7 @@ export function ProjectedLineups({ players, teamId }: ProjectedLineupsProps) {
     const projectedNet = projectedORtg - projectedDRtg;
 
     // Calculate confidence based on sample sizes
-    const avgPossessions = lineup.reduce((sum, p) => sum + (p.possessions || 0), 0) / 5;
+    const avgPossessions = selectedPlayers.reduce((sum, p) => sum + (p.possessions || 0), 0) / 5;
     const confidence: 'high' | 'moderate' | 'low' =
       avgPossessions >= 800 ? 'high' :
       avgPossessions >= 400 ? 'moderate' : 'low';
@@ -181,6 +181,51 @@ export function ProjectedLineups({ players, teamId }: ProjectedLineupsProps) {
                   {projectedStats.projectedNet >= 0 ? '+' : ''}{projectedStats.projectedNet.toFixed(1)}
                 </div>
                 <div className="text-text-dim text-xs mt-1">Net rating</div>
+              </div>
+            </div>
+
+            {/* RAPM Breakdown */}
+            <div className="border border-border mb-4">
+              <div className="p-4 border-b border-border bg-surface-2/30">
+                <h4 className="text-sm font-medium mb-3">Individual RAPM Contributions</h4>
+                <div className="space-y-2">
+                  {selectedPlayers.map((player, index) => (
+                    <div key={player.id} className="flex items-center justify-between text-sm">
+                      <span className="text-text">{player.name}</span>
+                      <div className="flex items-center gap-4 mono text-xs">
+                        <span className="text-text-dim w-12 text-right">
+                          O: <span className={`${(player.orapm || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {player.orapm ? (player.orapm >= 0 ? '+' : '') + player.orapm.toFixed(1) : '—'}
+                          </span>
+                        </span>
+                        <span className="text-text-dim w-12 text-right">
+                          D: <span className={`${(player.drapm || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {player.drapm ? (player.drapm >= 0 ? '+' : '') + player.drapm.toFixed(1) : '—'}
+                          </span>
+                        </span>
+                        <span className="text-text w-12 text-right">
+                          Net: <span className={`${(player.rapm || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {player.rapm ? (player.rapm >= 0 ? '+' : '') + player.rapm.toFixed(1) : '—'}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 pt-3 border-t border-border flex items-center justify-between text-sm">
+                  <span className="text-text-dim font-medium">Lineup Totals:</span>
+                  <div className="flex items-center gap-4 mono text-xs">
+                    <span className="text-text-dim w-12 text-right">
+                      O: <span className="text-text">{selectedPlayers.reduce((sum, p) => sum + (p.orapm || 0), 0).toFixed(1)}</span>
+                    </span>
+                    <span className="text-text-dim w-12 text-right">
+                      D: <span className="text-text">{selectedPlayers.reduce((sum, p) => sum + (p.drapm || 0), 0).toFixed(1)}</span>
+                    </span>
+                    <span className="text-text w-12 text-right">
+                      Net: <span className="text-text">{selectedPlayers.reduce((sum, p) => sum + (p.rapm || 0), 0).toFixed(1)}</span>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
