@@ -436,12 +436,20 @@ async function callClaude(
   client: Anthropic,
   userPrompt: string,
 ): Promise<SectionResult> {
-  const response = await client.messages.create({
-    model: MODEL,
-    max_tokens: 400,
-    system: SYSTEM_PROMPT,
-    messages: [{ role: 'user', content: userPrompt }],
+  // Add timeout to prevent hanging
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    setTimeout(() => reject(new Error('Claude API call timed out after 30 seconds')), 30000);
   });
+
+  const response = await Promise.race([
+    client.messages.create({
+      model: MODEL,
+      max_tokens: 400,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: 'user', content: userPrompt }],
+    }),
+    timeoutPromise
+  ]);
 
   const textBlock = response.content.find((b) => b.type === 'text');
   const text = textBlock && textBlock.type === 'text' ? textBlock.text.trim() : '';
@@ -787,20 +795,39 @@ async function loadCached(teamId: number, season: number) {
 async function generateAndStore(teamId: number, season: number): Promise<NextResponse> {
   // Defensive cleanup of API key
   const rawApiKey = process.env.ANTHROPIC_API_KEY;
+
+  // Check if API key exists
   if (!rawApiKey) {
-    return NextResponse.json({ error: 'ANTHROPIC_API_KEY not configured' }, { status: 500 });
+    console.error('Coach brief API key not configured');
+    return NextResponse.json({
+      error: 'Coach brief service temporarily unavailable. Check server logs.'
+    }, { status: 500 });
   }
 
-  // Clean up potential environment variable issues
+  // Sanitize API key - remove quotes, whitespace, newlines
   const apiKey = rawApiKey
-    .trim()                    // Remove whitespace
-    .replace(/^["']|["']$/g, '') // Remove quotes
-    .replace(/^\s*|\s*$/g, '');  // Extra trim
+    .replace(/\r?\n/g, '')       // Remove newlines
+    .replace(/^["']|["']$/g, '') // Remove surrounding quotes
+    .trim();                     // Remove whitespace
 
-  // Validate API key format
-  if (!apiKey.startsWith('sk-ant-')) {
-    console.error('Invalid ANTHROPIC_API_KEY format - should start with sk-ant-');
-    return NextResponse.json({ error: 'Coach brief service temporarily unavailable' }, { status: 500 });
+  // Validate API key format without exposing it
+  const keyExists = Boolean(apiKey);
+  const hasValidPrefix = keyExists && apiKey.startsWith('sk-ant-');
+  const hasValidLength = keyExists && apiKey.length > 20; // Basic length check
+
+  // Log sanitized status without exposing the key
+  console.log('API key validation:', {
+    keyExists,
+    hasValidPrefix,
+    hasValidLength,
+    keyLength: apiKey.length
+  });
+
+  if (!keyExists || !hasValidPrefix || !hasValidLength) {
+    console.error('Invalid ANTHROPIC_API_KEY format or content');
+    return NextResponse.json({
+      error: 'Coach brief service temporarily unavailable. Check server logs.'
+    }, { status: 500 });
   }
 
   const opponentTeam = await prisma.team.findUnique({ where: { id: teamId } });
@@ -966,9 +993,18 @@ export async function GET(
   try {
     return await generateAndStore(teamId, season);
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unknown error';
-    console.error('Coach brief generation failed:', err);
-    return NextResponse.json({ error: `Brief generation failed: ${message}` }, { status: 500 });
+    // Log the full error for debugging but sanitize user-facing message
+    console.error('Coach brief generation failed:', {
+      error: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack : undefined,
+      teamId,
+      season
+    });
+
+    // Provide safe, generic error message to user
+    return NextResponse.json({
+      error: 'Coach brief service temporarily unavailable. Check server logs.'
+    }, { status: 500 });
   }
 }
 
@@ -991,8 +1027,17 @@ export async function POST(
   try {
     return await generateAndStore(teamId, season);
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unknown error';
-    console.error('Coach brief regeneration failed:', err);
-    return NextResponse.json({ error: `Brief generation failed: ${message}` }, { status: 500 });
+    // Log the full error for debugging but sanitize user-facing message
+    console.error('Coach brief regeneration failed:', {
+      error: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack : undefined,
+      teamId,
+      season
+    });
+
+    // Provide safe, generic error message to user
+    return NextResponse.json({
+      error: 'Coach brief service temporarily unavailable. Check server logs.'
+    }, { status: 500 });
   }
 }
