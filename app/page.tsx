@@ -250,6 +250,27 @@ export default async function HomePage({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {/* Analytics Guide */}
+          <Link
+            href="/analytics-guide"
+            className="group bg-surface hover:bg-surface-2 transition-colors p-6 border-l-4 border-yellow-400"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="display text-xl font-medium group-hover:text-yellow-400 transition-colors">
+                Analytics Guide
+              </h3>
+              <div className="mono text-xs text-yellow-400 border border-yellow-400/40 px-2 py-1 uppercase tracking-wider">
+                Educational
+              </div>
+            </div>
+            <p className="text-text-dim leading-relaxed text-sm mb-4">
+              Learn what each advanced stat means and how to use them for scouting.
+              Plain English explanations of RAPM, shot quality, efficiency metrics, and more.
+            </p>
+            <div className="text-xs text-yellow-400 group-hover:text-text transition-colors">
+              How to Read the Numbers →
+            </div>
+          </Link>
           {/* Lineup Optimizer */}
           <Link
             href={withSeason('/lineups', season)}

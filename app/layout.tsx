@@ -42,6 +42,7 @@ function Nav() {
             <Link href="/" className="text-text-dim hover:text-text transition-colors">Home</Link>
             <Link href="/teams" className="text-text-dim hover:text-text transition-colors">Teams</Link>
             <Link href="/players" className="text-text-dim hover:text-text transition-colors">Players</Link>
+            <Link href="/analytics-guide" className="text-text-dim hover:text-text transition-colors">Analytics Guide</Link>
           </div>
         </div>
         <div className="flex items-center gap-3">
