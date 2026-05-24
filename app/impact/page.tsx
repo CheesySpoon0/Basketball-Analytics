@@ -47,13 +47,21 @@ export default async function ImpactMetricsPage({
           }
         },
         position ? { position } : {},
-        conference ? { team: { conference } } : {}
+        conference ? {
+          seasonStats: {
+            some: {
+              season,
+              team: { conference }
+            }
+          }
+        } : {}
       ]
     },
     include: {
       team: true,
       seasonStats: {
-        where: { season }
+        where: { season },
+        include: { team: true } // Season-specific team
       },
       impact: {
         where: { season }
@@ -77,7 +85,7 @@ export default async function ImpactMetricsPage({
         id: player.id,
         name: player.name,
         position: player.position,
-        team: player.team,
+        team: stats.team, // Use season-specific team
         games: stats.games || 0,
         minutes: stats.minutes || 0,
         ppg,

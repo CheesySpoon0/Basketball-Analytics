@@ -41,8 +41,22 @@ export default async function PlayersPage({
         }
       },
       position ? { position } : {},
-      team ? { teamId: parseInt(team) } : {},
-      conference ? { team: { conference } } : {},
+      team ? {
+        seasonStats: {
+          some: {
+            season,
+            teamId: parseInt(team)
+          }
+        }
+      } : {},
+      conference ? {
+        seasonStats: {
+          some: {
+            season,
+            team: { conference }
+          }
+        }
+      } : {},
       scope === 'bigwest' ? {
         team: {
           school: {
@@ -63,7 +77,8 @@ export default async function PlayersPage({
     include: {
       team: true,
       seasonStats: {
-        where: { season }
+        where: { season },
+        include: { team: true } // Season-specific team
       },
       impact: {
         where: { season }
@@ -92,7 +107,7 @@ export default async function PlayersPage({
         id: player.id,
         name: player.name,
         position: player.position,
-        team: player.team,
+        team: stats.team, // Use season-specific team, not current team
         games: stats.games,
         minutes: stats.minutes || 0,
         ppg,
@@ -121,10 +136,10 @@ export default async function PlayersPage({
       }
     });
 
-  // Get filter options
-  const conferences = [...new Set(players.map(p => p.team?.conference).filter((conf): conf is string => Boolean(conf)))].sort();
+  // Get filter options using season-specific data
+  const conferences = [...new Set(playerData.map(p => p.team?.conference).filter((conf): conf is string => Boolean(conf)))].sort();
   const positions = [...new Set(players.map(p => p.position).filter((pos): pos is string => Boolean(pos)))].sort();
-  const teamsForFilter = [...new Set(players.map(p => p.team).filter((team): team is NonNullable<typeof team> => Boolean(team)))]
+  const teamsForFilter = [...new Set(playerData.map(p => p.team).filter((team): team is NonNullable<typeof team> => Boolean(team)))]
     .sort((a, b) => a.school.localeCompare(b.school));
 
   return (
