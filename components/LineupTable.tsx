@@ -2,11 +2,13 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { withSeason } from '../lib/season';
 
 interface LineupData {
   lineupHash: string | null;
   playerIds: string | null;
   playerNames: string[];
+  players: { id: number; name: string }[]; // For clickable links
   minutes: number;
   games: number;
   possessionsFor: number;
@@ -269,9 +271,14 @@ export function LineupTable({ lineups, season }: LineupTableProps) {
                   >
                     <td className="px-6 py-4">
                       <div className="space-y-1">
-                        {lineup.playerNames.map((name, j) => (
-                          <div key={j} className="text-sm text-text group-hover:text-accent transition-colors">
-                            {name}
+                        {lineup.players?.map((player, j) => (
+                          <div key={j} className="text-sm">
+                            <Link
+                              href={withSeason(`/players/${player.id}`, season)}
+                              className="text-text hover:text-accent transition-colors hover:underline decoration-1 underline-offset-2"
+                            >
+                              {player.name}
+                            </Link>
                           </div>
                         ))}
                       </div>

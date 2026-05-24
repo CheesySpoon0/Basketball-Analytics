@@ -13,6 +13,7 @@ interface LineupData {
   lineupHash: string | null;
   playerIds: string | null;
   playerNames: string[];
+  players: { id: number; name: string }[]; // For clickable links
   minutes: number;
   games: number;
   possessionsFor: number;
@@ -143,9 +144,17 @@ export default async function TeamLineupsPage({
       // endSeconds = seconds remaining at END (lower value)
       // Duration = startSeconds - endSeconds
       const minutes = stints.reduce((sum, stint) => {
+        // Validate stint has required fields
+        if (stint.startSeconds == null || stint.endSeconds == null) {
+          return sum;
+        }
+
         const stintMinutes = (stint.startSeconds - stint.endSeconds) / 60;
-        // Guard against negative durations (should not happen with correct clock logic)
-        return sum + Math.max(0, stintMinutes);
+        // Guard against negative durations and only include positive durations
+        if (stintMinutes > 0) {
+          return sum + stintMinutes;
+        }
+        return sum;
       }, 0);
       const games = new Set(stints.map(s => s.gameId)).size;
       const confidence = stints.find(s => s.confidence === 'full')?.confidence ||
@@ -155,41 +164,76 @@ export default async function TeamLineupsPage({
     })
   );
 
-  // Process lineup data
+  // Process lineup data - only valid 5-man lineups
+  let totalStints = 0;
+  let excludedPartialStints = 0;
+  let excludedMalformedStints = 0;
+  let excludedNegativeMinutes = 0;
+
   const lineups: LineupData[] = lineupDetails
-    .filter(row => row.playerIds !== null) // Filter out null playerIds
+    .filter(row => {
+      totalStints++;
+
+      // Filter out null playerIds
+      if (row.playerIds === null) {
+        excludedMalformedStints++;
+        return false;
+      }
+
+      // Parse playerIds and validate exactly 5 players
+      const playerIds = row.playerIds.split(',').map((id: string) => parseInt(id, 10));
+      if (playerIds.length !== 5 || playerIds.some(id => isNaN(id))) {
+        excludedPartialStints++;
+        return false;
+      }
+
+      // Check if minutes would be negative or zero
+      if (row.minutes <= 0) {
+        excludedNegativeMinutes++;
+        return false;
+      }
+
+      return true;
+    })
     .map(row => {
-    const playerIds = row.playerIds!.split(',').map((id: string) => parseInt(id, 10));
-    const playerNames = playerIds
-      .map((id: number) => playerMap.get(id) || `Player ${id}`)
-      .sort(); // Alphabetical for consistency
+      const playerIds = row.playerIds!.split(',').map((id: string) => parseInt(id, 10));
 
-    const possFor = row._sum.possessionsFor || 0;
-    const possAgainst = row._sum.possessionsAgainst || 0;
-    const ptsFor = row._sum.pointsFor || 0;
-    const ptsAgainst = row._sum.pointsAgainst || 0;
-    const xPtsFor = row._sum.expectedPointsFor || 0;
-    const xPtsAgainst = row._sum.expectedPointsAgainst || 0;
+      // Create player objects for linking
+      const players = playerIds.map((id: number) => ({
+        id,
+        name: playerMap.get(id) || `Player ${id}`
+      }));
 
-    return {
-      lineupHash: row.lineupHash,
-      playerIds: row.playerIds,
-      playerNames,
-      minutes: Math.max(0, Math.round(row.minutes)), // Additional guard against negative minutes in display
-      games: row.games,
-      possessionsFor: Math.round(possFor),
-      possessionsAgainst: Math.round(possAgainst),
-      pppFor: possFor > 0 ? ptsFor / possFor : 0,
-      pppAgainst: possAgainst > 0 ? ptsAgainst / possAgainst : 0,
-      netPpp: (possFor > 0 ? ptsFor / possFor : 0) - (possAgainst > 0 ? ptsAgainst / possAgainst : 0),
-      expectedPppFor: possFor > 0 && xPtsFor > 0 ? xPtsFor / possFor : undefined,
-      expectedPppAgainst: possAgainst > 0 && xPtsAgainst > 0 ? xPtsAgainst / possAgainst : undefined,
-      expectedNetPpp: (possFor > 0 && xPtsFor > 0 && possAgainst > 0 && xPtsAgainst > 0)
-        ? (xPtsFor / possFor) - (xPtsAgainst / possAgainst)
-        : undefined,
-      confidence: row.confidence as 'full' | 'partial' | 'gap'
-    };
-  });
+      // Keep playerNames for backward compatibility but sort for consistency
+      const playerNames = players.map(p => p.name).sort();
+
+      const possFor = row._sum.possessionsFor || 0;
+      const possAgainst = row._sum.possessionsAgainst || 0;
+      const ptsFor = row._sum.pointsFor || 0;
+      const ptsAgainst = row._sum.pointsAgainst || 0;
+      const xPtsFor = row._sum.expectedPointsFor || 0;
+      const xPtsAgainst = row._sum.expectedPointsAgainst || 0;
+
+      return {
+        lineupHash: row.lineupHash,
+        playerIds: row.playerIds,
+        playerNames,
+        players, // For clickable links
+        minutes: Math.max(0, Math.round(row.minutes)), // Additional guard against negative minutes in display
+        games: row.games,
+        possessionsFor: Math.round(possFor),
+        possessionsAgainst: Math.round(possAgainst),
+        pppFor: possFor > 0 ? ptsFor / possFor : 0,
+        pppAgainst: possAgainst > 0 ? ptsAgainst / possAgainst : 0,
+        netPpp: (possFor > 0 ? ptsFor / possFor : 0) - (possAgainst > 0 ? ptsAgainst / possAgainst : 0),
+        expectedPppFor: possFor > 0 && xPtsFor > 0 ? xPtsFor / possFor : undefined,
+        expectedPppAgainst: possAgainst > 0 && xPtsAgainst > 0 ? xPtsAgainst / possAgainst : undefined,
+        expectedNetPpp: (possFor > 0 && xPtsFor > 0 && possAgainst > 0 && xPtsAgainst > 0)
+          ? (xPtsFor / possFor) - (xPtsAgainst / possAgainst)
+          : undefined,
+        confidence: row.confidence as 'full' | 'partial' | 'gap'
+      };
+    });
 
   // Sort lineups by selected criteria (since SQL ORDER BY might not work with computed columns)
   lineups.sort((a, b) => {
@@ -360,6 +404,18 @@ export default async function TeamLineupsPage({
               ))}
             </div>
           </section>
+
+      {/* Data Quality Note */}
+      <section className="mb-6">
+        <div className="bg-surface-2/50 border border-border rounded-lg p-4">
+          <div className="text-sm text-text-dim leading-relaxed">
+            <strong className="text-text">Data Quality:</strong> Observed lineups only include valid 5-player stints.
+            Showing {lineups.length} valid lineups from {totalStints} total stints.
+            {excludedPartialStints > 0 && ` Excluded ${excludedPartialStints} partial/malformed lineups.`}
+            {excludedNegativeMinutes > 0 && ` Excluded ${excludedNegativeMinutes} stints with invalid minutes.`}
+          </div>
+        </div>
+      </section>
 
       {/* Lineups table */}
       <section>
