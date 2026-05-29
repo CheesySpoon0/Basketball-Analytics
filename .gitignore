@@ -28,3 +28,17 @@ scripts/python/rapm/.env
 scripts/output/
 .vercel
 .env*.local
+
+# RAPM Import and Validation Artifacts
+*backup*.json
+*validation*.json
+Lambda*.json
+PlayerImpact_backup_*.json
+backups/*.json
+scripts/python/rapm/output/lambda_grid/*.json
+
+# Analysis and Audit Reports  
+*AUDIT*.md
+*VALIDATION*.md
+*SUMMARY*.md
+*REPORT*.md
