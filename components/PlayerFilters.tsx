@@ -91,7 +91,7 @@ export function PlayerFilters({
           <option value="">All Teams</option>
           {teams.map(t => (
             <option key={t.id} value={t.id.toString()}>
-              {t.abbreviation || t.school}
+              {t.school}{t.abbreviation && t.abbreviation !== t.school ? ` (${t.abbreviation})` : ''}
             </option>
           ))}
         </select>

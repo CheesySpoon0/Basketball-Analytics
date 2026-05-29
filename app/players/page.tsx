@@ -23,101 +23,90 @@ export default async function PlayersPage({
   const search = params.search as string | undefined;
   const scope = params.scope as 'bigwest' | 'all' || 'all';
 
-  // Build where conditions
-  const whereConditions: any = {
-    AND: [
-      search ? {
-        name: {
-          contains: search,
-          mode: 'insensitive'
+  // Start with PlayerSeasonStats as base table for proper season-specific querying
+  const seasonStatsWhere: any = {
+    season,
+    games: { gte: minGames },
+    ...(team ? { teamId: parseInt(team) } : {}),
+    ...(conference ? { team: { conference } } : {}),
+    ...(scope === 'bigwest' ? {
+      team: {
+        school: {
+          in: [
+            'UC Irvine', 'UC Santa Barbara', 'Long Beach State', 'Cal Poly',
+            'Cal State Bakersfield', 'Cal State Fullerton', 'Cal State Northridge',
+            "Hawai'i", 'UC Davis', 'UC Riverside', 'UC San Diego'
+          ]
         }
-      } : {},
-      {
-        seasonStats: {
-          some: {
-            season,
-            games: { gte: minGames }
+      }
+    } : {}),
+    ...(search || position ? {
+      player: {
+        ...(search ? {
+          name: {
+            contains: search,
+            mode: 'insensitive'
           }
-        }
-      },
-      position ? { position } : {},
-      team ? {
-        seasonStats: {
-          some: {
-            season,
-            teamId: parseInt(team)
-          }
-        }
-      } : {},
-      conference ? {
-        seasonStats: {
-          some: {
-            season,
-            team: { conference }
-          }
-        }
-      } : {},
-      scope === 'bigwest' ? {
-        team: {
-          school: {
-            in: [
-              'UC Irvine', 'UC Santa Barbara', 'Long Beach State', 'Cal Poly',
-              'Cal State Bakersfield', 'Cal State Fullerton', 'Cal State Northridge',
-              "Hawai'i", 'UC Davis', 'UC Riverside', 'UC San Diego'
-            ]
-          }
-        }
-      } : {}
-    ]
+        } : {}),
+        ...(position ? { position } : {})
+      }
+    } : {})
   };
 
-  // Get players with stats and RAPM data
-  const players = await prisma.player.findMany({
-    where: whereConditions,
+  // Get season stats with related player, team, and RAPM data
+  const seasonStats = await prisma.playerSeasonStats.findMany({
+    where: seasonStatsWhere,
     include: {
-      team: true,
-      seasonStats: {
-        where: { season },
-        include: { team: true } // Season-specific team
+      player: {
+        include: {
+          impact: {
+            where: { season } // Use canonical PlayerImpact
+          }
+        }
       },
-      impact: {
-        where: { season }
-      }
-    },
-    take: 500 // Limit for performance
+      team: true // Season-specific team from the stats record
+    }
   });
 
-  // Transform and sort
-  const playerData = players
-    .map(player => {
-      const stats = player.seasonStats[0];
-      const rapm = player.impact[0];
-
-      if (!stats) return null;
+  // Transform and sort - now we have one record per player-season
+  const playerData = seasonStats
+    .map(stats => {
+      const impactData = stats.player.impact[0];
 
       const ppg = stats.games && stats.games > 0 ? (stats.points || 0) / stats.games : 0;
       const rpg = stats.games && stats.games > 0 ? (stats.rebounds || 0) / stats.games : 0;
+
       const apg = stats.games && stats.games > 0 ? (stats.assists || 0) / stats.games : 0;
       const fgAtt = stats.fieldGoalsAttempted || 0;
       const threePtAtt = stats.threePointsAttempted || 0;
       const efg = fgAtt > 0 ?
         ((stats.fieldGoalsMade || 0) + 0.5 * (stats.threePointsMade || 0)) / fgAtt : 0;
 
+      // Use Net RAPM from PlayerImpact, with validation that rapm ≈ orapm + drapm
+      const netRapm = impactData?.rapm || null;
+      const calculatedNetRapm = impactData && impactData.orapm !== null && impactData.drapm !== null
+        ? impactData.orapm + impactData.drapm
+        : null;
+
+      // Determine confidence based on possession sample
+      const totalPoss = impactData?.possessions || 0;
+      const confidence = totalPoss >= 400 ? 'high' : totalPoss >= 200 ? 'moderate' : 'low';
+
       return {
-        id: player.id,
-        name: player.name,
-        position: player.position,
-        team: stats.team, // Use season-specific team, not current team
+        id: stats.player.id,
+        name: stats.player.name,
+        position: stats.player.position,
+        team: stats.team, // Use season-specific team from stats record
         games: stats.games,
         minutes: stats.minutes || 0,
         ppg,
         rpg,
         apg,
         efg: efg * 100,
-        rapm: rapm?.rapm || null,
-        orapm: rapm?.orapm || null,
-        drapm: rapm?.drapm || null,
-        confidence: rapm?.confidence || null
+        rapm: netRapm, // Use actual Net RAPM from PlayerImpact
+        orapm: impactData?.orapm || null,
+        drapm: impactData?.drapm || null,
+        confidence: impactData ? confidence : null
       };
     })
     .filter((player): player is NonNullable<typeof player> => Boolean(player))
@@ -136,11 +125,23 @@ export default async function PlayersPage({
       }
     });
 
-  // Get filter options using season-specific data
+  // Get filter options using season-specific data (deduplicated properly)
   const conferences = [...new Set(playerData.map(p => p.team?.conference).filter((conf): conf is string => Boolean(conf)))].sort();
-  const positions = [...new Set(players.map(p => p.position).filter((pos): pos is string => Boolean(pos)))].sort();
-  const teamsForFilter = [...new Set(playerData.map(p => p.team).filter((team): team is NonNullable<typeof team> => Boolean(team)))]
-    .sort((a, b) => a.school.localeCompare(b.school));
+  const positions = [...new Set(seasonStats.map(s => s.player.position).filter((pos): pos is string => Boolean(pos)))].sort();
+
+  // Build team filter with proper deduplication by teamId and clear labels
+  const teamMap = new Map();
+  seasonStats.forEach(s => {
+    if (s.team && !teamMap.has(s.team.id)) {
+      teamMap.set(s.team.id, {
+        id: s.team.id,
+        school: s.team.school,
+        abbreviation: s.team.abbreviation,
+        conference: s.team.conference
+      });
+    }
+  });
+  const teamsForFilter = Array.from(teamMap.values()).sort((a, b) => a.school.localeCompare(b.school));
 
   return (
     <main className="max-w-[1400px] mx-auto px-6 lg:px-8 py-8 lg:py-12">
@@ -171,7 +172,7 @@ export default async function PlayersPage({
               : 'border-border text-text-dim hover:border-accent/50'
           }`}
         >
-          All D1 ({playerData.length})
+          All D1 ({playerData.length.toLocaleString()})
         </Link>
         <Link
           href={`?${new URLSearchParams({ ...params, scope: 'bigwest' }).toString()}`}

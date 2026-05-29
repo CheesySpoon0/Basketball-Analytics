@@ -70,7 +70,7 @@ export default async function TeamLineupsPage({
   });
   const playerMap = new Map(teamPlayers.map(p => [p.playerId, p.player.name || `Player ${p.playerId}`]));
 
-  // Get player RAPM data for projected lineups
+  // Get player RAPM data from canonical PlayerImpact table for projected lineups
   const playerRAMP = await prisma.playerImpact.findMany({
     where: {
       season,
@@ -79,16 +79,28 @@ export default async function TeamLineupsPage({
   });
   const rampMap = new Map(playerRAMP.map(p => [p.playerId, p]));
 
-  const playersWithRAMP = teamPlayers.map(p => ({
-    id: p.playerId,
-    name: p.player.name || `Player ${p.playerId}`,
-    orapm: rampMap.get(p.playerId)?.orapm || undefined,
-    drapm: rampMap.get(p.playerId)?.drapm || undefined,
-    rapm: rampMap.get(p.playerId)?.rapm || undefined,
-    confidence: rampMap.get(p.playerId)?.confidence || undefined,
-    possessions: rampMap.get(p.playerId)?.possessions || undefined,
-    minutes: p.minutes || undefined,
-  }));
+  const playersWithRAMP = teamPlayers.map(p => {
+    const impactData = rampMap.get(p.playerId);
+    // Use Net RAPM from PlayerImpact, with validation that rapm ≈ orapm + drapm
+    const netRapm = impactData?.rapm || undefined;
+    const calculatedNetRapm = impactData && impactData.orapm !== null && impactData.drapm !== null
+      ? (impactData.orapm + impactData.drapm)
+      : undefined;
+
+    const totalPoss = impactData?.possessions || 0;
+    const confidence = totalPoss >= 400 ? 'high' : totalPoss >= 200 ? 'moderate' : 'low';
+
+    return {
+      id: p.playerId,
+      name: p.player.name || `Player ${p.playerId}`,
+      orapm: impactData?.orapm || undefined,
+      drapm: impactData?.drapm || undefined,
+      rapm: netRapm, // Use actual Net RAPM from PlayerImpact
+      confidence: impactData ? confidence : undefined,
+      possessions: totalPoss || undefined,
+      minutes: p.minutes || undefined,
+    };
+  });
 
   // Note: For now using league baseline. Team-specific baseline would require
   // proper possession and efficiency calculations from TeamSeasonStats

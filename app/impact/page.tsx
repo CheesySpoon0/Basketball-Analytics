@@ -21,7 +21,7 @@ export default async function ImpactMetricsPage({
   const minGames = parseInt((params.minGames as string) || '5');
   const search = params.search as string | undefined;
 
-  // Get players with RAPM data
+  // Get players with RAPM data from canonical PlayerImpact table
   const players = await prisma.player.findMany({
     where: {
       AND: [
@@ -42,7 +42,7 @@ export default async function ImpactMetricsPage({
         {
           impact: {
             some: {
-              season
+              season // Use PlayerImpact as canonical RAPM source
             }
           }
         },
@@ -73,13 +73,21 @@ export default async function ImpactMetricsPage({
   const playerData = players
     .map(player => {
       const stats = player.seasonStats[0];
-      const impact = player.impact[0];
+      const impactData = player.impact[0];
 
-      if (!stats || !impact) return null;
+      if (!stats || !impactData) return null;
 
       const ppg = stats.games && stats.games > 0 ? (stats.points || 0) / stats.games : 0;
       const rpg = stats.games && stats.games > 0 ? (stats.rebounds || 0) / stats.games : 0;
       const apg = stats.games && stats.games > 0 ? (stats.assists || 0) / stats.games : 0;
+
+      // Use Net RAPM from PlayerImpact, with validation that rapm ≈ orapm + drapm
+      const netRapm = impactData.rapm;
+      const calculatedNetRapm = (impactData.orapm || 0) + (impactData.drapm || 0);
+
+      // Determine confidence based on possession sample
+      const totalPoss = impactData.possessions || 0;
+      const confidence = totalPoss >= 400 ? 'high' : totalPoss >= 200 ? 'moderate' : 'low';
 
       return {
         id: player.id,
@@ -91,12 +99,12 @@ export default async function ImpactMetricsPage({
         ppg,
         rpg,
         apg,
-        rapm: impact.rapm,
-        orapm: impact.orapm,
-        drapm: impact.drapm,
-        rapmExpected: impact.rapmExpected,
-        possessions: impact.possessions,
-        confidence: impact.confidence
+        rapm: netRapm, // Use actual Net RAPM from PlayerImpact
+        orapm: impactData.orapm,
+        drapm: impactData.drapm,
+        rapmExpected: impactData.rapmExpected, // Available in PlayerImpact
+        possessions: totalPoss,
+        confidence
       };
     })
     .filter((player): player is NonNullable<typeof player> => Boolean(player))
