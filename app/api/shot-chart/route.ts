@@ -19,11 +19,16 @@ export async function GET(request: Request) {
 
   const player = await prisma.player.findUnique({
     where: { id: playerId },
-    include: { team: true },
   });
   if (!player) {
     return NextResponse.json({ error: 'player not found' }, { status: 404 });
   }
+
+  // Get season-specific team info
+  const seasonStats = await prisma.playerSeasonStats.findUnique({
+    where: { playerId_season: { playerId, season } },
+    include: { team: true },
+  });
 
   const plays = await prisma.play.findMany({
     where: {
@@ -61,8 +66,8 @@ export async function GET(request: Request) {
       name: player.name,
       jersey: player.jersey,
       position: player.position,
-      team: player.team
-        ? { id: player.team.id, school: player.team.school, displayName: player.team.displayName }
+      team: seasonStats?.team
+        ? { id: seasonStats.team.id, school: seasonStats.team.school, displayName: seasonStats.team.displayName }
         : null,
     },
     season,

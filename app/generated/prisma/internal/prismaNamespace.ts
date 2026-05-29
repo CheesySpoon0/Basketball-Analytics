@@ -394,7 +394,8 @@ export const ModelName = {
   CoachBriefCache: 'CoachBriefCache',
   PlayerXeFG: 'PlayerXeFG',
   TeamXeFG: 'TeamXeFG',
-  LineupStint: 'LineupStint'
+  LineupStint: 'LineupStint',
+  PlayerRapm: 'PlayerRapm'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -410,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "team" | "player" | "game" | "play" | "teamSeasonStats" | "playerSeasonStats" | "playerImpact" | "coachBriefCache" | "playerXeFG" | "teamXeFG" | "lineupStint"
+    modelProps: "team" | "player" | "game" | "play" | "teamSeasonStats" | "playerSeasonStats" | "playerImpact" | "coachBriefCache" | "playerXeFG" | "teamXeFG" | "lineupStint" | "playerRapm"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1228,6 +1229,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PlayerRapm: {
+      payload: Prisma.$PlayerRapmPayload<ExtArgs>
+      fields: Prisma.PlayerRapmFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlayerRapmFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerRapmPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlayerRapmFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerRapmPayload>
+        }
+        findFirst: {
+          args: Prisma.PlayerRapmFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerRapmPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlayerRapmFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerRapmPayload>
+        }
+        findMany: {
+          args: Prisma.PlayerRapmFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerRapmPayload>[]
+        }
+        create: {
+          args: Prisma.PlayerRapmCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerRapmPayload>
+        }
+        createMany: {
+          args: Prisma.PlayerRapmCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlayerRapmCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerRapmPayload>[]
+        }
+        delete: {
+          args: Prisma.PlayerRapmDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerRapmPayload>
+        }
+        update: {
+          args: Prisma.PlayerRapmUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerRapmPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlayerRapmDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlayerRapmUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlayerRapmUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerRapmPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlayerRapmUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerRapmPayload>
+        }
+        aggregate: {
+          args: Prisma.PlayerRapmAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlayerRapm>
+        }
+        groupBy: {
+          args: Prisma.PlayerRapmGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlayerRapmGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlayerRapmCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlayerRapmCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1341,15 +1416,15 @@ export const PlayScalarFieldEnum = {
   playText: 'playText',
   scoringPlay: 'scoringPlay',
   shootingPlay: 'shootingPlay',
-  scoreValue: 'scoreValue',
-  shotMade: 'shotMade',
-  shotRange: 'shotRange',
-  shotAssisted: 'shotAssisted',
-  shotX: 'shotX',
-  shotY: 'shotY',
+  createdAt: 'createdAt',
   assisterId: 'assisterId',
   assisterName: 'assisterName',
-  createdAt: 'createdAt'
+  scoreValue: 'scoreValue',
+  shotAssisted: 'shotAssisted',
+  shotMade: 'shotMade',
+  shotRange: 'shotRange',
+  shotX: 'shotX',
+  shotY: 'shotY'
 } as const
 
 export type PlayScalarFieldEnum = (typeof PlayScalarFieldEnum)[keyof typeof PlayScalarFieldEnum]
@@ -1362,40 +1437,40 @@ export const TeamSeasonStatsScalarFieldEnum = {
   games: 'games',
   wins: 'wins',
   losses: 'losses',
-  pointsTotal: 'pointsTotal',
-  pointsInPaint: 'pointsInPaint',
-  pointsFastBreak: 'pointsFastBreak',
-  pointsOffTurnovers: 'pointsOffTurnovers',
   fieldGoalsMade: 'fieldGoalsMade',
   fieldGoalsAttempted: 'fieldGoalsAttempted',
   threePointsMade: 'threePointsMade',
   threePointsAttempted: 'threePointsAttempted',
   freeThrowsMade: 'freeThrowsMade',
   freeThrowsAttempted: 'freeThrowsAttempted',
-  offensiveRebounds: 'offensiveRebounds',
-  defensiveRebounds: 'defensiveRebounds',
-  totalRebounds: 'totalRebounds',
   assists: 'assists',
   steals: 'steals',
   blocks: 'blocks',
-  turnoversTotal: 'turnoversTotal',
-  turnoversTeam: 'turnoversTeam',
-  foulsTotal: 'foulsTotal',
-  foulsTechnical: 'foulsTechnical',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  defensiveRebounds: 'defensiveRebounds',
   foulsFlagrant: 'foulsFlagrant',
-  oppFieldGoalsMade: 'oppFieldGoalsMade',
-  oppFieldGoalsAttempted: 'oppFieldGoalsAttempted',
-  oppThreePointsMade: 'oppThreePointsMade',
-  oppThreePointsAttempted: 'oppThreePointsAttempted',
-  oppFreeThrowsMade: 'oppFreeThrowsMade',
-  oppFreeThrowsAttempted: 'oppFreeThrowsAttempted',
-  oppOffensiveRebounds: 'oppOffensiveRebounds',
+  foulsTechnical: 'foulsTechnical',
+  foulsTotal: 'foulsTotal',
+  offensiveRebounds: 'offensiveRebounds',
+  pointsFastBreak: 'pointsFastBreak',
+  pointsInPaint: 'pointsInPaint',
+  pointsOffTurnovers: 'pointsOffTurnovers',
+  pointsTotal: 'pointsTotal',
+  totalRebounds: 'totalRebounds',
+  turnoversTeam: 'turnoversTeam',
+  turnoversTotal: 'turnoversTotal',
   oppDefensiveRebounds: 'oppDefensiveRebounds',
-  oppTurnovers: 'oppTurnovers',
+  oppFieldGoalsAttempted: 'oppFieldGoalsAttempted',
+  oppFieldGoalsMade: 'oppFieldGoalsMade',
+  oppFreeThrowsAttempted: 'oppFreeThrowsAttempted',
+  oppFreeThrowsMade: 'oppFreeThrowsMade',
+  oppOffensiveRebounds: 'oppOffensiveRebounds',
   oppPoints: 'oppPoints',
   oppPossessions: 'oppPossessions',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  oppThreePointsAttempted: 'oppThreePointsAttempted',
+  oppThreePointsMade: 'oppThreePointsMade',
+  oppTurnovers: 'oppTurnovers'
 } as const
 
 export type TeamSeasonStatsScalarFieldEnum = (typeof TeamSeasonStatsScalarFieldEnum)[keyof typeof TeamSeasonStatsScalarFieldEnum]
@@ -1465,9 +1540,9 @@ export const CoachBriefCacheScalarFieldEnum = {
   inputTokens: 'inputTokens',
   outputTokens: 'outputTokens',
   costUsd: 'costUsd',
-  promptVersion: 'promptVersion',
   generatedAt: 'generatedAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  promptVersion: 'promptVersion'
 } as const
 
 export type CoachBriefCacheScalarFieldEnum = (typeof CoachBriefCacheScalarFieldEnum)[keyof typeof CoachBriefCacheScalarFieldEnum]
@@ -1540,20 +1615,41 @@ export const LineupStintScalarFieldEnum = {
   pppFor: 'pppFor',
   pppAgainst: 'pppAgainst',
   netPpp: 'netPpp',
-  expectedPointsFor: 'expectedPointsFor',
-  expectedPointsAgainst: 'expectedPointsAgainst',
-  expectedPppFor: 'expectedPppFor',
-  expectedPppAgainst: 'expectedPppAgainst',
-  expectedNetPpp: 'expectedNetPpp',
-  shotQualityFgaFor: 'shotQualityFgaFor',
-  shotQualityFgaAgainst: 'shotQualityFgaAgainst',
   confidence: 'confidence',
   notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  expectedNetPpp: 'expectedNetPpp',
+  expectedPointsAgainst: 'expectedPointsAgainst',
+  expectedPointsFor: 'expectedPointsFor',
+  expectedPppAgainst: 'expectedPppAgainst',
+  expectedPppFor: 'expectedPppFor',
+  shotQualityFgaAgainst: 'shotQualityFgaAgainst',
+  shotQualityFgaFor: 'shotQualityFgaFor'
+} as const
+
+export type LineupStintScalarFieldEnum = (typeof LineupStintScalarFieldEnum)[keyof typeof LineupStintScalarFieldEnum]
+
+
+export const PlayerRapmScalarFieldEnum = {
+  id: 'id',
+  playerId: 'playerId',
+  season: 'season',
+  target: 'target',
+  orapm: 'orapm',
+  drapm: 'drapm',
+  rapm: 'rapm',
+  offPossUsed: 'offPossUsed',
+  defPossUsed: 'defPossUsed',
+  lambda: 'lambda',
+  priorOrapm: 'priorOrapm',
+  priorDrapm: 'priorDrapm',
+  modelVersion: 'modelVersion',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type LineupStintScalarFieldEnum = (typeof LineupStintScalarFieldEnum)[keyof typeof LineupStintScalarFieldEnum]
+export type PlayerRapmScalarFieldEnum = (typeof PlayerRapmScalarFieldEnum)[keyof typeof PlayerRapmScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1807,6 +1903,7 @@ export type GlobalOmitConfig = {
   playerXeFG?: Prisma.PlayerXeFGOmit
   teamXeFG?: Prisma.TeamXeFGOmit
   lineupStint?: Prisma.LineupStintOmit
+  playerRapm?: Prisma.PlayerRapmOmit
 }
 
 /* Types for Logging */

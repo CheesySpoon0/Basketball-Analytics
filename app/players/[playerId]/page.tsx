@@ -41,12 +41,12 @@ export default async function PlayerPage({
 
   const player = await prisma.player.findUnique({
     where: { id: playerId },
-    include: { team: true },
   });
   if (!player) notFound();
 
   const seasonStats = await prisma.playerSeasonStats.findUnique({
     where: { playerId_season: { playerId, season: SEASON } },
+    include: { team: true }, // Season-specific team
   });
 
   const playerImpact = await prisma.playerImpact.findUnique({
@@ -118,7 +118,7 @@ export default async function PlayerPage({
   const rpg = seasonStats && (seasonStats.games ?? 0) > 0 ? (seasonStats.rebounds ?? 0) / (seasonStats.games ?? 1) : 0;
   const apg = seasonStats && (seasonStats.games ?? 0) > 0 ? (seasonStats.assists ?? 0) / (seasonStats.games ?? 1) : 0;
 
-  const accentColor = player.team?.primaryColor ? `#${player.team.primaryColor}` : 'var(--accent)';
+  const accentColor = seasonStats?.team?.primaryColor ? `#${seasonStats.team.primaryColor}` : 'var(--accent)';
 
   return (
     <main className="max-w-[1400px] mx-auto px-6 lg:px-8 py-10 lg:py-14">
@@ -129,13 +129,13 @@ export default async function PlayerPage({
             Conference
           </Link>
           <span className="mx-2 opacity-40">/</span>
-          {player.team && (
+          {seasonStats?.team && (
             <>
               <Link
-                href={withSeason(`/teams/${player.team.id}`, SEASON)}
+                href={withSeason(`/teams/${seasonStats.team.id}`, SEASON)}
                 className="hover:text-text transition-colors"
               >
-                {player.team.abbreviation ?? player.team.school}
+                {seasonStats.team.abbreviation ?? seasonStats.team.school}
               </Link>
               <span className="mx-2 opacity-40">/</span>
             </>
@@ -156,9 +156,9 @@ export default async function PlayerPage({
             {player.jersey && <span className="tabular-nums">#{player.jersey}</span>}
             <span>{player.position ?? '—'}</span>
             <span className="opacity-40">·</span>
-            {player.team && (
-              <Link href={withSeason(`/teams/${player.team.id}`, SEASON)} className="hover:text-text transition-colors">
-                {player.team.school}
+            {seasonStats?.team && (
+              <Link href={withSeason(`/teams/${seasonStats.team.id}`, SEASON)} className="hover:text-text transition-colors">
+                {seasonStats.team.school}
               </Link>
             )}
           </div>

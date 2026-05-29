@@ -45,8 +45,8 @@ export default async function ShotQualityHubPage({
     orderBy: { school: 'asc' }
   });
 
-  // Get sample players with high shot volume
-  const topShooters = await prisma.player.findMany({
+  // Get sample players with high shot volume and their season-specific team info
+  const playersWithShots = await prisma.player.findMany({
     where: {
       plays: {
         some: {
@@ -55,8 +55,9 @@ export default async function ShotQualityHubPage({
         }
       }
     },
-    include: {
-      team: true,
+    select: {
+      id: true,
+      name: true,
       _count: {
         select: {
           plays: {
@@ -75,6 +76,26 @@ export default async function ShotQualityHubPage({
     },
     take: 12
   });
+
+  // Get season-specific team info for these players
+  const playerIds = playersWithShots.map(p => p.id);
+  const seasonStatsMap = new Map();
+  if (playerIds.length > 0) {
+    const seasonStats = await prisma.playerSeasonStats.findMany({
+      where: {
+        playerId: { in: playerIds },
+        season
+      },
+      include: { team: true }
+    });
+    seasonStats.forEach(s => seasonStatsMap.set(s.playerId, s));
+  }
+
+  // Combine player data with season-specific team info
+  const topShooters = playersWithShots.map(player => ({
+    ...player,
+    team: seasonStatsMap.get(player.id)?.team || null
+  })).filter(player => player.team !== null); // Only show players with season team data
 
   return (
     <main className="max-w-[1400px] mx-auto px-6 lg:px-8 py-8 lg:py-12">

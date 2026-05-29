@@ -131,8 +131,8 @@ export interface PlayerScoutingReport {
   creation: CreationAgg;
   context: ContextAgg;
 
-  /** Inferred-only defensive profile (box-score + size proxies). */
-  defenseProfile: import('./defense').DefenseProfile;
+  /** Observed defensive impact (real data only, no inferences). */
+  observedDefenseProfile: import('./observed-defense').ObservedDefenseProfile | null;
 
   /** Top 2–4 prioritized notes, post dedup. */
   notes: PlayerNote[];

@@ -34,10 +34,10 @@ export type PlayAvgAggregateOutputType = {
   secondsRemaining: number | null
   homeScore: number | null
   awayScore: number | null
+  assisterId: number | null
   scoreValue: number | null
   shotX: number | null
   shotY: number | null
-  assisterId: number | null
 }
 
 export type PlaySumAggregateOutputType = {
@@ -48,10 +48,10 @@ export type PlaySumAggregateOutputType = {
   secondsRemaining: number | null
   homeScore: number | null
   awayScore: number | null
+  assisterId: number | null
   scoreValue: number | null
   shotX: number | null
   shotY: number | null
-  assisterId: number | null
 }
 
 export type PlayMinAggregateOutputType = {
@@ -68,15 +68,15 @@ export type PlayMinAggregateOutputType = {
   playText: string | null
   scoringPlay: boolean | null
   shootingPlay: boolean | null
-  scoreValue: number | null
-  shotMade: boolean | null
-  shotRange: string | null
-  shotAssisted: boolean | null
-  shotX: number | null
-  shotY: number | null
+  createdAt: Date | null
   assisterId: number | null
   assisterName: string | null
-  createdAt: Date | null
+  scoreValue: number | null
+  shotAssisted: boolean | null
+  shotMade: boolean | null
+  shotRange: string | null
+  shotX: number | null
+  shotY: number | null
 }
 
 export type PlayMaxAggregateOutputType = {
@@ -93,15 +93,15 @@ export type PlayMaxAggregateOutputType = {
   playText: string | null
   scoringPlay: boolean | null
   shootingPlay: boolean | null
-  scoreValue: number | null
-  shotMade: boolean | null
-  shotRange: string | null
-  shotAssisted: boolean | null
-  shotX: number | null
-  shotY: number | null
+  createdAt: Date | null
   assisterId: number | null
   assisterName: string | null
-  createdAt: Date | null
+  scoreValue: number | null
+  shotAssisted: boolean | null
+  shotMade: boolean | null
+  shotRange: string | null
+  shotX: number | null
+  shotY: number | null
 }
 
 export type PlayCountAggregateOutputType = {
@@ -118,15 +118,15 @@ export type PlayCountAggregateOutputType = {
   playText: number
   scoringPlay: number
   shootingPlay: number
-  scoreValue: number
-  shotMade: number
-  shotRange: number
-  shotAssisted: number
-  shotX: number
-  shotY: number
+  createdAt: number
   assisterId: number
   assisterName: number
-  createdAt: number
+  scoreValue: number
+  shotAssisted: number
+  shotMade: number
+  shotRange: number
+  shotX: number
+  shotY: number
   _all: number
 }
 
@@ -139,10 +139,10 @@ export type PlayAvgAggregateInputType = {
   secondsRemaining?: true
   homeScore?: true
   awayScore?: true
+  assisterId?: true
   scoreValue?: true
   shotX?: true
   shotY?: true
-  assisterId?: true
 }
 
 export type PlaySumAggregateInputType = {
@@ -153,10 +153,10 @@ export type PlaySumAggregateInputType = {
   secondsRemaining?: true
   homeScore?: true
   awayScore?: true
+  assisterId?: true
   scoreValue?: true
   shotX?: true
   shotY?: true
-  assisterId?: true
 }
 
 export type PlayMinAggregateInputType = {
@@ -173,15 +173,15 @@ export type PlayMinAggregateInputType = {
   playText?: true
   scoringPlay?: true
   shootingPlay?: true
-  scoreValue?: true
-  shotMade?: true
-  shotRange?: true
-  shotAssisted?: true
-  shotX?: true
-  shotY?: true
+  createdAt?: true
   assisterId?: true
   assisterName?: true
-  createdAt?: true
+  scoreValue?: true
+  shotAssisted?: true
+  shotMade?: true
+  shotRange?: true
+  shotX?: true
+  shotY?: true
 }
 
 export type PlayMaxAggregateInputType = {
@@ -198,15 +198,15 @@ export type PlayMaxAggregateInputType = {
   playText?: true
   scoringPlay?: true
   shootingPlay?: true
-  scoreValue?: true
-  shotMade?: true
-  shotRange?: true
-  shotAssisted?: true
-  shotX?: true
-  shotY?: true
+  createdAt?: true
   assisterId?: true
   assisterName?: true
-  createdAt?: true
+  scoreValue?: true
+  shotAssisted?: true
+  shotMade?: true
+  shotRange?: true
+  shotX?: true
+  shotY?: true
 }
 
 export type PlayCountAggregateInputType = {
@@ -223,15 +223,15 @@ export type PlayCountAggregateInputType = {
   playText?: true
   scoringPlay?: true
   shootingPlay?: true
-  scoreValue?: true
-  shotMade?: true
-  shotRange?: true
-  shotAssisted?: true
-  shotX?: true
-  shotY?: true
+  createdAt?: true
   assisterId?: true
   assisterName?: true
-  createdAt?: true
+  scoreValue?: true
+  shotAssisted?: true
+  shotMade?: true
+  shotRange?: true
+  shotX?: true
+  shotY?: true
   _all?: true
 }
 
@@ -335,15 +335,15 @@ export type PlayGroupByOutputType = {
   playText: string | null
   scoringPlay: boolean | null
   shootingPlay: boolean | null
-  scoreValue: number | null
-  shotMade: boolean | null
-  shotRange: string | null
-  shotAssisted: boolean | null
-  shotX: number | null
-  shotY: number | null
+  createdAt: Date
   assisterId: number | null
   assisterName: string | null
-  createdAt: Date
+  scoreValue: number | null
+  shotAssisted: boolean | null
+  shotMade: boolean | null
+  shotRange: string | null
+  shotX: number | null
+  shotY: number | null
   _count: PlayCountAggregateOutputType | null
   _avg: PlayAvgAggregateOutputType | null
   _sum: PlaySumAggregateOutputType | null
@@ -383,15 +383,15 @@ export type PlayWhereInput = {
   playText?: Prisma.StringNullableFilter<"Play"> | string | null
   scoringPlay?: Prisma.BoolNullableFilter<"Play"> | boolean | null
   shootingPlay?: Prisma.BoolNullableFilter<"Play"> | boolean | null
-  scoreValue?: Prisma.IntNullableFilter<"Play"> | number | null
-  shotMade?: Prisma.BoolNullableFilter<"Play"> | boolean | null
-  shotRange?: Prisma.StringNullableFilter<"Play"> | string | null
-  shotAssisted?: Prisma.BoolNullableFilter<"Play"> | boolean | null
-  shotX?: Prisma.FloatNullableFilter<"Play"> | number | null
-  shotY?: Prisma.FloatNullableFilter<"Play"> | number | null
+  createdAt?: Prisma.DateTimeFilter<"Play"> | Date | string
   assisterId?: Prisma.IntNullableFilter<"Play"> | number | null
   assisterName?: Prisma.StringNullableFilter<"Play"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Play"> | Date | string
+  scoreValue?: Prisma.IntNullableFilter<"Play"> | number | null
+  shotAssisted?: Prisma.BoolNullableFilter<"Play"> | boolean | null
+  shotMade?: Prisma.BoolNullableFilter<"Play"> | boolean | null
+  shotRange?: Prisma.StringNullableFilter<"Play"> | string | null
+  shotX?: Prisma.FloatNullableFilter<"Play"> | number | null
+  shotY?: Prisma.FloatNullableFilter<"Play"> | number | null
   game?: Prisma.XOR<Prisma.GameScalarRelationFilter, Prisma.GameWhereInput>
   player?: Prisma.XOR<Prisma.PlayerNullableScalarRelationFilter, Prisma.PlayerWhereInput> | null
 }
@@ -410,15 +410,15 @@ export type PlayOrderByWithRelationInput = {
   playText?: Prisma.SortOrderInput | Prisma.SortOrder
   scoringPlay?: Prisma.SortOrderInput | Prisma.SortOrder
   shootingPlay?: Prisma.SortOrderInput | Prisma.SortOrder
-  scoreValue?: Prisma.SortOrderInput | Prisma.SortOrder
-  shotMade?: Prisma.SortOrderInput | Prisma.SortOrder
-  shotRange?: Prisma.SortOrderInput | Prisma.SortOrder
-  shotAssisted?: Prisma.SortOrderInput | Prisma.SortOrder
-  shotX?: Prisma.SortOrderInput | Prisma.SortOrder
-  shotY?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   assisterId?: Prisma.SortOrderInput | Prisma.SortOrder
   assisterName?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
+  scoreValue?: Prisma.SortOrderInput | Prisma.SortOrder
+  shotAssisted?: Prisma.SortOrderInput | Prisma.SortOrder
+  shotMade?: Prisma.SortOrderInput | Prisma.SortOrder
+  shotRange?: Prisma.SortOrderInput | Prisma.SortOrder
+  shotX?: Prisma.SortOrderInput | Prisma.SortOrder
+  shotY?: Prisma.SortOrderInput | Prisma.SortOrder
   game?: Prisma.GameOrderByWithRelationInput
   player?: Prisma.PlayerOrderByWithRelationInput
 }
@@ -440,15 +440,15 @@ export type PlayWhereUniqueInput = Prisma.AtLeast<{
   playText?: Prisma.StringNullableFilter<"Play"> | string | null
   scoringPlay?: Prisma.BoolNullableFilter<"Play"> | boolean | null
   shootingPlay?: Prisma.BoolNullableFilter<"Play"> | boolean | null
-  scoreValue?: Prisma.IntNullableFilter<"Play"> | number | null
-  shotMade?: Prisma.BoolNullableFilter<"Play"> | boolean | null
-  shotRange?: Prisma.StringNullableFilter<"Play"> | string | null
-  shotAssisted?: Prisma.BoolNullableFilter<"Play"> | boolean | null
-  shotX?: Prisma.FloatNullableFilter<"Play"> | number | null
-  shotY?: Prisma.FloatNullableFilter<"Play"> | number | null
+  createdAt?: Prisma.DateTimeFilter<"Play"> | Date | string
   assisterId?: Prisma.IntNullableFilter<"Play"> | number | null
   assisterName?: Prisma.StringNullableFilter<"Play"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Play"> | Date | string
+  scoreValue?: Prisma.IntNullableFilter<"Play"> | number | null
+  shotAssisted?: Prisma.BoolNullableFilter<"Play"> | boolean | null
+  shotMade?: Prisma.BoolNullableFilter<"Play"> | boolean | null
+  shotRange?: Prisma.StringNullableFilter<"Play"> | string | null
+  shotX?: Prisma.FloatNullableFilter<"Play"> | number | null
+  shotY?: Prisma.FloatNullableFilter<"Play"> | number | null
   game?: Prisma.XOR<Prisma.GameScalarRelationFilter, Prisma.GameWhereInput>
   player?: Prisma.XOR<Prisma.PlayerNullableScalarRelationFilter, Prisma.PlayerWhereInput> | null
 }, "id">
@@ -467,15 +467,15 @@ export type PlayOrderByWithAggregationInput = {
   playText?: Prisma.SortOrderInput | Prisma.SortOrder
   scoringPlay?: Prisma.SortOrderInput | Prisma.SortOrder
   shootingPlay?: Prisma.SortOrderInput | Prisma.SortOrder
-  scoreValue?: Prisma.SortOrderInput | Prisma.SortOrder
-  shotMade?: Prisma.SortOrderInput | Prisma.SortOrder
-  shotRange?: Prisma.SortOrderInput | Prisma.SortOrder
-  shotAssisted?: Prisma.SortOrderInput | Prisma.SortOrder
-  shotX?: Prisma.SortOrderInput | Prisma.SortOrder
-  shotY?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   assisterId?: Prisma.SortOrderInput | Prisma.SortOrder
   assisterName?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
+  scoreValue?: Prisma.SortOrderInput | Prisma.SortOrder
+  shotAssisted?: Prisma.SortOrderInput | Prisma.SortOrder
+  shotMade?: Prisma.SortOrderInput | Prisma.SortOrder
+  shotRange?: Prisma.SortOrderInput | Prisma.SortOrder
+  shotX?: Prisma.SortOrderInput | Prisma.SortOrder
+  shotY?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PlayCountOrderByAggregateInput
   _avg?: Prisma.PlayAvgOrderByAggregateInput
   _max?: Prisma.PlayMaxOrderByAggregateInput
@@ -500,15 +500,15 @@ export type PlayScalarWhereWithAggregatesInput = {
   playText?: Prisma.StringNullableWithAggregatesFilter<"Play"> | string | null
   scoringPlay?: Prisma.BoolNullableWithAggregatesFilter<"Play"> | boolean | null
   shootingPlay?: Prisma.BoolNullableWithAggregatesFilter<"Play"> | boolean | null
-  scoreValue?: Prisma.IntNullableWithAggregatesFilter<"Play"> | number | null
-  shotMade?: Prisma.BoolNullableWithAggregatesFilter<"Play"> | boolean | null
-  shotRange?: Prisma.StringNullableWithAggregatesFilter<"Play"> | string | null
-  shotAssisted?: Prisma.BoolNullableWithAggregatesFilter<"Play"> | boolean | null
-  shotX?: Prisma.FloatNullableWithAggregatesFilter<"Play"> | number | null
-  shotY?: Prisma.FloatNullableWithAggregatesFilter<"Play"> | number | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Play"> | Date | string
   assisterId?: Prisma.IntNullableWithAggregatesFilter<"Play"> | number | null
   assisterName?: Prisma.StringNullableWithAggregatesFilter<"Play"> | string | null
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Play"> | Date | string
+  scoreValue?: Prisma.IntNullableWithAggregatesFilter<"Play"> | number | null
+  shotAssisted?: Prisma.BoolNullableWithAggregatesFilter<"Play"> | boolean | null
+  shotMade?: Prisma.BoolNullableWithAggregatesFilter<"Play"> | boolean | null
+  shotRange?: Prisma.StringNullableWithAggregatesFilter<"Play"> | string | null
+  shotX?: Prisma.FloatNullableWithAggregatesFilter<"Play"> | number | null
+  shotY?: Prisma.FloatNullableWithAggregatesFilter<"Play"> | number | null
 }
 
 export type PlayCreateInput = {
@@ -523,15 +523,15 @@ export type PlayCreateInput = {
   playText?: string | null
   scoringPlay?: boolean | null
   shootingPlay?: boolean | null
-  scoreValue?: number | null
-  shotMade?: boolean | null
-  shotRange?: string | null
-  shotAssisted?: boolean | null
-  shotX?: number | null
-  shotY?: number | null
+  createdAt?: Date | string
   assisterId?: number | null
   assisterName?: string | null
-  createdAt?: Date | string
+  scoreValue?: number | null
+  shotAssisted?: boolean | null
+  shotMade?: boolean | null
+  shotRange?: string | null
+  shotX?: number | null
+  shotY?: number | null
   game: Prisma.GameCreateNestedOneWithoutPlaysInput
   player?: Prisma.PlayerCreateNestedOneWithoutPlaysInput
 }
@@ -550,15 +550,15 @@ export type PlayUncheckedCreateInput = {
   playText?: string | null
   scoringPlay?: boolean | null
   shootingPlay?: boolean | null
-  scoreValue?: number | null
-  shotMade?: boolean | null
-  shotRange?: string | null
-  shotAssisted?: boolean | null
-  shotX?: number | null
-  shotY?: number | null
+  createdAt?: Date | string
   assisterId?: number | null
   assisterName?: string | null
-  createdAt?: Date | string
+  scoreValue?: number | null
+  shotAssisted?: boolean | null
+  shotMade?: boolean | null
+  shotRange?: string | null
+  shotX?: number | null
+  shotY?: number | null
 }
 
 export type PlayUpdateInput = {
@@ -573,15 +573,15 @@ export type PlayUpdateInput = {
   playText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scoringPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   shootingPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assisterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   assisterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   game?: Prisma.GameUpdateOneRequiredWithoutPlaysNestedInput
   player?: Prisma.PlayerUpdateOneWithoutPlaysNestedInput
 }
@@ -600,15 +600,15 @@ export type PlayUncheckedUpdateInput = {
   playText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scoringPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   shootingPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assisterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   assisterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type PlayCreateManyInput = {
@@ -625,15 +625,15 @@ export type PlayCreateManyInput = {
   playText?: string | null
   scoringPlay?: boolean | null
   shootingPlay?: boolean | null
-  scoreValue?: number | null
-  shotMade?: boolean | null
-  shotRange?: string | null
-  shotAssisted?: boolean | null
-  shotX?: number | null
-  shotY?: number | null
+  createdAt?: Date | string
   assisterId?: number | null
   assisterName?: string | null
-  createdAt?: Date | string
+  scoreValue?: number | null
+  shotAssisted?: boolean | null
+  shotMade?: boolean | null
+  shotRange?: string | null
+  shotX?: number | null
+  shotY?: number | null
 }
 
 export type PlayUpdateManyMutationInput = {
@@ -648,15 +648,15 @@ export type PlayUpdateManyMutationInput = {
   playText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scoringPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   shootingPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assisterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   assisterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type PlayUncheckedUpdateManyInput = {
@@ -673,15 +673,15 @@ export type PlayUncheckedUpdateManyInput = {
   playText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scoringPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   shootingPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assisterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   assisterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type PlayListRelationFilter = {
@@ -708,15 +708,15 @@ export type PlayCountOrderByAggregateInput = {
   playText?: Prisma.SortOrder
   scoringPlay?: Prisma.SortOrder
   shootingPlay?: Prisma.SortOrder
-  scoreValue?: Prisma.SortOrder
-  shotMade?: Prisma.SortOrder
-  shotRange?: Prisma.SortOrder
-  shotAssisted?: Prisma.SortOrder
-  shotX?: Prisma.SortOrder
-  shotY?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   assisterId?: Prisma.SortOrder
   assisterName?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
+  scoreValue?: Prisma.SortOrder
+  shotAssisted?: Prisma.SortOrder
+  shotMade?: Prisma.SortOrder
+  shotRange?: Prisma.SortOrder
+  shotX?: Prisma.SortOrder
+  shotY?: Prisma.SortOrder
 }
 
 export type PlayAvgOrderByAggregateInput = {
@@ -727,10 +727,10 @@ export type PlayAvgOrderByAggregateInput = {
   secondsRemaining?: Prisma.SortOrder
   homeScore?: Prisma.SortOrder
   awayScore?: Prisma.SortOrder
+  assisterId?: Prisma.SortOrder
   scoreValue?: Prisma.SortOrder
   shotX?: Prisma.SortOrder
   shotY?: Prisma.SortOrder
-  assisterId?: Prisma.SortOrder
 }
 
 export type PlayMaxOrderByAggregateInput = {
@@ -747,15 +747,15 @@ export type PlayMaxOrderByAggregateInput = {
   playText?: Prisma.SortOrder
   scoringPlay?: Prisma.SortOrder
   shootingPlay?: Prisma.SortOrder
-  scoreValue?: Prisma.SortOrder
-  shotMade?: Prisma.SortOrder
-  shotRange?: Prisma.SortOrder
-  shotAssisted?: Prisma.SortOrder
-  shotX?: Prisma.SortOrder
-  shotY?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   assisterId?: Prisma.SortOrder
   assisterName?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
+  scoreValue?: Prisma.SortOrder
+  shotAssisted?: Prisma.SortOrder
+  shotMade?: Prisma.SortOrder
+  shotRange?: Prisma.SortOrder
+  shotX?: Prisma.SortOrder
+  shotY?: Prisma.SortOrder
 }
 
 export type PlayMinOrderByAggregateInput = {
@@ -772,15 +772,15 @@ export type PlayMinOrderByAggregateInput = {
   playText?: Prisma.SortOrder
   scoringPlay?: Prisma.SortOrder
   shootingPlay?: Prisma.SortOrder
-  scoreValue?: Prisma.SortOrder
-  shotMade?: Prisma.SortOrder
-  shotRange?: Prisma.SortOrder
-  shotAssisted?: Prisma.SortOrder
-  shotX?: Prisma.SortOrder
-  shotY?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   assisterId?: Prisma.SortOrder
   assisterName?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
+  scoreValue?: Prisma.SortOrder
+  shotAssisted?: Prisma.SortOrder
+  shotMade?: Prisma.SortOrder
+  shotRange?: Prisma.SortOrder
+  shotX?: Prisma.SortOrder
+  shotY?: Prisma.SortOrder
 }
 
 export type PlaySumOrderByAggregateInput = {
@@ -791,10 +791,10 @@ export type PlaySumOrderByAggregateInput = {
   secondsRemaining?: Prisma.SortOrder
   homeScore?: Prisma.SortOrder
   awayScore?: Prisma.SortOrder
+  assisterId?: Prisma.SortOrder
   scoreValue?: Prisma.SortOrder
   shotX?: Prisma.SortOrder
   shotY?: Prisma.SortOrder
-  assisterId?: Prisma.SortOrder
 }
 
 export type PlayCreateNestedManyWithoutPlayerInput = {
@@ -901,15 +901,15 @@ export type PlayCreateWithoutPlayerInput = {
   playText?: string | null
   scoringPlay?: boolean | null
   shootingPlay?: boolean | null
-  scoreValue?: number | null
-  shotMade?: boolean | null
-  shotRange?: string | null
-  shotAssisted?: boolean | null
-  shotX?: number | null
-  shotY?: number | null
+  createdAt?: Date | string
   assisterId?: number | null
   assisterName?: string | null
-  createdAt?: Date | string
+  scoreValue?: number | null
+  shotAssisted?: boolean | null
+  shotMade?: boolean | null
+  shotRange?: string | null
+  shotX?: number | null
+  shotY?: number | null
   game: Prisma.GameCreateNestedOneWithoutPlaysInput
 }
 
@@ -926,15 +926,15 @@ export type PlayUncheckedCreateWithoutPlayerInput = {
   playText?: string | null
   scoringPlay?: boolean | null
   shootingPlay?: boolean | null
-  scoreValue?: number | null
-  shotMade?: boolean | null
-  shotRange?: string | null
-  shotAssisted?: boolean | null
-  shotX?: number | null
-  shotY?: number | null
+  createdAt?: Date | string
   assisterId?: number | null
   assisterName?: string | null
-  createdAt?: Date | string
+  scoreValue?: number | null
+  shotAssisted?: boolean | null
+  shotMade?: boolean | null
+  shotRange?: string | null
+  shotX?: number | null
+  shotY?: number | null
 }
 
 export type PlayCreateOrConnectWithoutPlayerInput = {
@@ -980,15 +980,15 @@ export type PlayScalarWhereInput = {
   playText?: Prisma.StringNullableFilter<"Play"> | string | null
   scoringPlay?: Prisma.BoolNullableFilter<"Play"> | boolean | null
   shootingPlay?: Prisma.BoolNullableFilter<"Play"> | boolean | null
-  scoreValue?: Prisma.IntNullableFilter<"Play"> | number | null
-  shotMade?: Prisma.BoolNullableFilter<"Play"> | boolean | null
-  shotRange?: Prisma.StringNullableFilter<"Play"> | string | null
-  shotAssisted?: Prisma.BoolNullableFilter<"Play"> | boolean | null
-  shotX?: Prisma.FloatNullableFilter<"Play"> | number | null
-  shotY?: Prisma.FloatNullableFilter<"Play"> | number | null
+  createdAt?: Prisma.DateTimeFilter<"Play"> | Date | string
   assisterId?: Prisma.IntNullableFilter<"Play"> | number | null
   assisterName?: Prisma.StringNullableFilter<"Play"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Play"> | Date | string
+  scoreValue?: Prisma.IntNullableFilter<"Play"> | number | null
+  shotAssisted?: Prisma.BoolNullableFilter<"Play"> | boolean | null
+  shotMade?: Prisma.BoolNullableFilter<"Play"> | boolean | null
+  shotRange?: Prisma.StringNullableFilter<"Play"> | string | null
+  shotX?: Prisma.FloatNullableFilter<"Play"> | number | null
+  shotY?: Prisma.FloatNullableFilter<"Play"> | number | null
 }
 
 export type PlayCreateWithoutGameInput = {
@@ -1003,15 +1003,15 @@ export type PlayCreateWithoutGameInput = {
   playText?: string | null
   scoringPlay?: boolean | null
   shootingPlay?: boolean | null
-  scoreValue?: number | null
-  shotMade?: boolean | null
-  shotRange?: string | null
-  shotAssisted?: boolean | null
-  shotX?: number | null
-  shotY?: number | null
+  createdAt?: Date | string
   assisterId?: number | null
   assisterName?: string | null
-  createdAt?: Date | string
+  scoreValue?: number | null
+  shotAssisted?: boolean | null
+  shotMade?: boolean | null
+  shotRange?: string | null
+  shotX?: number | null
+  shotY?: number | null
   player?: Prisma.PlayerCreateNestedOneWithoutPlaysInput
 }
 
@@ -1028,15 +1028,15 @@ export type PlayUncheckedCreateWithoutGameInput = {
   playText?: string | null
   scoringPlay?: boolean | null
   shootingPlay?: boolean | null
-  scoreValue?: number | null
-  shotMade?: boolean | null
-  shotRange?: string | null
-  shotAssisted?: boolean | null
-  shotX?: number | null
-  shotY?: number | null
+  createdAt?: Date | string
   assisterId?: number | null
   assisterName?: string | null
-  createdAt?: Date | string
+  scoreValue?: number | null
+  shotAssisted?: boolean | null
+  shotMade?: boolean | null
+  shotRange?: string | null
+  shotX?: number | null
+  shotY?: number | null
 }
 
 export type PlayCreateOrConnectWithoutGameInput = {
@@ -1078,15 +1078,15 @@ export type PlayCreateManyPlayerInput = {
   playText?: string | null
   scoringPlay?: boolean | null
   shootingPlay?: boolean | null
-  scoreValue?: number | null
-  shotMade?: boolean | null
-  shotRange?: string | null
-  shotAssisted?: boolean | null
-  shotX?: number | null
-  shotY?: number | null
+  createdAt?: Date | string
   assisterId?: number | null
   assisterName?: string | null
-  createdAt?: Date | string
+  scoreValue?: number | null
+  shotAssisted?: boolean | null
+  shotMade?: boolean | null
+  shotRange?: string | null
+  shotX?: number | null
+  shotY?: number | null
 }
 
 export type PlayUpdateWithoutPlayerInput = {
@@ -1101,15 +1101,15 @@ export type PlayUpdateWithoutPlayerInput = {
   playText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scoringPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   shootingPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assisterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   assisterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   game?: Prisma.GameUpdateOneRequiredWithoutPlaysNestedInput
 }
 
@@ -1126,15 +1126,15 @@ export type PlayUncheckedUpdateWithoutPlayerInput = {
   playText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scoringPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   shootingPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assisterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   assisterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type PlayUncheckedUpdateManyWithoutPlayerInput = {
@@ -1150,15 +1150,15 @@ export type PlayUncheckedUpdateManyWithoutPlayerInput = {
   playText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scoringPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   shootingPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assisterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   assisterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type PlayCreateManyGameInput = {
@@ -1174,15 +1174,15 @@ export type PlayCreateManyGameInput = {
   playText?: string | null
   scoringPlay?: boolean | null
   shootingPlay?: boolean | null
-  scoreValue?: number | null
-  shotMade?: boolean | null
-  shotRange?: string | null
-  shotAssisted?: boolean | null
-  shotX?: number | null
-  shotY?: number | null
+  createdAt?: Date | string
   assisterId?: number | null
   assisterName?: string | null
-  createdAt?: Date | string
+  scoreValue?: number | null
+  shotAssisted?: boolean | null
+  shotMade?: boolean | null
+  shotRange?: string | null
+  shotX?: number | null
+  shotY?: number | null
 }
 
 export type PlayUpdateWithoutGameInput = {
@@ -1197,15 +1197,15 @@ export type PlayUpdateWithoutGameInput = {
   playText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scoringPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   shootingPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assisterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   assisterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   player?: Prisma.PlayerUpdateOneWithoutPlaysNestedInput
 }
 
@@ -1222,15 +1222,15 @@ export type PlayUncheckedUpdateWithoutGameInput = {
   playText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scoringPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   shootingPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assisterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   assisterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type PlayUncheckedUpdateManyWithoutGameInput = {
@@ -1246,15 +1246,15 @@ export type PlayUncheckedUpdateManyWithoutGameInput = {
   playText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scoringPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   shootingPlay?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assisterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   assisterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scoreValue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  shotAssisted?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotMade?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  shotRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shotX?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotY?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 
@@ -1273,15 +1273,15 @@ export type PlaySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   playText?: boolean
   scoringPlay?: boolean
   shootingPlay?: boolean
-  scoreValue?: boolean
-  shotMade?: boolean
-  shotRange?: boolean
-  shotAssisted?: boolean
-  shotX?: boolean
-  shotY?: boolean
+  createdAt?: boolean
   assisterId?: boolean
   assisterName?: boolean
-  createdAt?: boolean
+  scoreValue?: boolean
+  shotAssisted?: boolean
+  shotMade?: boolean
+  shotRange?: boolean
+  shotX?: boolean
+  shotY?: boolean
   game?: boolean | Prisma.GameDefaultArgs<ExtArgs>
   player?: boolean | Prisma.Play$playerArgs<ExtArgs>
 }, ExtArgs["result"]["play"]>
@@ -1300,15 +1300,15 @@ export type PlaySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   playText?: boolean
   scoringPlay?: boolean
   shootingPlay?: boolean
-  scoreValue?: boolean
-  shotMade?: boolean
-  shotRange?: boolean
-  shotAssisted?: boolean
-  shotX?: boolean
-  shotY?: boolean
+  createdAt?: boolean
   assisterId?: boolean
   assisterName?: boolean
-  createdAt?: boolean
+  scoreValue?: boolean
+  shotAssisted?: boolean
+  shotMade?: boolean
+  shotRange?: boolean
+  shotX?: boolean
+  shotY?: boolean
   game?: boolean | Prisma.GameDefaultArgs<ExtArgs>
   player?: boolean | Prisma.Play$playerArgs<ExtArgs>
 }, ExtArgs["result"]["play"]>
@@ -1327,15 +1327,15 @@ export type PlaySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   playText?: boolean
   scoringPlay?: boolean
   shootingPlay?: boolean
-  scoreValue?: boolean
-  shotMade?: boolean
-  shotRange?: boolean
-  shotAssisted?: boolean
-  shotX?: boolean
-  shotY?: boolean
+  createdAt?: boolean
   assisterId?: boolean
   assisterName?: boolean
-  createdAt?: boolean
+  scoreValue?: boolean
+  shotAssisted?: boolean
+  shotMade?: boolean
+  shotRange?: boolean
+  shotX?: boolean
+  shotY?: boolean
   game?: boolean | Prisma.GameDefaultArgs<ExtArgs>
   player?: boolean | Prisma.Play$playerArgs<ExtArgs>
 }, ExtArgs["result"]["play"]>
@@ -1354,18 +1354,18 @@ export type PlaySelectScalar = {
   playText?: boolean
   scoringPlay?: boolean
   shootingPlay?: boolean
-  scoreValue?: boolean
-  shotMade?: boolean
-  shotRange?: boolean
-  shotAssisted?: boolean
-  shotX?: boolean
-  shotY?: boolean
+  createdAt?: boolean
   assisterId?: boolean
   assisterName?: boolean
-  createdAt?: boolean
+  scoreValue?: boolean
+  shotAssisted?: boolean
+  shotMade?: boolean
+  shotRange?: boolean
+  shotX?: boolean
+  shotY?: boolean
 }
 
-export type PlayOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "gameId" | "playerId" | "teamId" | "period" | "clock" | "secondsRemaining" | "homeScore" | "awayScore" | "playType" | "playText" | "scoringPlay" | "shootingPlay" | "scoreValue" | "shotMade" | "shotRange" | "shotAssisted" | "shotX" | "shotY" | "assisterId" | "assisterName" | "createdAt", ExtArgs["result"]["play"]>
+export type PlayOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "gameId" | "playerId" | "teamId" | "period" | "clock" | "secondsRemaining" | "homeScore" | "awayScore" | "playType" | "playText" | "scoringPlay" | "shootingPlay" | "createdAt" | "assisterId" | "assisterName" | "scoreValue" | "shotAssisted" | "shotMade" | "shotRange" | "shotX" | "shotY", ExtArgs["result"]["play"]>
 export type PlayInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   game?: boolean | Prisma.GameDefaultArgs<ExtArgs>
   player?: boolean | Prisma.Play$playerArgs<ExtArgs>
@@ -1399,15 +1399,15 @@ export type $PlayPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     playText: string | null
     scoringPlay: boolean | null
     shootingPlay: boolean | null
-    scoreValue: number | null
-    shotMade: boolean | null
-    shotRange: string | null
-    shotAssisted: boolean | null
-    shotX: number | null
-    shotY: number | null
+    createdAt: Date
     assisterId: number | null
     assisterName: string | null
-    createdAt: Date
+    scoreValue: number | null
+    shotAssisted: boolean | null
+    shotMade: boolean | null
+    shotRange: string | null
+    shotX: number | null
+    shotY: number | null
   }, ExtArgs["result"]["play"]>
   composites: {}
 }
@@ -1846,15 +1846,15 @@ export interface PlayFieldRefs {
   readonly playText: Prisma.FieldRef<"Play", 'String'>
   readonly scoringPlay: Prisma.FieldRef<"Play", 'Boolean'>
   readonly shootingPlay: Prisma.FieldRef<"Play", 'Boolean'>
-  readonly scoreValue: Prisma.FieldRef<"Play", 'Int'>
-  readonly shotMade: Prisma.FieldRef<"Play", 'Boolean'>
-  readonly shotRange: Prisma.FieldRef<"Play", 'String'>
-  readonly shotAssisted: Prisma.FieldRef<"Play", 'Boolean'>
-  readonly shotX: Prisma.FieldRef<"Play", 'Float'>
-  readonly shotY: Prisma.FieldRef<"Play", 'Float'>
+  readonly createdAt: Prisma.FieldRef<"Play", 'DateTime'>
   readonly assisterId: Prisma.FieldRef<"Play", 'Int'>
   readonly assisterName: Prisma.FieldRef<"Play", 'String'>
-  readonly createdAt: Prisma.FieldRef<"Play", 'DateTime'>
+  readonly scoreValue: Prisma.FieldRef<"Play", 'Int'>
+  readonly shotAssisted: Prisma.FieldRef<"Play", 'Boolean'>
+  readonly shotMade: Prisma.FieldRef<"Play", 'Boolean'>
+  readonly shotRange: Prisma.FieldRef<"Play", 'String'>
+  readonly shotX: Prisma.FieldRef<"Play", 'Float'>
+  readonly shotY: Prisma.FieldRef<"Play", 'Float'>
 }
     
 

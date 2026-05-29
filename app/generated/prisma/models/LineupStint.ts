@@ -54,13 +54,13 @@ export type LineupStintAvgAggregateOutputType = {
   pppFor: number | null
   pppAgainst: number | null
   netPpp: number | null
-  expectedPointsFor: number | null
-  expectedPointsAgainst: number | null
-  expectedPppFor: number | null
-  expectedPppAgainst: number | null
   expectedNetPpp: number | null
-  shotQualityFgaFor: number | null
+  expectedPointsAgainst: number | null
+  expectedPointsFor: number | null
+  expectedPppAgainst: number | null
+  expectedPppFor: number | null
   shotQualityFgaAgainst: number | null
+  shotQualityFgaFor: number | null
 }
 
 export type LineupStintSumAggregateOutputType = {
@@ -91,13 +91,13 @@ export type LineupStintSumAggregateOutputType = {
   pppFor: number | null
   pppAgainst: number | null
   netPpp: number | null
-  expectedPointsFor: number | null
-  expectedPointsAgainst: number | null
-  expectedPppFor: number | null
-  expectedPppAgainst: number | null
   expectedNetPpp: number | null
-  shotQualityFgaFor: number | null
+  expectedPointsAgainst: number | null
+  expectedPointsFor: number | null
+  expectedPppAgainst: number | null
+  expectedPppFor: number | null
   shotQualityFgaAgainst: number | null
+  shotQualityFgaFor: number | null
 }
 
 export type LineupStintMinAggregateOutputType = {
@@ -130,17 +130,17 @@ export type LineupStintMinAggregateOutputType = {
   pppFor: number | null
   pppAgainst: number | null
   netPpp: number | null
-  expectedPointsFor: number | null
-  expectedPointsAgainst: number | null
-  expectedPppFor: number | null
-  expectedPppAgainst: number | null
-  expectedNetPpp: number | null
-  shotQualityFgaFor: number | null
-  shotQualityFgaAgainst: number | null
   confidence: string | null
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  expectedNetPpp: number | null
+  expectedPointsAgainst: number | null
+  expectedPointsFor: number | null
+  expectedPppAgainst: number | null
+  expectedPppFor: number | null
+  shotQualityFgaAgainst: number | null
+  shotQualityFgaFor: number | null
 }
 
 export type LineupStintMaxAggregateOutputType = {
@@ -173,17 +173,17 @@ export type LineupStintMaxAggregateOutputType = {
   pppFor: number | null
   pppAgainst: number | null
   netPpp: number | null
-  expectedPointsFor: number | null
-  expectedPointsAgainst: number | null
-  expectedPppFor: number | null
-  expectedPppAgainst: number | null
-  expectedNetPpp: number | null
-  shotQualityFgaFor: number | null
-  shotQualityFgaAgainst: number | null
   confidence: string | null
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  expectedNetPpp: number | null
+  expectedPointsAgainst: number | null
+  expectedPointsFor: number | null
+  expectedPppAgainst: number | null
+  expectedPppFor: number | null
+  shotQualityFgaAgainst: number | null
+  shotQualityFgaFor: number | null
 }
 
 export type LineupStintCountAggregateOutputType = {
@@ -216,17 +216,17 @@ export type LineupStintCountAggregateOutputType = {
   pppFor: number
   pppAgainst: number
   netPpp: number
-  expectedPointsFor: number
-  expectedPointsAgainst: number
-  expectedPppFor: number
-  expectedPppAgainst: number
-  expectedNetPpp: number
-  shotQualityFgaFor: number
-  shotQualityFgaAgainst: number
   confidence: number
   notes: number
   createdAt: number
   updatedAt: number
+  expectedNetPpp: number
+  expectedPointsAgainst: number
+  expectedPointsFor: number
+  expectedPppAgainst: number
+  expectedPppFor: number
+  shotQualityFgaAgainst: number
+  shotQualityFgaFor: number
   _all: number
 }
 
@@ -259,13 +259,13 @@ export type LineupStintAvgAggregateInputType = {
   pppFor?: true
   pppAgainst?: true
   netPpp?: true
-  expectedPointsFor?: true
-  expectedPointsAgainst?: true
-  expectedPppFor?: true
-  expectedPppAgainst?: true
   expectedNetPpp?: true
-  shotQualityFgaFor?: true
+  expectedPointsAgainst?: true
+  expectedPointsFor?: true
+  expectedPppAgainst?: true
+  expectedPppFor?: true
   shotQualityFgaAgainst?: true
+  shotQualityFgaFor?: true
 }
 
 export type LineupStintSumAggregateInputType = {
@@ -296,13 +296,13 @@ export type LineupStintSumAggregateInputType = {
   pppFor?: true
   pppAgainst?: true
   netPpp?: true
-  expectedPointsFor?: true
-  expectedPointsAgainst?: true
-  expectedPppFor?: true
-  expectedPppAgainst?: true
   expectedNetPpp?: true
-  shotQualityFgaFor?: true
+  expectedPointsAgainst?: true
+  expectedPointsFor?: true
+  expectedPppAgainst?: true
+  expectedPppFor?: true
   shotQualityFgaAgainst?: true
+  shotQualityFgaFor?: true
 }
 
 export type LineupStintMinAggregateInputType = {
@@ -335,17 +335,17 @@ export type LineupStintMinAggregateInputType = {
   pppFor?: true
   pppAgainst?: true
   netPpp?: true
-  expectedPointsFor?: true
-  expectedPointsAgainst?: true
-  expectedPppFor?: true
-  expectedPppAgainst?: true
-  expectedNetPpp?: true
-  shotQualityFgaFor?: true
-  shotQualityFgaAgainst?: true
   confidence?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
+  expectedNetPpp?: true
+  expectedPointsAgainst?: true
+  expectedPointsFor?: true
+  expectedPppAgainst?: true
+  expectedPppFor?: true
+  shotQualityFgaAgainst?: true
+  shotQualityFgaFor?: true
 }
 
 export type LineupStintMaxAggregateInputType = {
@@ -378,17 +378,17 @@ export type LineupStintMaxAggregateInputType = {
   pppFor?: true
   pppAgainst?: true
   netPpp?: true
-  expectedPointsFor?: true
-  expectedPointsAgainst?: true
-  expectedPppFor?: true
-  expectedPppAgainst?: true
-  expectedNetPpp?: true
-  shotQualityFgaFor?: true
-  shotQualityFgaAgainst?: true
   confidence?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
+  expectedNetPpp?: true
+  expectedPointsAgainst?: true
+  expectedPointsFor?: true
+  expectedPppAgainst?: true
+  expectedPppFor?: true
+  shotQualityFgaAgainst?: true
+  shotQualityFgaFor?: true
 }
 
 export type LineupStintCountAggregateInputType = {
@@ -421,17 +421,17 @@ export type LineupStintCountAggregateInputType = {
   pppFor?: true
   pppAgainst?: true
   netPpp?: true
-  expectedPointsFor?: true
-  expectedPointsAgainst?: true
-  expectedPppFor?: true
-  expectedPppAgainst?: true
-  expectedNetPpp?: true
-  shotQualityFgaFor?: true
-  shotQualityFgaAgainst?: true
   confidence?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
+  expectedNetPpp?: true
+  expectedPointsAgainst?: true
+  expectedPointsFor?: true
+  expectedPppAgainst?: true
+  expectedPppFor?: true
+  shotQualityFgaAgainst?: true
+  shotQualityFgaFor?: true
   _all?: true
 }
 
@@ -551,17 +551,17 @@ export type LineupStintGroupByOutputType = {
   pppFor: number | null
   pppAgainst: number | null
   netPpp: number | null
-  expectedPointsFor: number | null
-  expectedPointsAgainst: number | null
-  expectedPppFor: number | null
-  expectedPppAgainst: number | null
-  expectedNetPpp: number | null
-  shotQualityFgaFor: number
-  shotQualityFgaAgainst: number
   confidence: string
   notes: string | null
   createdAt: Date
   updatedAt: Date
+  expectedNetPpp: number | null
+  expectedPointsAgainst: number | null
+  expectedPointsFor: number | null
+  expectedPppAgainst: number | null
+  expectedPppFor: number | null
+  shotQualityFgaAgainst: number
+  shotQualityFgaFor: number
   _count: LineupStintCountAggregateOutputType | null
   _avg: LineupStintAvgAggregateOutputType | null
   _sum: LineupStintSumAggregateOutputType | null
@@ -617,17 +617,17 @@ export type LineupStintWhereInput = {
   pppFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
   pppAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
   netPpp?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedPointsFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedPointsAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedPppFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedPppAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedNetPpp?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  shotQualityFgaFor?: Prisma.IntFilter<"LineupStint"> | number
-  shotQualityFgaAgainst?: Prisma.IntFilter<"LineupStint"> | number
   confidence?: Prisma.StringFilter<"LineupStint"> | string
   notes?: Prisma.StringNullableFilter<"LineupStint"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LineupStint"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LineupStint"> | Date | string
+  expectedNetPpp?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  expectedPointsAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  expectedPointsFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  expectedPppAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  expectedPppFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  shotQualityFgaAgainst?: Prisma.IntFilter<"LineupStint"> | number
+  shotQualityFgaFor?: Prisma.IntFilter<"LineupStint"> | number
   game?: Prisma.XOR<Prisma.GameScalarRelationFilter, Prisma.GameWhereInput>
   team?: Prisma.XOR<Prisma.TeamScalarRelationFilter, Prisma.TeamWhereInput>
 }
@@ -662,17 +662,17 @@ export type LineupStintOrderByWithRelationInput = {
   pppFor?: Prisma.SortOrderInput | Prisma.SortOrder
   pppAgainst?: Prisma.SortOrderInput | Prisma.SortOrder
   netPpp?: Prisma.SortOrderInput | Prisma.SortOrder
-  expectedPointsFor?: Prisma.SortOrderInput | Prisma.SortOrder
-  expectedPointsAgainst?: Prisma.SortOrderInput | Prisma.SortOrder
-  expectedPppFor?: Prisma.SortOrderInput | Prisma.SortOrder
-  expectedPppAgainst?: Prisma.SortOrderInput | Prisma.SortOrder
-  expectedNetPpp?: Prisma.SortOrderInput | Prisma.SortOrder
-  shotQualityFgaFor?: Prisma.SortOrder
-  shotQualityFgaAgainst?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  expectedNetPpp?: Prisma.SortOrderInput | Prisma.SortOrder
+  expectedPointsAgainst?: Prisma.SortOrderInput | Prisma.SortOrder
+  expectedPointsFor?: Prisma.SortOrderInput | Prisma.SortOrder
+  expectedPppAgainst?: Prisma.SortOrderInput | Prisma.SortOrder
+  expectedPppFor?: Prisma.SortOrderInput | Prisma.SortOrder
+  shotQualityFgaAgainst?: Prisma.SortOrder
+  shotQualityFgaFor?: Prisma.SortOrder
   game?: Prisma.GameOrderByWithRelationInput
   team?: Prisma.TeamOrderByWithRelationInput
 }
@@ -710,17 +710,17 @@ export type LineupStintWhereUniqueInput = Prisma.AtLeast<{
   pppFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
   pppAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
   netPpp?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedPointsFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedPointsAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedPppFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedPppAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedNetPpp?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  shotQualityFgaFor?: Prisma.IntFilter<"LineupStint"> | number
-  shotQualityFgaAgainst?: Prisma.IntFilter<"LineupStint"> | number
   confidence?: Prisma.StringFilter<"LineupStint"> | string
   notes?: Prisma.StringNullableFilter<"LineupStint"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LineupStint"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LineupStint"> | Date | string
+  expectedNetPpp?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  expectedPointsAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  expectedPointsFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  expectedPppAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  expectedPppFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  shotQualityFgaAgainst?: Prisma.IntFilter<"LineupStint"> | number
+  shotQualityFgaFor?: Prisma.IntFilter<"LineupStint"> | number
   game?: Prisma.XOR<Prisma.GameScalarRelationFilter, Prisma.GameWhereInput>
   team?: Prisma.XOR<Prisma.TeamScalarRelationFilter, Prisma.TeamWhereInput>
 }, "id">
@@ -755,17 +755,17 @@ export type LineupStintOrderByWithAggregationInput = {
   pppFor?: Prisma.SortOrderInput | Prisma.SortOrder
   pppAgainst?: Prisma.SortOrderInput | Prisma.SortOrder
   netPpp?: Prisma.SortOrderInput | Prisma.SortOrder
-  expectedPointsFor?: Prisma.SortOrderInput | Prisma.SortOrder
-  expectedPointsAgainst?: Prisma.SortOrderInput | Prisma.SortOrder
-  expectedPppFor?: Prisma.SortOrderInput | Prisma.SortOrder
-  expectedPppAgainst?: Prisma.SortOrderInput | Prisma.SortOrder
-  expectedNetPpp?: Prisma.SortOrderInput | Prisma.SortOrder
-  shotQualityFgaFor?: Prisma.SortOrder
-  shotQualityFgaAgainst?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  expectedNetPpp?: Prisma.SortOrderInput | Prisma.SortOrder
+  expectedPointsAgainst?: Prisma.SortOrderInput | Prisma.SortOrder
+  expectedPointsFor?: Prisma.SortOrderInput | Prisma.SortOrder
+  expectedPppAgainst?: Prisma.SortOrderInput | Prisma.SortOrder
+  expectedPppFor?: Prisma.SortOrderInput | Prisma.SortOrder
+  shotQualityFgaAgainst?: Prisma.SortOrder
+  shotQualityFgaFor?: Prisma.SortOrder
   _count?: Prisma.LineupStintCountOrderByAggregateInput
   _avg?: Prisma.LineupStintAvgOrderByAggregateInput
   _max?: Prisma.LineupStintMaxOrderByAggregateInput
@@ -806,17 +806,17 @@ export type LineupStintScalarWhereWithAggregatesInput = {
   pppFor?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
   pppAgainst?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
   netPpp?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
-  expectedPointsFor?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
-  expectedPointsAgainst?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
-  expectedPppFor?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
-  expectedPppAgainst?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
-  expectedNetPpp?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
-  shotQualityFgaFor?: Prisma.IntWithAggregatesFilter<"LineupStint"> | number
-  shotQualityFgaAgainst?: Prisma.IntWithAggregatesFilter<"LineupStint"> | number
   confidence?: Prisma.StringWithAggregatesFilter<"LineupStint"> | string
   notes?: Prisma.StringNullableWithAggregatesFilter<"LineupStint"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LineupStint"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LineupStint"> | Date | string
+  expectedNetPpp?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
+  expectedPointsAgainst?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
+  expectedPointsFor?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
+  expectedPppAgainst?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
+  expectedPppFor?: Prisma.FloatNullableWithAggregatesFilter<"LineupStint"> | number | null
+  shotQualityFgaAgainst?: Prisma.IntWithAggregatesFilter<"LineupStint"> | number
+  shotQualityFgaFor?: Prisma.IntWithAggregatesFilter<"LineupStint"> | number
 }
 
 export type LineupStintCreateInput = {
@@ -846,17 +846,17 @@ export type LineupStintCreateInput = {
   pppFor?: number | null
   pppAgainst?: number | null
   netPpp?: number | null
-  expectedPointsFor?: number | null
-  expectedPointsAgainst?: number | null
-  expectedPppFor?: number | null
-  expectedPppAgainst?: number | null
-  expectedNetPpp?: number | null
-  shotQualityFgaFor?: number
-  shotQualityFgaAgainst?: number
   confidence?: string
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  expectedNetPpp?: number | null
+  expectedPointsAgainst?: number | null
+  expectedPointsFor?: number | null
+  expectedPppAgainst?: number | null
+  expectedPppFor?: number | null
+  shotQualityFgaAgainst?: number
+  shotQualityFgaFor?: number
   game: Prisma.GameCreateNestedOneWithoutLineupStintsInput
   team: Prisma.TeamCreateNestedOneWithoutLineupStintsInput
 }
@@ -891,17 +891,17 @@ export type LineupStintUncheckedCreateInput = {
   pppFor?: number | null
   pppAgainst?: number | null
   netPpp?: number | null
-  expectedPointsFor?: number | null
-  expectedPointsAgainst?: number | null
-  expectedPppFor?: number | null
-  expectedPppAgainst?: number | null
-  expectedNetPpp?: number | null
-  shotQualityFgaFor?: number
-  shotQualityFgaAgainst?: number
   confidence?: string
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  expectedNetPpp?: number | null
+  expectedPointsAgainst?: number | null
+  expectedPointsFor?: number | null
+  expectedPppAgainst?: number | null
+  expectedPppFor?: number | null
+  shotQualityFgaAgainst?: number
+  shotQualityFgaFor?: number
 }
 
 export type LineupStintUpdateInput = {
@@ -931,17 +931,17 @@ export type LineupStintUpdateInput = {
   pppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   pppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   netPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
-  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
   confidence?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
+  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
   game?: Prisma.GameUpdateOneRequiredWithoutLineupStintsNestedInput
   team?: Prisma.TeamUpdateOneRequiredWithoutLineupStintsNestedInput
 }
@@ -976,17 +976,17 @@ export type LineupStintUncheckedUpdateInput = {
   pppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   pppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   netPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
-  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
   confidence?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
+  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type LineupStintCreateManyInput = {
@@ -1019,17 +1019,17 @@ export type LineupStintCreateManyInput = {
   pppFor?: number | null
   pppAgainst?: number | null
   netPpp?: number | null
-  expectedPointsFor?: number | null
-  expectedPointsAgainst?: number | null
-  expectedPppFor?: number | null
-  expectedPppAgainst?: number | null
-  expectedNetPpp?: number | null
-  shotQualityFgaFor?: number
-  shotQualityFgaAgainst?: number
   confidence?: string
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  expectedNetPpp?: number | null
+  expectedPointsAgainst?: number | null
+  expectedPointsFor?: number | null
+  expectedPppAgainst?: number | null
+  expectedPppFor?: number | null
+  shotQualityFgaAgainst?: number
+  shotQualityFgaFor?: number
 }
 
 export type LineupStintUpdateManyMutationInput = {
@@ -1059,17 +1059,17 @@ export type LineupStintUpdateManyMutationInput = {
   pppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   pppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   netPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
-  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
   confidence?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
+  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type LineupStintUncheckedUpdateManyInput = {
@@ -1102,17 +1102,17 @@ export type LineupStintUncheckedUpdateManyInput = {
   pppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   pppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   netPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
-  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
   confidence?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
+  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type LineupStintListRelationFilter = {
@@ -1155,17 +1155,17 @@ export type LineupStintCountOrderByAggregateInput = {
   pppFor?: Prisma.SortOrder
   pppAgainst?: Prisma.SortOrder
   netPpp?: Prisma.SortOrder
-  expectedPointsFor?: Prisma.SortOrder
-  expectedPointsAgainst?: Prisma.SortOrder
-  expectedPppFor?: Prisma.SortOrder
-  expectedPppAgainst?: Prisma.SortOrder
-  expectedNetPpp?: Prisma.SortOrder
-  shotQualityFgaFor?: Prisma.SortOrder
-  shotQualityFgaAgainst?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  expectedNetPpp?: Prisma.SortOrder
+  expectedPointsAgainst?: Prisma.SortOrder
+  expectedPointsFor?: Prisma.SortOrder
+  expectedPppAgainst?: Prisma.SortOrder
+  expectedPppFor?: Prisma.SortOrder
+  shotQualityFgaAgainst?: Prisma.SortOrder
+  shotQualityFgaFor?: Prisma.SortOrder
 }
 
 export type LineupStintAvgOrderByAggregateInput = {
@@ -1196,13 +1196,13 @@ export type LineupStintAvgOrderByAggregateInput = {
   pppFor?: Prisma.SortOrder
   pppAgainst?: Prisma.SortOrder
   netPpp?: Prisma.SortOrder
-  expectedPointsFor?: Prisma.SortOrder
-  expectedPointsAgainst?: Prisma.SortOrder
-  expectedPppFor?: Prisma.SortOrder
-  expectedPppAgainst?: Prisma.SortOrder
   expectedNetPpp?: Prisma.SortOrder
-  shotQualityFgaFor?: Prisma.SortOrder
+  expectedPointsAgainst?: Prisma.SortOrder
+  expectedPointsFor?: Prisma.SortOrder
+  expectedPppAgainst?: Prisma.SortOrder
+  expectedPppFor?: Prisma.SortOrder
   shotQualityFgaAgainst?: Prisma.SortOrder
+  shotQualityFgaFor?: Prisma.SortOrder
 }
 
 export type LineupStintMaxOrderByAggregateInput = {
@@ -1235,17 +1235,17 @@ export type LineupStintMaxOrderByAggregateInput = {
   pppFor?: Prisma.SortOrder
   pppAgainst?: Prisma.SortOrder
   netPpp?: Prisma.SortOrder
-  expectedPointsFor?: Prisma.SortOrder
-  expectedPointsAgainst?: Prisma.SortOrder
-  expectedPppFor?: Prisma.SortOrder
-  expectedPppAgainst?: Prisma.SortOrder
-  expectedNetPpp?: Prisma.SortOrder
-  shotQualityFgaFor?: Prisma.SortOrder
-  shotQualityFgaAgainst?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  expectedNetPpp?: Prisma.SortOrder
+  expectedPointsAgainst?: Prisma.SortOrder
+  expectedPointsFor?: Prisma.SortOrder
+  expectedPppAgainst?: Prisma.SortOrder
+  expectedPppFor?: Prisma.SortOrder
+  shotQualityFgaAgainst?: Prisma.SortOrder
+  shotQualityFgaFor?: Prisma.SortOrder
 }
 
 export type LineupStintMinOrderByAggregateInput = {
@@ -1278,17 +1278,17 @@ export type LineupStintMinOrderByAggregateInput = {
   pppFor?: Prisma.SortOrder
   pppAgainst?: Prisma.SortOrder
   netPpp?: Prisma.SortOrder
-  expectedPointsFor?: Prisma.SortOrder
-  expectedPointsAgainst?: Prisma.SortOrder
-  expectedPppFor?: Prisma.SortOrder
-  expectedPppAgainst?: Prisma.SortOrder
-  expectedNetPpp?: Prisma.SortOrder
-  shotQualityFgaFor?: Prisma.SortOrder
-  shotQualityFgaAgainst?: Prisma.SortOrder
   confidence?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  expectedNetPpp?: Prisma.SortOrder
+  expectedPointsAgainst?: Prisma.SortOrder
+  expectedPointsFor?: Prisma.SortOrder
+  expectedPppAgainst?: Prisma.SortOrder
+  expectedPppFor?: Prisma.SortOrder
+  shotQualityFgaAgainst?: Prisma.SortOrder
+  shotQualityFgaFor?: Prisma.SortOrder
 }
 
 export type LineupStintSumOrderByAggregateInput = {
@@ -1319,13 +1319,13 @@ export type LineupStintSumOrderByAggregateInput = {
   pppFor?: Prisma.SortOrder
   pppAgainst?: Prisma.SortOrder
   netPpp?: Prisma.SortOrder
-  expectedPointsFor?: Prisma.SortOrder
-  expectedPointsAgainst?: Prisma.SortOrder
-  expectedPppFor?: Prisma.SortOrder
-  expectedPppAgainst?: Prisma.SortOrder
   expectedNetPpp?: Prisma.SortOrder
-  shotQualityFgaFor?: Prisma.SortOrder
+  expectedPointsAgainst?: Prisma.SortOrder
+  expectedPointsFor?: Prisma.SortOrder
+  expectedPppAgainst?: Prisma.SortOrder
+  expectedPppFor?: Prisma.SortOrder
   shotQualityFgaAgainst?: Prisma.SortOrder
+  shotQualityFgaFor?: Prisma.SortOrder
 }
 
 export type LineupStintCreateNestedManyWithoutTeamInput = {
@@ -1439,17 +1439,17 @@ export type LineupStintCreateWithoutTeamInput = {
   pppFor?: number | null
   pppAgainst?: number | null
   netPpp?: number | null
-  expectedPointsFor?: number | null
-  expectedPointsAgainst?: number | null
-  expectedPppFor?: number | null
-  expectedPppAgainst?: number | null
-  expectedNetPpp?: number | null
-  shotQualityFgaFor?: number
-  shotQualityFgaAgainst?: number
   confidence?: string
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  expectedNetPpp?: number | null
+  expectedPointsAgainst?: number | null
+  expectedPointsFor?: number | null
+  expectedPppAgainst?: number | null
+  expectedPppFor?: number | null
+  shotQualityFgaAgainst?: number
+  shotQualityFgaFor?: number
   game: Prisma.GameCreateNestedOneWithoutLineupStintsInput
 }
 
@@ -1482,17 +1482,17 @@ export type LineupStintUncheckedCreateWithoutTeamInput = {
   pppFor?: number | null
   pppAgainst?: number | null
   netPpp?: number | null
-  expectedPointsFor?: number | null
-  expectedPointsAgainst?: number | null
-  expectedPppFor?: number | null
-  expectedPppAgainst?: number | null
-  expectedNetPpp?: number | null
-  shotQualityFgaFor?: number
-  shotQualityFgaAgainst?: number
   confidence?: string
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  expectedNetPpp?: number | null
+  expectedPointsAgainst?: number | null
+  expectedPointsFor?: number | null
+  expectedPppAgainst?: number | null
+  expectedPppFor?: number | null
+  shotQualityFgaAgainst?: number
+  shotQualityFgaFor?: number
 }
 
 export type LineupStintCreateOrConnectWithoutTeamInput = {
@@ -1554,17 +1554,17 @@ export type LineupStintScalarWhereInput = {
   pppFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
   pppAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
   netPpp?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedPointsFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedPointsAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedPppFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedPppAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  expectedNetPpp?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
-  shotQualityFgaFor?: Prisma.IntFilter<"LineupStint"> | number
-  shotQualityFgaAgainst?: Prisma.IntFilter<"LineupStint"> | number
   confidence?: Prisma.StringFilter<"LineupStint"> | string
   notes?: Prisma.StringNullableFilter<"LineupStint"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LineupStint"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LineupStint"> | Date | string
+  expectedNetPpp?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  expectedPointsAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  expectedPointsFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  expectedPppAgainst?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  expectedPppFor?: Prisma.FloatNullableFilter<"LineupStint"> | number | null
+  shotQualityFgaAgainst?: Prisma.IntFilter<"LineupStint"> | number
+  shotQualityFgaFor?: Prisma.IntFilter<"LineupStint"> | number
 }
 
 export type LineupStintCreateWithoutGameInput = {
@@ -1594,17 +1594,17 @@ export type LineupStintCreateWithoutGameInput = {
   pppFor?: number | null
   pppAgainst?: number | null
   netPpp?: number | null
-  expectedPointsFor?: number | null
-  expectedPointsAgainst?: number | null
-  expectedPppFor?: number | null
-  expectedPppAgainst?: number | null
-  expectedNetPpp?: number | null
-  shotQualityFgaFor?: number
-  shotQualityFgaAgainst?: number
   confidence?: string
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  expectedNetPpp?: number | null
+  expectedPointsAgainst?: number | null
+  expectedPointsFor?: number | null
+  expectedPppAgainst?: number | null
+  expectedPppFor?: number | null
+  shotQualityFgaAgainst?: number
+  shotQualityFgaFor?: number
   team: Prisma.TeamCreateNestedOneWithoutLineupStintsInput
 }
 
@@ -1637,17 +1637,17 @@ export type LineupStintUncheckedCreateWithoutGameInput = {
   pppFor?: number | null
   pppAgainst?: number | null
   netPpp?: number | null
-  expectedPointsFor?: number | null
-  expectedPointsAgainst?: number | null
-  expectedPppFor?: number | null
-  expectedPppAgainst?: number | null
-  expectedNetPpp?: number | null
-  shotQualityFgaFor?: number
-  shotQualityFgaAgainst?: number
   confidence?: string
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  expectedNetPpp?: number | null
+  expectedPointsAgainst?: number | null
+  expectedPointsFor?: number | null
+  expectedPppAgainst?: number | null
+  expectedPppFor?: number | null
+  shotQualityFgaAgainst?: number
+  shotQualityFgaFor?: number
 }
 
 export type LineupStintCreateOrConnectWithoutGameInput = {
@@ -1705,17 +1705,17 @@ export type LineupStintCreateManyTeamInput = {
   pppFor?: number | null
   pppAgainst?: number | null
   netPpp?: number | null
-  expectedPointsFor?: number | null
-  expectedPointsAgainst?: number | null
-  expectedPppFor?: number | null
-  expectedPppAgainst?: number | null
-  expectedNetPpp?: number | null
-  shotQualityFgaFor?: number
-  shotQualityFgaAgainst?: number
   confidence?: string
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  expectedNetPpp?: number | null
+  expectedPointsAgainst?: number | null
+  expectedPointsFor?: number | null
+  expectedPppAgainst?: number | null
+  expectedPppFor?: number | null
+  shotQualityFgaAgainst?: number
+  shotQualityFgaFor?: number
 }
 
 export type LineupStintUpdateWithoutTeamInput = {
@@ -1745,17 +1745,17 @@ export type LineupStintUpdateWithoutTeamInput = {
   pppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   pppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   netPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
-  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
   confidence?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
+  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
   game?: Prisma.GameUpdateOneRequiredWithoutLineupStintsNestedInput
 }
 
@@ -1788,17 +1788,17 @@ export type LineupStintUncheckedUpdateWithoutTeamInput = {
   pppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   pppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   netPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
-  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
   confidence?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
+  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type LineupStintUncheckedUpdateManyWithoutTeamInput = {
@@ -1830,17 +1830,17 @@ export type LineupStintUncheckedUpdateManyWithoutTeamInput = {
   pppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   pppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   netPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
-  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
   confidence?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
+  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type LineupStintCreateManyGameInput = {
@@ -1872,17 +1872,17 @@ export type LineupStintCreateManyGameInput = {
   pppFor?: number | null
   pppAgainst?: number | null
   netPpp?: number | null
-  expectedPointsFor?: number | null
-  expectedPointsAgainst?: number | null
-  expectedPppFor?: number | null
-  expectedPppAgainst?: number | null
-  expectedNetPpp?: number | null
-  shotQualityFgaFor?: number
-  shotQualityFgaAgainst?: number
   confidence?: string
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  expectedNetPpp?: number | null
+  expectedPointsAgainst?: number | null
+  expectedPointsFor?: number | null
+  expectedPppAgainst?: number | null
+  expectedPppFor?: number | null
+  shotQualityFgaAgainst?: number
+  shotQualityFgaFor?: number
 }
 
 export type LineupStintUpdateWithoutGameInput = {
@@ -1912,17 +1912,17 @@ export type LineupStintUpdateWithoutGameInput = {
   pppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   pppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   netPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
-  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
   confidence?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
+  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
   team?: Prisma.TeamUpdateOneRequiredWithoutLineupStintsNestedInput
 }
 
@@ -1955,17 +1955,17 @@ export type LineupStintUncheckedUpdateWithoutGameInput = {
   pppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   pppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   netPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
-  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
   confidence?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
+  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type LineupStintUncheckedUpdateManyWithoutGameInput = {
@@ -1997,17 +1997,17 @@ export type LineupStintUncheckedUpdateManyWithoutGameInput = {
   pppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   pppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   netPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
-  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
   confidence?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expectedNetPpp?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPointsFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppAgainst?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  expectedPppFor?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shotQualityFgaAgainst?: Prisma.IntFieldUpdateOperationsInput | number
+  shotQualityFgaFor?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -2042,17 +2042,17 @@ export type LineupStintSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   pppFor?: boolean
   pppAgainst?: boolean
   netPpp?: boolean
-  expectedPointsFor?: boolean
-  expectedPointsAgainst?: boolean
-  expectedPppFor?: boolean
-  expectedPppAgainst?: boolean
-  expectedNetPpp?: boolean
-  shotQualityFgaFor?: boolean
-  shotQualityFgaAgainst?: boolean
   confidence?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  expectedNetPpp?: boolean
+  expectedPointsAgainst?: boolean
+  expectedPointsFor?: boolean
+  expectedPppAgainst?: boolean
+  expectedPppFor?: boolean
+  shotQualityFgaAgainst?: boolean
+  shotQualityFgaFor?: boolean
   game?: boolean | Prisma.GameDefaultArgs<ExtArgs>
   team?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lineupStint"]>
@@ -2087,17 +2087,17 @@ export type LineupStintSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   pppFor?: boolean
   pppAgainst?: boolean
   netPpp?: boolean
-  expectedPointsFor?: boolean
-  expectedPointsAgainst?: boolean
-  expectedPppFor?: boolean
-  expectedPppAgainst?: boolean
-  expectedNetPpp?: boolean
-  shotQualityFgaFor?: boolean
-  shotQualityFgaAgainst?: boolean
   confidence?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  expectedNetPpp?: boolean
+  expectedPointsAgainst?: boolean
+  expectedPointsFor?: boolean
+  expectedPppAgainst?: boolean
+  expectedPppFor?: boolean
+  shotQualityFgaAgainst?: boolean
+  shotQualityFgaFor?: boolean
   game?: boolean | Prisma.GameDefaultArgs<ExtArgs>
   team?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lineupStint"]>
@@ -2132,17 +2132,17 @@ export type LineupStintSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   pppFor?: boolean
   pppAgainst?: boolean
   netPpp?: boolean
-  expectedPointsFor?: boolean
-  expectedPointsAgainst?: boolean
-  expectedPppFor?: boolean
-  expectedPppAgainst?: boolean
-  expectedNetPpp?: boolean
-  shotQualityFgaFor?: boolean
-  shotQualityFgaAgainst?: boolean
   confidence?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  expectedNetPpp?: boolean
+  expectedPointsAgainst?: boolean
+  expectedPointsFor?: boolean
+  expectedPppAgainst?: boolean
+  expectedPppFor?: boolean
+  shotQualityFgaAgainst?: boolean
+  shotQualityFgaFor?: boolean
   game?: boolean | Prisma.GameDefaultArgs<ExtArgs>
   team?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lineupStint"]>
@@ -2177,20 +2177,20 @@ export type LineupStintSelectScalar = {
   pppFor?: boolean
   pppAgainst?: boolean
   netPpp?: boolean
-  expectedPointsFor?: boolean
-  expectedPointsAgainst?: boolean
-  expectedPppFor?: boolean
-  expectedPppAgainst?: boolean
-  expectedNetPpp?: boolean
-  shotQualityFgaFor?: boolean
-  shotQualityFgaAgainst?: boolean
   confidence?: boolean
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  expectedNetPpp?: boolean
+  expectedPointsAgainst?: boolean
+  expectedPointsFor?: boolean
+  expectedPppAgainst?: boolean
+  expectedPppFor?: boolean
+  shotQualityFgaAgainst?: boolean
+  shotQualityFgaFor?: boolean
 }
 
-export type LineupStintOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "season" | "gameId" | "teamId" | "opponentTeamId" | "period" | "startSeconds" | "endSeconds" | "playerIds" | "lineupHash" | "pointsFor" | "pointsAgainst" | "fga" | "fgm" | "threepa" | "threepm" | "fta" | "ftm" | "offRebounds" | "defRebounds" | "turnovers" | "assists" | "steals" | "blocks" | "possessionsFor" | "possessionsAgainst" | "pppFor" | "pppAgainst" | "netPpp" | "expectedPointsFor" | "expectedPointsAgainst" | "expectedPppFor" | "expectedPppAgainst" | "expectedNetPpp" | "shotQualityFgaFor" | "shotQualityFgaAgainst" | "confidence" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["lineupStint"]>
+export type LineupStintOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "season" | "gameId" | "teamId" | "opponentTeamId" | "period" | "startSeconds" | "endSeconds" | "playerIds" | "lineupHash" | "pointsFor" | "pointsAgainst" | "fga" | "fgm" | "threepa" | "threepm" | "fta" | "ftm" | "offRebounds" | "defRebounds" | "turnovers" | "assists" | "steals" | "blocks" | "possessionsFor" | "possessionsAgainst" | "pppFor" | "pppAgainst" | "netPpp" | "confidence" | "notes" | "createdAt" | "updatedAt" | "expectedNetPpp" | "expectedPointsAgainst" | "expectedPointsFor" | "expectedPppAgainst" | "expectedPppFor" | "shotQualityFgaAgainst" | "shotQualityFgaFor", ExtArgs["result"]["lineupStint"]>
 export type LineupStintInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   game?: boolean | Prisma.GameDefaultArgs<ExtArgs>
   team?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
@@ -2240,17 +2240,17 @@ export type $LineupStintPayload<ExtArgs extends runtime.Types.Extensions.Interna
     pppFor: number | null
     pppAgainst: number | null
     netPpp: number | null
-    expectedPointsFor: number | null
-    expectedPointsAgainst: number | null
-    expectedPppFor: number | null
-    expectedPppAgainst: number | null
-    expectedNetPpp: number | null
-    shotQualityFgaFor: number
-    shotQualityFgaAgainst: number
     confidence: string
     notes: string | null
     createdAt: Date
     updatedAt: Date
+    expectedNetPpp: number | null
+    expectedPointsAgainst: number | null
+    expectedPointsFor: number | null
+    expectedPppAgainst: number | null
+    expectedPppFor: number | null
+    shotQualityFgaAgainst: number
+    shotQualityFgaFor: number
   }, ExtArgs["result"]["lineupStint"]>
   composites: {}
 }
@@ -2705,17 +2705,17 @@ export interface LineupStintFieldRefs {
   readonly pppFor: Prisma.FieldRef<"LineupStint", 'Float'>
   readonly pppAgainst: Prisma.FieldRef<"LineupStint", 'Float'>
   readonly netPpp: Prisma.FieldRef<"LineupStint", 'Float'>
-  readonly expectedPointsFor: Prisma.FieldRef<"LineupStint", 'Float'>
-  readonly expectedPointsAgainst: Prisma.FieldRef<"LineupStint", 'Float'>
-  readonly expectedPppFor: Prisma.FieldRef<"LineupStint", 'Float'>
-  readonly expectedPppAgainst: Prisma.FieldRef<"LineupStint", 'Float'>
-  readonly expectedNetPpp: Prisma.FieldRef<"LineupStint", 'Float'>
-  readonly shotQualityFgaFor: Prisma.FieldRef<"LineupStint", 'Int'>
-  readonly shotQualityFgaAgainst: Prisma.FieldRef<"LineupStint", 'Int'>
   readonly confidence: Prisma.FieldRef<"LineupStint", 'String'>
   readonly notes: Prisma.FieldRef<"LineupStint", 'String'>
   readonly createdAt: Prisma.FieldRef<"LineupStint", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LineupStint", 'DateTime'>
+  readonly expectedNetPpp: Prisma.FieldRef<"LineupStint", 'Float'>
+  readonly expectedPointsAgainst: Prisma.FieldRef<"LineupStint", 'Float'>
+  readonly expectedPointsFor: Prisma.FieldRef<"LineupStint", 'Float'>
+  readonly expectedPppAgainst: Prisma.FieldRef<"LineupStint", 'Float'>
+  readonly expectedPppFor: Prisma.FieldRef<"LineupStint", 'Float'>
+  readonly shotQualityFgaAgainst: Prisma.FieldRef<"LineupStint", 'Int'>
+  readonly shotQualityFgaFor: Prisma.FieldRef<"LineupStint", 'Int'>
 }
     
 

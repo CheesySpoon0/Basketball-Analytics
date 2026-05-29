@@ -80,7 +80,7 @@ export default async function PlayerReportPage({
     notes,
     liveWith,
     deny,
-    defenseProfile,
+    observedDefenseProfile,
     tendencies,
     confidence,
     rotation,
@@ -130,10 +130,13 @@ export default async function PlayerReportPage({
           <div className="mono text-[11px] uppercase tracking-[0.2em] text-text-dim mb-2 flex flex-wrap items-center gap-3">
             {player.jersey && <span className="tabular-nums">#{player.jersey}</span>}
             <span>{player.position ?? '—'}</span>
-            {defenseProfile.sizeNote && (
+            {player.height && (
               <>
                 <span className="opacity-40">·</span>
-                <span>{defenseProfile.sizeNote}</span>
+                <span>
+                  {Math.floor((player.height || 0) / 12)}'{((player.height || 0) % 12)}"
+                  {player.weight && ` · ${player.weight} lbs`}
+                </span>
               </>
             )}
             <span className="opacity-40">·</span>
@@ -339,47 +342,134 @@ export default async function PlayerReportPage({
         <NoteSection title="What to live with" notes={liveWith} accent="made" />
       )}
 
-      {/* Inferred defensive profile — clearly labeled */}
-      <section className="mb-10">
-        <div className="flex items-baseline justify-between mb-4 pb-3 border-b border-border">
-          <h2 className="display text-2xl font-medium">Inferred defensive profile</h2>
-          <span className="mono text-[11px] uppercase tracking-widest text-text-dim">
-            no tracking data
-          </span>
-        </div>
-        <div className="bg-surface border border-border p-5">
-          <p className="text-text-dim text-sm mb-5 leading-relaxed">
-            We store no defensive matchup or tracking data. Everything below is inferred from
-            box-score production and size only — direction, not verdict.
-          </p>
-          <div className="space-y-3 mb-5">
-            <DefenseLine label="Likely guards" value={defenseProfile.likelyGuards} />
-            <DefenseLine label="Best used defending" value={defenseProfile.bestUsedDefending} />
-            <DefenseLine label="Avoid asking him to" value={defenseProfile.avoidAskingHimTo} />
+      {/* Observed Defensive Impact */}
+      {observedDefenseProfile && (
+        <section className="mb-10">
+          <div className="flex items-baseline justify-between mb-4 pb-3 border-b border-border">
+            <h2 className="display text-2xl font-medium">Observed Defensive Impact</h2>
+            <span className="mono text-[11px] uppercase tracking-widest text-text-dim">
+              real data only
+            </span>
           </div>
-          <div className="flex flex-wrap gap-2 mb-5">
-            {defenseProfile.descriptors.map((d) => (
-              <span
-                key={d}
-                className="mono text-[10px] uppercase tracking-widest border border-border text-text-dim px-2 py-1"
-              >
-                {d}
-              </span>
-            ))}
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Stat label="STL/g" value={num(defenseProfile.spg)} />
-            <Stat label="BLK/g" value={num(defenseProfile.bpg)} />
-            <Stat label="REB/g" value={num(defenseProfile.rpg)} />
-            <Stat label="Fouls/g" value={num(defenseProfile.fpg)} />
-          </div>
-          {defenseProfile.sizeNote && (
-            <div className="mt-4 mono text-[11px] text-text-dim">
-              Size: {defenseProfile.sizeNote} · inferred from box-score and size only
+          <div className="bg-surface border border-border p-5">
+            <div className="flex items-center gap-3 mb-5">
+              <ConfidenceBadge
+                level={observedDefenseProfile.confidence}
+                score={observedDefenseProfile.defensivePossessions}
+              />
+              <span className="text-text-dim text-sm">{observedDefenseProfile.sampleNote}</span>
             </div>
-          )}
-        </div>
-      </section>
+
+            <div className="bg-surface-2 border border-border p-4 mb-5">
+              <div className="mono text-[10px] uppercase tracking-widest text-text-dim mb-2">
+                Data Quality Note
+              </div>
+              <p className="text-text-dim text-sm leading-relaxed">
+                We do not have player-tracking or matchup assignment data. Defensive impact is based on observed on-court results, RAPM, and box-score events. It measures impact, not exact defensive assignment.
+              </p>
+            </div>
+
+            {/* RAPM Section */}
+            {observedDefenseProfile.drapm !== null && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5 bg-surface-2 border border-border p-4">
+                <div className="text-center">
+                  <div className="stat-label">DRAPM</div>
+                  <div className="mono text-2xl tabular-nums mt-1"
+                       title="Defensive Regularized Adjusted Plus-Minus">
+                    {observedDefenseProfile.drapm.toFixed(1)}
+                  </div>
+                </div>
+                {observedDefenseProfile.drapmExpected !== null && (
+                  <div className="text-center">
+                    <div className="stat-label">Expected DRAPM</div>
+                    <div className="mono text-2xl tabular-nums mt-1 text-text-dim">
+                      {observedDefenseProfile.drapmExpected.toFixed(1)}
+                    </div>
+                  </div>
+                )}
+                {observedDefenseProfile.drapmDelta !== null && (
+                  <div className="text-center">
+                    <div className="stat-label">DRAPM vs Expected</div>
+                    <div className={`mono text-2xl tabular-nums mt-1 ${
+                      observedDefenseProfile.drapmDelta >= 0 ? 'text-made' : 'text-missed'
+                    }`}>
+                      {observedDefenseProfile.drapmDelta >= 0 ? '+' : ''}
+                      {observedDefenseProfile.drapmDelta.toFixed(1)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* On-court metrics */}
+            {observedDefenseProfile.showOnCourtMetrics && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+                <DefensiveStat
+                  label="On-court DRtg"
+                  value={observedDefenseProfile.onCourtDRtg?.toFixed(1) ?? '—'}
+                  tooltip="Points allowed per 100 possessions while this player is on court"
+                />
+                <DefensiveStat
+                  label="Expected DRtg"
+                  value={observedDefenseProfile.expectedDRtg?.toFixed(1) ?? '—'}
+                  tooltip="Expected points allowed per 100 possessions based on shot quality models"
+                />
+                <DefensiveStat
+                  label="On/Off DRtg"
+                  value={observedDefenseProfile.onOffDRtg ?
+                    `${observedDefenseProfile.onOffDRtg >= 0 ? '+' : ''}${observedDefenseProfile.onOffDRtg.toFixed(1)}` : '—'}
+                  tooltip="Team defense with player on court vs off court (negative = better with player on)"
+                  className={observedDefenseProfile.onOffDRtg ?
+                    (observedDefenseProfile.onOffDRtg <= 0 ? 'text-made' : 'text-missed') : ''}
+                />
+                <DefensiveStat
+                  label="Forced TO%"
+                  value={observedDefenseProfile.forcedTurnoverPct?.toFixed(1) ?
+                    `${observedDefenseProfile.forcedTurnoverPct.toFixed(1)}%` : '—'}
+                  tooltip="Opponent turnovers forced per 100 possessions while on court"
+                />
+              </div>
+            )}
+
+            {/* Advanced on-court metrics */}
+            {observedDefenseProfile.showAdvancedMetrics && observedDefenseProfile.defensiveReboundingPct && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                <DefensiveStat
+                  label="DREB% (est.)"
+                  value={`${observedDefenseProfile.defensiveReboundingPct.toFixed(1)}%`}
+                  tooltip="Estimated defensive rebounding percentage while on court (approximate calculation)"
+                />
+              </div>
+            )}
+
+            {/* Individual rates */}
+            {observedDefenseProfile.showDetailedRates && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <DefensiveStat
+                  label="STL per 40"
+                  value={num(observedDefenseProfile.stealsPer40)}
+                  tooltip="Steals per 40 minutes played"
+                />
+                <DefensiveStat
+                  label="BLK per 40"
+                  value={num(observedDefenseProfile.blocksPer40)}
+                  tooltip="Blocks per 40 minutes played"
+                />
+                <DefensiveStat
+                  label="DREB per 40"
+                  value={num(observedDefenseProfile.defReboundsPer40)}
+                  tooltip="Defensive rebounds per 40 minutes played"
+                />
+                <DefensiveStat
+                  label="Fouls per 40"
+                  value={num(observedDefenseProfile.foulsPer40)}
+                  tooltip="Personal fouls per 40 minutes played"
+                />
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Shot chart + zone breakdown */}
       <section className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(0,1.5fr)] gap-8 lg:gap-12 mb-10">
@@ -454,14 +544,40 @@ function ConfidenceBadge({ level, score }: { level: string; score: number }) {
       ? 'text-made border-made'
       : level === 'medium'
       ? 'text-text border-border'
-      : 'text-missed border-missed';
+      : level === 'insufficient'
+      ? 'text-missed border-missed'
+      : 'text-missed border-missed'; // 'low' case
+  const scoreText = typeof score === 'number' ? Math.round(score).toString() : score;
   return (
     <span
       className={`mono text-[10px] uppercase tracking-widest border px-2 py-1 ${cls}`}
       title="Report confidence from sample size, minutes, games, and xeFG coverage"
     >
-      {level} confidence · {score}
+      {level} confidence{scoreText && ` · ${scoreText}`}
     </span>
+  );
+}
+
+function DefensiveStat({
+  label,
+  value,
+  tooltip,
+  className
+}: {
+  label: string;
+  value: string;
+  tooltip: string;
+  className?: string;
+}) {
+  return (
+    <div className="text-center">
+      <div className="stat-label" title={tooltip}>
+        {label}
+      </div>
+      <div className={`mono text-2xl tabular-nums mt-1 ${className || ''}`}>
+        {value}
+      </div>
+    </div>
   );
 }
 

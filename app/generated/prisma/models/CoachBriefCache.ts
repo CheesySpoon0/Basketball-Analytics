@@ -57,9 +57,9 @@ export type CoachBriefCacheMinAggregateOutputType = {
   inputTokens: number | null
   outputTokens: number | null
   costUsd: number | null
-  promptVersion: number | null
   generatedAt: Date | null
   updatedAt: Date | null
+  promptVersion: number | null
 }
 
 export type CoachBriefCacheMaxAggregateOutputType = {
@@ -71,9 +71,9 @@ export type CoachBriefCacheMaxAggregateOutputType = {
   inputTokens: number | null
   outputTokens: number | null
   costUsd: number | null
-  promptVersion: number | null
   generatedAt: Date | null
   updatedAt: Date | null
+  promptVersion: number | null
 }
 
 export type CoachBriefCacheCountAggregateOutputType = {
@@ -88,9 +88,9 @@ export type CoachBriefCacheCountAggregateOutputType = {
   inputTokens: number
   outputTokens: number
   costUsd: number
-  promptVersion: number
   generatedAt: number
   updatedAt: number
+  promptVersion: number
   _all: number
 }
 
@@ -126,9 +126,9 @@ export type CoachBriefCacheMinAggregateInputType = {
   inputTokens?: true
   outputTokens?: true
   costUsd?: true
-  promptVersion?: true
   generatedAt?: true
   updatedAt?: true
+  promptVersion?: true
 }
 
 export type CoachBriefCacheMaxAggregateInputType = {
@@ -140,9 +140,9 @@ export type CoachBriefCacheMaxAggregateInputType = {
   inputTokens?: true
   outputTokens?: true
   costUsd?: true
-  promptVersion?: true
   generatedAt?: true
   updatedAt?: true
+  promptVersion?: true
 }
 
 export type CoachBriefCacheCountAggregateInputType = {
@@ -157,9 +157,9 @@ export type CoachBriefCacheCountAggregateInputType = {
   inputTokens?: true
   outputTokens?: true
   costUsd?: true
-  promptVersion?: true
   generatedAt?: true
   updatedAt?: true
+  promptVersion?: true
   _all?: true
 }
 
@@ -261,9 +261,9 @@ export type CoachBriefCacheGroupByOutputType = {
   inputTokens: number | null
   outputTokens: number | null
   costUsd: number | null
-  promptVersion: number
   generatedAt: Date
   updatedAt: Date
+  promptVersion: number
   _count: CoachBriefCacheCountAggregateOutputType | null
   _avg: CoachBriefCacheAvgAggregateOutputType | null
   _sum: CoachBriefCacheSumAggregateOutputType | null
@@ -301,9 +301,9 @@ export type CoachBriefCacheWhereInput = {
   inputTokens?: Prisma.IntNullableFilter<"CoachBriefCache"> | number | null
   outputTokens?: Prisma.IntNullableFilter<"CoachBriefCache"> | number | null
   costUsd?: Prisma.FloatNullableFilter<"CoachBriefCache"> | number | null
-  promptVersion?: Prisma.IntFilter<"CoachBriefCache"> | number
   generatedAt?: Prisma.DateTimeFilter<"CoachBriefCache"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CoachBriefCache"> | Date | string
+  promptVersion?: Prisma.IntFilter<"CoachBriefCache"> | number
 }
 
 export type CoachBriefCacheOrderByWithRelationInput = {
@@ -318,9 +318,9 @@ export type CoachBriefCacheOrderByWithRelationInput = {
   inputTokens?: Prisma.SortOrderInput | Prisma.SortOrder
   outputTokens?: Prisma.SortOrderInput | Prisma.SortOrder
   costUsd?: Prisma.SortOrderInput | Prisma.SortOrder
-  promptVersion?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  promptVersion?: Prisma.SortOrder
 }
 
 export type CoachBriefCacheWhereUniqueInput = Prisma.AtLeast<{
@@ -339,9 +339,9 @@ export type CoachBriefCacheWhereUniqueInput = Prisma.AtLeast<{
   inputTokens?: Prisma.IntNullableFilter<"CoachBriefCache"> | number | null
   outputTokens?: Prisma.IntNullableFilter<"CoachBriefCache"> | number | null
   costUsd?: Prisma.FloatNullableFilter<"CoachBriefCache"> | number | null
-  promptVersion?: Prisma.IntFilter<"CoachBriefCache"> | number
   generatedAt?: Prisma.DateTimeFilter<"CoachBriefCache"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CoachBriefCache"> | Date | string
+  promptVersion?: Prisma.IntFilter<"CoachBriefCache"> | number
 }, "id" | "subjectTeamId_opponentTeamId_season">
 
 export type CoachBriefCacheOrderByWithAggregationInput = {
@@ -356,9 +356,9 @@ export type CoachBriefCacheOrderByWithAggregationInput = {
   inputTokens?: Prisma.SortOrderInput | Prisma.SortOrder
   outputTokens?: Prisma.SortOrderInput | Prisma.SortOrder
   costUsd?: Prisma.SortOrderInput | Prisma.SortOrder
-  promptVersion?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  promptVersion?: Prisma.SortOrder
   _count?: Prisma.CoachBriefCacheCountOrderByAggregateInput
   _avg?: Prisma.CoachBriefCacheAvgOrderByAggregateInput
   _max?: Prisma.CoachBriefCacheMaxOrderByAggregateInput
@@ -381,9 +381,9 @@ export type CoachBriefCacheScalarWhereWithAggregatesInput = {
   inputTokens?: Prisma.IntNullableWithAggregatesFilter<"CoachBriefCache"> | number | null
   outputTokens?: Prisma.IntNullableWithAggregatesFilter<"CoachBriefCache"> | number | null
   costUsd?: Prisma.FloatNullableWithAggregatesFilter<"CoachBriefCache"> | number | null
-  promptVersion?: Prisma.IntWithAggregatesFilter<"CoachBriefCache"> | number
   generatedAt?: Prisma.DateTimeWithAggregatesFilter<"CoachBriefCache"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CoachBriefCache"> | Date | string
+  promptVersion?: Prisma.IntWithAggregatesFilter<"CoachBriefCache"> | number
 }
 
 export type CoachBriefCacheCreateInput = {
@@ -397,9 +397,9 @@ export type CoachBriefCacheCreateInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   costUsd?: number | null
-  promptVersion?: number
   generatedAt?: Date | string
   updatedAt?: Date | string
+  promptVersion?: number
 }
 
 export type CoachBriefCacheUncheckedCreateInput = {
@@ -414,9 +414,9 @@ export type CoachBriefCacheUncheckedCreateInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   costUsd?: number | null
-  promptVersion?: number
   generatedAt?: Date | string
   updatedAt?: Date | string
+  promptVersion?: number
 }
 
 export type CoachBriefCacheUpdateInput = {
@@ -430,9 +430,9 @@ export type CoachBriefCacheUpdateInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   costUsd?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  promptVersion?: Prisma.IntFieldUpdateOperationsInput | number
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  promptVersion?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type CoachBriefCacheUncheckedUpdateInput = {
@@ -447,9 +447,9 @@ export type CoachBriefCacheUncheckedUpdateInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   costUsd?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  promptVersion?: Prisma.IntFieldUpdateOperationsInput | number
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  promptVersion?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type CoachBriefCacheCreateManyInput = {
@@ -464,9 +464,9 @@ export type CoachBriefCacheCreateManyInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   costUsd?: number | null
-  promptVersion?: number
   generatedAt?: Date | string
   updatedAt?: Date | string
+  promptVersion?: number
 }
 
 export type CoachBriefCacheUpdateManyMutationInput = {
@@ -480,9 +480,9 @@ export type CoachBriefCacheUpdateManyMutationInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   costUsd?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  promptVersion?: Prisma.IntFieldUpdateOperationsInput | number
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  promptVersion?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type CoachBriefCacheUncheckedUpdateManyInput = {
@@ -497,9 +497,9 @@ export type CoachBriefCacheUncheckedUpdateManyInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   costUsd?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  promptVersion?: Prisma.IntFieldUpdateOperationsInput | number
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  promptVersion?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type CoachBriefCacheSubjectTeamIdOpponentTeamIdSeasonCompoundUniqueInput = {
@@ -520,9 +520,9 @@ export type CoachBriefCacheCountOrderByAggregateInput = {
   inputTokens?: Prisma.SortOrder
   outputTokens?: Prisma.SortOrder
   costUsd?: Prisma.SortOrder
-  promptVersion?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  promptVersion?: Prisma.SortOrder
 }
 
 export type CoachBriefCacheAvgOrderByAggregateInput = {
@@ -545,9 +545,9 @@ export type CoachBriefCacheMaxOrderByAggregateInput = {
   inputTokens?: Prisma.SortOrder
   outputTokens?: Prisma.SortOrder
   costUsd?: Prisma.SortOrder
-  promptVersion?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  promptVersion?: Prisma.SortOrder
 }
 
 export type CoachBriefCacheMinOrderByAggregateInput = {
@@ -559,9 +559,9 @@ export type CoachBriefCacheMinOrderByAggregateInput = {
   inputTokens?: Prisma.SortOrder
   outputTokens?: Prisma.SortOrder
   costUsd?: Prisma.SortOrder
-  promptVersion?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  promptVersion?: Prisma.SortOrder
 }
 
 export type CoachBriefCacheSumOrderByAggregateInput = {
@@ -589,9 +589,9 @@ export type CoachBriefCacheSelect<ExtArgs extends runtime.Types.Extensions.Inter
   inputTokens?: boolean
   outputTokens?: boolean
   costUsd?: boolean
-  promptVersion?: boolean
   generatedAt?: boolean
   updatedAt?: boolean
+  promptVersion?: boolean
 }, ExtArgs["result"]["coachBriefCache"]>
 
 export type CoachBriefCacheSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -606,9 +606,9 @@ export type CoachBriefCacheSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   inputTokens?: boolean
   outputTokens?: boolean
   costUsd?: boolean
-  promptVersion?: boolean
   generatedAt?: boolean
   updatedAt?: boolean
+  promptVersion?: boolean
 }, ExtArgs["result"]["coachBriefCache"]>
 
 export type CoachBriefCacheSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -623,9 +623,9 @@ export type CoachBriefCacheSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   inputTokens?: boolean
   outputTokens?: boolean
   costUsd?: boolean
-  promptVersion?: boolean
   generatedAt?: boolean
   updatedAt?: boolean
+  promptVersion?: boolean
 }, ExtArgs["result"]["coachBriefCache"]>
 
 export type CoachBriefCacheSelectScalar = {
@@ -640,12 +640,12 @@ export type CoachBriefCacheSelectScalar = {
   inputTokens?: boolean
   outputTokens?: boolean
   costUsd?: boolean
-  promptVersion?: boolean
   generatedAt?: boolean
   updatedAt?: boolean
+  promptVersion?: boolean
 }
 
-export type CoachBriefCacheOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "subjectTeamId" | "opponentTeamId" | "season" | "brief" | "firedRules" | "stats" | "model" | "inputTokens" | "outputTokens" | "costUsd" | "promptVersion" | "generatedAt" | "updatedAt", ExtArgs["result"]["coachBriefCache"]>
+export type CoachBriefCacheOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "subjectTeamId" | "opponentTeamId" | "season" | "brief" | "firedRules" | "stats" | "model" | "inputTokens" | "outputTokens" | "costUsd" | "generatedAt" | "updatedAt" | "promptVersion", ExtArgs["result"]["coachBriefCache"]>
 
 export type $CoachBriefCachePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CoachBriefCache"
@@ -662,9 +662,9 @@ export type $CoachBriefCachePayload<ExtArgs extends runtime.Types.Extensions.Int
     inputTokens: number | null
     outputTokens: number | null
     costUsd: number | null
-    promptVersion: number
     generatedAt: Date
     updatedAt: Date
+    promptVersion: number
   }, ExtArgs["result"]["coachBriefCache"]>
   composites: {}
 }
@@ -1099,9 +1099,9 @@ export interface CoachBriefCacheFieldRefs {
   readonly inputTokens: Prisma.FieldRef<"CoachBriefCache", 'Int'>
   readonly outputTokens: Prisma.FieldRef<"CoachBriefCache", 'Int'>
   readonly costUsd: Prisma.FieldRef<"CoachBriefCache", 'Float'>
-  readonly promptVersion: Prisma.FieldRef<"CoachBriefCache", 'Int'>
   readonly generatedAt: Prisma.FieldRef<"CoachBriefCache", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CoachBriefCache", 'DateTime'>
+  readonly promptVersion: Prisma.FieldRef<"CoachBriefCache", 'Int'>
 }
     
 

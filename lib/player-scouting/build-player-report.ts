@@ -23,7 +23,7 @@ import { deriveScoutingPriority, runPlayerRules, type PlayerRuleInput } from './
 import { buildTendencyProfile, deriveTransitionShotIds, type TendencyPlay } from './tendencies';
 import { deriveArchetype } from './archetype';
 import { deriveConfidence } from './confidence';
-import { buildDefenseProfile } from './defense';
+import { buildObservedDefenseProfile } from './observed-defense';
 import { runXeFGRules } from './xefg-rules';
 import type {
   ContextAgg,
@@ -69,17 +69,17 @@ export async function buildPlayerScoutingReport(
 ): Promise<PlayerScoutingReport | null> {
   const player = await prisma.player.findUnique({
     where: { id: playerId },
-    include: { team: true },
   });
   if (!player) return null;
 
   const seasonStats = await prisma.playerSeasonStats.findUnique({
     where: { playerId_season: { playerId, season } },
+    include: { team: true }, // Season-specific team
   });
 
-  const teamFgaRow = player.teamId
+  const teamFgaRow = seasonStats?.teamId
     ? await prisma.teamSeasonStats.findUnique({
-        where: { teamId_season: { teamId: player.teamId, season } },
+        where: { teamId_season: { teamId: seasonStats.teamId, season } },
         select: { fieldGoalsAttempted: true },
       })
     : null;
@@ -372,18 +372,14 @@ export async function buildPlayerScoutingReport(
   const liveWith = pickNotes(allNotes, 'live_with', 4);
   const deny = pickNotes(allNotes, 'deny', 4);
 
-  // ----- inferred defensive profile -----
-  const defenseProfile = buildDefenseProfile({
-    position: player.position,
-    heightInches: player.height,
-    weightLbs: player.weight,
-    isFrontcourt,
-    spg,
-    bpg,
-    rpg,
-    fpg,
-    minutesPerGame: mpg,
-  });
+  // ----- observed defensive impact -----
+  const observedDefenseProfile = seasonStats?.teamId
+    ? await buildObservedDefenseProfile({
+        playerId,
+        season,
+        teamId: seasonStats.teamId,
+      })
+    : null;
 
   // ----- caveats -----
   const caveats: string[] = [];
@@ -404,12 +400,12 @@ export async function buildPlayerScoutingReport(
       jersey: player.jersey,
       height: player.height,
       weight: player.weight,
-      team: player.team
+      team: seasonStats?.team
         ? {
-            id: player.team.id,
-            school: player.team.school,
-            abbreviation: player.team.abbreviation,
-            primaryColor: player.team.primaryColor,
+            id: seasonStats.team.id,
+            school: seasonStats.team.school,
+            abbreviation: seasonStats.team.abbreviation,
+            primaryColor: seasonStats.team.primaryColor,
           }
         : null,
     },
@@ -448,7 +444,7 @@ export async function buildPlayerScoutingReport(
     threeSubzones,
     creation,
     context,
-    defenseProfile,
+    observedDefenseProfile,
     notes: guarding,
     liveWith,
     deny,

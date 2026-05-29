@@ -96,3 +96,8 @@ export type TeamXeFG = Prisma.TeamXeFGModel
  * 
  */
 export type LineupStint = Prisma.LineupStintModel
+/**
+ * Model PlayerRapm
+ * 
+ */
+export type PlayerRapm = Prisma.PlayerRapmModel

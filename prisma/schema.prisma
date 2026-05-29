@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client"
   output   = "../app/generated/prisma"
@@ -11,113 +8,104 @@ datasource db {
 }
 
 model Team {
-  id            Int     @id
-  sourceId      String?
-  school        String
-  mascot        String?
-  abbreviation  String?
-  displayName   String?
-  conference    String?
-  conferenceId  Int?
-  primaryColor  String?
-  secondaryColor String?
-  currentVenue  String?
-  currentCity   String?
-  currentState  String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  players          Player[]
-  homeGames        Game[]             @relation("HomeTeam")
-  awayGames        Game[]             @relation("AwayTeam")
-  teamSeasonStats  TeamSeasonStats[]
+  id                Int                 @id
+  sourceId          String?
+  school            String
+  mascot            String?
+  abbreviation      String?
+  displayName       String?
+  conference        String?
+  conferenceId      Int?
+  primaryColor      String?
+  secondaryColor    String?
+  currentVenue      String?
+  currentCity       String?
+  currentState      String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  awayGames         Game[]              @relation("AwayTeam")
+  homeGames         Game[]              @relation("HomeTeam")
+  lineupStints      LineupStint[]
   playerSeasonStats PlayerSeasonStats[]
-  xeFG             TeamXeFG[]
-  lineupStints     LineupStint[]
+  players           Player[]
+  teamSeasonStats   TeamSeasonStats[]
+  xeFG              TeamXeFG[]
 
   @@map("teams")
 }
 
 model Player {
-  id        Int     @id
-  sourceId  String?
-  firstName String?
-  lastName  String?
-  name      String?
-  position  String?
-  height    Int?
-  weight    Int?
-  jersey    String?
-  teamId    Int?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  team        Team?               @relation(fields: [teamId], references: [id])
-  seasonStats PlayerSeasonStats[]
-  plays       Play[]
-  xeFG        PlayerXeFG[]
+  id          Int                 @id
+  sourceId    String?
+  firstName   String?
+  lastName    String?
+  name        String?
+  position    String?
+  height      Int?
+  weight      Int?
+  jersey      String?
+  teamId      Int?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
   impact      PlayerImpact[]
+  seasonStats PlayerSeasonStats[]
+  xeFG        PlayerXeFG[]
+  rapm        PlayerRapm[]
+  team        Team?               @relation(fields: [teamId], references: [id])
+  plays       Play[]
 
   @@map("players")
 }
 
 model Game {
-  id           Int      @id
-  sourceId     String?
-  season       Int
-  seasonType   String?
-  startDate    DateTime
-  homeTeamId   Int?
-  awayTeamId   Int?
-  homeScore    Int?
-  awayScore    Int?
-  venue        String?
-  status       String?
-  neutralSite  Boolean? @default(false)
-  conferenceGame Boolean? @default(false)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  homeTeam     Team?        @relation("HomeTeam", fields: [homeTeamId], references: [id])
-  awayTeam     Team?        @relation("AwayTeam", fields: [awayTeamId], references: [id])
-  plays        Play[]
-  lineupStints LineupStint[]
+  id             Int           @id
+  sourceId       String?
+  season         Int
+  seasonType     String?
+  startDate      DateTime
+  homeTeamId     Int?
+  awayTeamId     Int?
+  homeScore      Int?
+  awayScore      Int?
+  venue          String?
+  status         String?
+  neutralSite    Boolean?      @default(false)
+  conferenceGame Boolean?      @default(false)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  awayTeam       Team?         @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  homeTeam       Team?         @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  lineupStints   LineupStint[]
+  plays          Play[]
 
   @@map("games")
 }
 
 model Play {
-  id             String   @id
-  gameId         Int
-  playerId       Int?
-  teamId         Int?
-  period         Int?
-  clock          String?
+  id               String   @id
+  gameId           Int
+  playerId         Int?
+  teamId           Int?
+  period           Int?
+  clock            String?
   secondsRemaining Int?
-  homeScore      Int?
-  awayScore      Int?
-  playType       String?
-  playText       String?
-  scoringPlay    Boolean? @default(false)
-  shootingPlay   Boolean? @default(false)
-  scoreValue     Int?
-
-  // Shot information
-  shotMade       Boolean?
-  shotRange      String?
-  shotAssisted   Boolean?
-  shotX          Float?
-  shotY          Float?
-  assisterId     Int?
-  assisterName   String?
-
-  createdAt DateTime @default(now())
-
-  game   Game    @relation(fields: [gameId], references: [id])
-  player Player? @relation(fields: [playerId], references: [id])
+  homeScore        Int?
+  awayScore        Int?
+  playType         String?
+  playText         String?
+  scoringPlay      Boolean? @default(false)
+  shootingPlay     Boolean? @default(false)
+  createdAt        DateTime @default(now())
+  assisterId       Int?
+  assisterName     String?
+  scoreValue       Int?
+  shotAssisted     Boolean?
+  shotMade         Boolean?
+  shotRange        String?
+  shotX            Float?
+  shotY            Float?
+  game             Game     @relation(fields: [gameId], references: [id])
+  player           Player?  @relation(fields: [playerId], references: [id])
 
   @@index([gameId])
   @@index([playerId])
@@ -126,133 +114,102 @@ model Play {
 }
 
 model TeamSeasonStats {
-  id        Int @id @default(autoincrement())
-  teamId    Int
-  season    Int
-
-  games     Int? @default(0)
-  wins      Int? @default(0)
-  losses    Int? @default(0)
-
-  // Points breakdown
-  pointsTotal     Int? @default(0)
-  pointsInPaint   Int? @default(0)
-  pointsFastBreak Int? @default(0)
-  pointsOffTurnovers Int? @default(0)
-
-  fieldGoalsMade        Int? @default(0)
-  fieldGoalsAttempted   Int? @default(0)
-  threePointsMade       Int? @default(0)
-  threePointsAttempted  Int? @default(0)
-  freeThrowsMade        Int? @default(0)
-  freeThrowsAttempted   Int? @default(0)
-
-  // Rebounds breakdown
-  offensiveRebounds Int? @default(0)
-  defensiveRebounds Int? @default(0)
-  totalRebounds     Int? @default(0)
-
-  assists     Int? @default(0)
-  steals      Int? @default(0)
-  blocks      Int? @default(0)
-
-  // Turnovers breakdown
-  turnoversTotal Int? @default(0)
-  turnoversTeam  Int? @default(0)
-
-  // Fouls breakdown
-  foulsTotal     Int? @default(0)
-  foulsTechnical Int? @default(0)
-  foulsFlagrant  Int? @default(0)
-
-  // Opponent stats (for defensive metrics)
-  oppFieldGoalsMade        Int? @default(0)
-  oppFieldGoalsAttempted   Int? @default(0)
-  oppThreePointsMade       Int? @default(0)
-  oppThreePointsAttempted  Int? @default(0)
-  oppFreeThrowsMade        Int? @default(0)
-  oppFreeThrowsAttempted   Int? @default(0)
-  oppOffensiveRebounds     Int? @default(0)
-  oppDefensiveRebounds     Int? @default(0)
-  oppTurnovers             Int? @default(0)
-  oppPoints                Int? @default(0)
-  oppPossessions           Float? @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  team Team @relation(fields: [teamId], references: [id])
+  id                      Int      @id @default(autoincrement())
+  teamId                  Int
+  season                  Int
+  games                   Int?     @default(0)
+  wins                    Int?     @default(0)
+  losses                  Int?     @default(0)
+  fieldGoalsMade          Int?     @default(0)
+  fieldGoalsAttempted     Int?     @default(0)
+  threePointsMade         Int?     @default(0)
+  threePointsAttempted    Int?     @default(0)
+  freeThrowsMade          Int?     @default(0)
+  freeThrowsAttempted     Int?     @default(0)
+  assists                 Int?     @default(0)
+  steals                  Int?     @default(0)
+  blocks                  Int?     @default(0)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  defensiveRebounds       Int?     @default(0)
+  foulsFlagrant           Int?     @default(0)
+  foulsTechnical          Int?     @default(0)
+  foulsTotal              Int?     @default(0)
+  offensiveRebounds       Int?     @default(0)
+  pointsFastBreak         Int?     @default(0)
+  pointsInPaint           Int?     @default(0)
+  pointsOffTurnovers      Int?     @default(0)
+  pointsTotal             Int?     @default(0)
+  totalRebounds           Int?     @default(0)
+  turnoversTeam           Int?     @default(0)
+  turnoversTotal          Int?     @default(0)
+  oppDefensiveRebounds    Int?     @default(0)
+  oppFieldGoalsAttempted  Int?     @default(0)
+  oppFieldGoalsMade       Int?     @default(0)
+  oppFreeThrowsAttempted  Int?     @default(0)
+  oppFreeThrowsMade       Int?     @default(0)
+  oppOffensiveRebounds    Int?     @default(0)
+  oppPoints               Int?     @default(0)
+  oppPossessions          Float?   @default(0)
+  oppThreePointsAttempted Int?     @default(0)
+  oppThreePointsMade      Int?     @default(0)
+  oppTurnovers            Int?     @default(0)
+  team                    Team     @relation(fields: [teamId], references: [id])
 
   @@unique([teamId, season])
   @@map("team_season_stats")
 }
 
 model PlayerSeasonStats {
-  id        Int @id @default(autoincrement())
-  playerId  Int
-  teamId    Int?
-  season    Int
-
-  games           Int? @default(0)
-  gamesStarted    Int? @default(0)
-  minutes         Int? @default(0)
-  points          Int? @default(0)
-  rebounds        Int? @default(0)
-  offRebounds     Int? @default(0)
-  defRebounds     Int? @default(0)
-  assists         Int? @default(0)
-  steals          Int? @default(0)
-  blocks          Int? @default(0)
-  turnovers       Int? @default(0)
-  fouls           Int? @default(0)
-
-  fieldGoalsMade        Int? @default(0)
-  fieldGoalsAttempted   Int? @default(0)
-  threePointsMade       Int? @default(0)
-  threePointsAttempted  Int? @default(0)
-  freeThrowsMade        Int? @default(0)
-  freeThrowsAttempted   Int? @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  player Player @relation(fields: [playerId], references: [id])
-  team   Team?  @relation(fields: [teamId], references: [id])
+  id                   Int      @id @default(autoincrement())
+  playerId             Int
+  teamId               Int?
+  season               Int
+  games                Int?     @default(0)
+  gamesStarted         Int?     @default(0)
+  minutes              Int?     @default(0)
+  points               Int?     @default(0)
+  rebounds             Int?     @default(0)
+  offRebounds          Int?     @default(0)
+  defRebounds          Int?     @default(0)
+  assists              Int?     @default(0)
+  steals               Int?     @default(0)
+  blocks               Int?     @default(0)
+  turnovers            Int?     @default(0)
+  fouls                Int?     @default(0)
+  fieldGoalsMade       Int?     @default(0)
+  fieldGoalsAttempted  Int?     @default(0)
+  threePointsMade      Int?     @default(0)
+  threePointsAttempted Int?     @default(0)
+  freeThrowsMade       Int?     @default(0)
+  freeThrowsAttempted  Int?     @default(0)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  player               Player   @relation(fields: [playerId], references: [id])
+  team                 Team?    @relation(fields: [teamId], references: [id])
 
   @@unique([playerId, season])
   @@map("player_season_stats")
 }
 
-// RAPM (Regularized Adjusted Plus-Minus) impact metrics for players.
-// Each player has one record per season with separate offensive and defensive ratings.
-// ORAPM/DRAPM are in points per 100 possessions relative to league average.
 model PlayerImpact {
-  id              Int      @id @default(autoincrement())
-  season          Int
-  playerId        Int
-  teamId          Int?
-
-  // Primary RAPM components (points per 100 possessions)
-  orapm           Float?   // Offensive impact (actual target)
-  drapm           Float?   // Defensive impact (actual target)
-  rapm            Float?   // Net impact (orapm + drapm)
-
-  // Expected targets (xeFG-based)
-  orapmExpected   Float?
-  drapmExpected   Float?
-  rapmExpected    Float?
-
-  // Sample size and confidence
-  confidence      String?  // 'high' | 'moderate' | 'low' based on possessions
-  possessions     Int?     // Total possessions used in RAPM calculation
-  minutes         Int?     // Season minutes (from PlayerSeasonStats)
-
-  // Model metadata
-  modelVersion    Int      @default(1)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  player          Player   @relation(fields: [playerId], references: [id])
+  id            Int      @id @default(autoincrement())
+  season        Int
+  playerId      Int
+  teamId        Int?
+  orapm         Float?
+  drapm         Float?
+  rapm          Float?
+  orapmExpected Float?
+  drapmExpected Float?
+  rapmExpected  Float?
+  confidence    String?
+  possessions   Int?
+  minutes       Int?
+  modelVersion  Int      @default(1)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  player        Player   @relation(fields: [playerId], references: [id])
 
   @@unique([playerId, season])
   @@index([season])
@@ -260,54 +217,40 @@ model PlayerImpact {
   @@map("player_impact")
 }
 
-// Persistent cache for AI-generated coach briefs.
-// Keyed by (subjectTeamId, opponentTeamId, season). Only regenerated when
-// the user explicitly clicks "Update Brief" (?regenerate=1) — never on a
-// normal page load. brief / firedRules / stats stored as JSON blobs.
 model CoachBriefCache {
-  id              Int      @id @default(autoincrement())
-  subjectTeamId   Int
-  opponentTeamId  Int
-  season          Int
-
-  brief           Json
-  firedRules      Json
-  stats           Json?
-  model           String?
-  inputTokens     Int?
-  outputTokens    Int?
-  costUsd         Float?
-
-  // Bumped whenever the brief prompt/payload shape changes so the route can
-  // serve cached briefs only when they match the current generator version.
-  promptVersion   Int      @default(1)
-
-  generatedAt     DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  subjectTeamId  Int
+  opponentTeamId Int
+  season         Int
+  brief          Json
+  firedRules     Json
+  stats          Json?
+  model          String?
+  inputTokens    Int?
+  outputTokens   Int?
+  costUsd        Float?
+  generatedAt    DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  promptVersion  Int      @default(1)
 
   @@unique([subjectTeamId, opponentTeamId, season])
   @@map("coach_brief_cache")
 }
 
 model PlayerXeFG {
-  id              Int      @id @default(autoincrement())
-  playerId        Int
-  season          Int
-
-  sampleSize      Int
-  fgPct           Float?
-  actualEfg       Float?
-  expectedEfg     Float?
-  delta           Float?
-
-  // { rim: {sampleSize, fgPct, actualEfg, expectedEfg, delta}, mid: {...}, three: {...} }
-  byZone          Json
-
-  modelVersion    Int      @default(1)
-  updatedAt       DateTime @updatedAt
-  createdAt       DateTime @default(now())
-
-  player          Player   @relation(fields: [playerId], references: [id])
+  id           Int      @id @default(autoincrement())
+  playerId     Int
+  season       Int
+  sampleSize   Int
+  fgPct        Float?
+  actualEfg    Float?
+  expectedEfg  Float?
+  delta        Float?
+  byZone       Json
+  modelVersion Int      @default(1)
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  player       Player   @relation(fields: [playerId], references: [id])
 
   @@unique([playerId, season])
   @@index([season])
@@ -315,110 +258,100 @@ model PlayerXeFG {
 }
 
 model TeamXeFG {
-  id              Int      @id @default(autoincrement())
-  teamId          Int
-  season          Int
-  side            String   // 'offense' | 'defense'
-
-  sampleSize      Int
-  fgPct           Float?
-  actualEfg       Float?
-  expectedEfg     Float?
-  delta           Float?
-  byZone          Json
-
-  modelVersion    Int      @default(1)
-  updatedAt       DateTime @updatedAt
-  createdAt       DateTime @default(now())
-
-  team            Team     @relation(fields: [teamId], references: [id])
+  id           Int      @id @default(autoincrement())
+  teamId       Int
+  season       Int
+  side         String
+  sampleSize   Int
+  fgPct        Float?
+  actualEfg    Float?
+  expectedEfg  Float?
+  delta        Float?
+  byZone       Json
+  modelVersion Int      @default(1)
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  team         Team     @relation(fields: [teamId], references: [id])
 
   @@unique([teamId, season, side])
   @@index([season])
   @@map("team_xefg")
 }
 
-// One on-court stint for one team in one game. A stint begins whenever the
-// lineup changes (substitution, period start) and ends at the next lineup
-// change or game end. Only "Substitution" plays are used — no onFloor data
-// is stored in the DB, so the starting 5 is inferred from the first
-// substitution wave (players who sub OUT before anyone subs IN).
-//
-// confidence levels:
-//   'full'    — starting lineup reconstructed + all subs accounted for
-//   'partial' — some subs had null playerId; gaps filled or stint dropped
-//   'gap'     — period had no sub events; lineup unknown for that stretch
 model LineupStint {
-  id               Int     @id @default(autoincrement())
-  season           Int
-  gameId           Int
-  teamId           Int
-  opponentTeamId   Int?
-
-  period           Int
-  // Seconds remaining at the START of the stint (higher = earlier in period).
-  startSeconds     Int
-  // Seconds remaining at the END of the stint (lower = later; 0 = period end).
-  endSeconds       Int
-
-  // Sorted comma-separated player IDs, e.g. "1234,2345,3456,4567,5678".
-  // Canonical: always 5 values, ascending. NULL means lineup unknown.
-  playerIds        String?
-  // MD5 of playerIds for fast groupBy queries (NULL when playerIds is NULL).
-  lineupHash       String?
-
-  // Raw box-score accumulators for this stint.
-  pointsFor        Int     @default(0)
-  pointsAgainst    Int     @default(0)
-  fga              Int     @default(0)
-  fgm              Int     @default(0)
-  threepa          Int     @default(0)
-  threepm          Int     @default(0)
-  fta              Int     @default(0)
-  ftm              Int     @default(0)
-  offRebounds      Int     @default(0)
-  defRebounds      Int     @default(0)
-  turnovers        Int     @default(0)
-  assists          Int     @default(0)
-  steals           Int     @default(0)
-  blocks           Int     @default(0)
-
-  // Possession estimates (standard Four Factors formula).
-  possessionsFor   Float?
-  possessionsAgainst Float?
-
-  // Per-100 derived metrics (NULL when possessions too low to be meaningful).
-  pppFor           Float?
-  pppAgainst       Float?
-  netPpp           Float?
-
-  // ---- Expected scoring (xeFG model) ----
-  // expectedPointsFor = sum over our FGA of P(make)*2 (twos) or P(make)*3 (threes),
-  // plus actual made FT points (FTs are not modelled by xeFG — labelled choice).
-  // expectedPointsAgainst is the same for the opponent's FGA in this stint.
-  expectedPointsFor    Float?
+  id                    Int      @id @default(autoincrement())
+  season                Int
+  gameId                Int
+  teamId                Int
+  opponentTeamId        Int?
+  period                Int
+  startSeconds          Int
+  endSeconds            Int
+  playerIds             String?
+  lineupHash            String?
+  pointsFor             Int      @default(0)
+  pointsAgainst         Int      @default(0)
+  fga                   Int      @default(0)
+  fgm                   Int      @default(0)
+  threepa               Int      @default(0)
+  threepm               Int      @default(0)
+  fta                   Int      @default(0)
+  ftm                   Int      @default(0)
+  offRebounds           Int      @default(0)
+  defRebounds           Int      @default(0)
+  turnovers             Int      @default(0)
+  assists               Int      @default(0)
+  steals                Int      @default(0)
+  blocks                Int      @default(0)
+  possessionsFor        Float?
+  possessionsAgainst    Float?
+  pppFor                Float?
+  pppAgainst            Float?
+  netPpp                Float?
+  confidence            String   @default("full")
+  notes                 String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  expectedNetPpp        Float?
   expectedPointsAgainst Float?
-  // expectedPpp = expectedPoints / possessions (per-possession, NOT per-100).
-  expectedPppFor       Float?
-  expectedPppAgainst   Float?
-  expectedNetPpp       Float?
-  // Count of FGA that had usable shot coordinates and got an xeFG prediction.
-  shotQualityFgaFor    Int    @default(0)
-  shotQualityFgaAgainst Int   @default(0)
-
-  // 'full' | 'partial' | 'gap'
-  confidence       String  @default("full")
-  // Human-readable notes (e.g., "2 subs had null playerId at 14:01")
-  notes            String?
-
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  game             Game    @relation(fields: [gameId], references: [id])
-  team             Team    @relation(fields: [teamId], references: [id])
+  expectedPointsFor     Float?
+  expectedPppAgainst    Float?
+  expectedPppFor        Float?
+  shotQualityFgaAgainst Int      @default(0)
+  shotQualityFgaFor     Int      @default(0)
+  game                  Game     @relation(fields: [gameId], references: [id])
+  team                  Team     @relation(fields: [teamId], references: [id])
 
   @@index([gameId, teamId])
   @@index([season, teamId])
   @@index([lineupHash])
   @@map("lineup_stints")
+}
+
+model PlayerRapm {
+  id            Int     @id @default(autoincrement())
+  playerId      Int
+  season        Int
+  target        String  // 'actual' | 'xefg'
+
+  orapm         Float   // offensive RAPM, points per 100 possessions
+  drapm         Float   // defensive RAPM, points per 100 possessions
+  rapm          Float   // orapm + drapm
+
+  offPossUsed   Int     // full-confidence offensive possessions
+  defPossUsed   Int     // full-confidence defensive possessions
+
+  lambda        Float   // ridge penalty used
+  priorOrapm    Float?  // box-score prior used for ORAPM
+  priorDrapm    Float?  // box-score prior used for DRAPM
+
+  modelVersion  Int     @default(1)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  player        Player  @relation(fields: [playerId], references: [id])
+
+  @@unique([playerId, season, target])
+  @@index([season, target])
+  @@map("player_rapm")
 }
